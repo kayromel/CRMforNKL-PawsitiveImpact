@@ -1,31 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/Users/nicholasgathof/RiderProjects/No-Kill-Louisville-Inventory-System-CapstoneF23/NoKill-Inventory/NoKill-Inventory/NoKill-Inventory.csproj": {}
+    "E:\\Downloads\\School\\IUS\\Capstone\\Project\\NoKill-Inventory\\NoKill-Inventory\\NoKill-Inventory.csproj": {}
   },
   "projects": {
-    "/Users/nicholasgathof/RiderProjects/No-Kill-Louisville-Inventory-System-CapstoneF23/NoKill-Inventory/NoKill-Inventory/NoKill-Inventory.csproj": {
+    "E:\\Downloads\\School\\IUS\\Capstone\\Project\\NoKill-Inventory\\NoKill-Inventory\\NoKill-Inventory.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/nicholasgathof/RiderProjects/No-Kill-Louisville-Inventory-System-CapstoneF23/NoKill-Inventory/NoKill-Inventory/NoKill-Inventory.csproj",
+        "projectUniqueName": "E:\\Downloads\\School\\IUS\\Capstone\\Project\\NoKill-Inventory\\NoKill-Inventory\\NoKill-Inventory.csproj",
         "projectName": "NoKill-Inventory",
-        "projectPath": "/Users/nicholasgathof/RiderProjects/No-Kill-Louisville-Inventory-System-CapstoneF23/NoKill-Inventory/NoKill-Inventory/NoKill-Inventory.csproj",
-        "packagesPath": "/Users/nicholasgathof/.nuget/packages/",
-        "outputPath": "/Users/nicholasgathof/RiderProjects/No-Kill-Louisville-Inventory-System-CapstoneF23/NoKill-Inventory/NoKill-Inventory/obj/",
+        "projectPath": "E:\\Downloads\\School\\IUS\\Capstone\\Project\\NoKill-Inventory\\NoKill-Inventory\\NoKill-Inventory.csproj",
+        "packagesPath": "C:\\Users\\jacob\\.nuget\\packages\\",
+        "outputPath": "E:\\Downloads\\School\\IUS\\Capstone\\Project\\NoKill-Inventory\\NoKill-Inventory\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/nicholasgathof/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\jacob\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net8.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/sdk/7.0.306/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -36,26 +35,42 @@
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authorization": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.AspNetCore.Components": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.AspNetCore.Components.Authorization": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "Microsoft.Data.Sqlite.Core": {
               "target": "Package",
-              "version": "[7.0.13, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[7.0.13, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[7.0.13, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
-              "version": "[7.0.13, )"
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite.Core": {
+              "target": "Package",
+              "version": "[8.0.0, )"
             }
           },
           "imports": [
@@ -69,20 +84,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[6.0.20, 6.0.20]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.osx-arm64",
-              "version": "[6.0.20, 6.0.20]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[6.0.20, 6.0.20]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -91,7 +92,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.306/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
