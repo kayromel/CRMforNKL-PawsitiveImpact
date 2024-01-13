@@ -1,0 +1,27 @@
+﻿@page "/InventoryEntry"
+
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
+@using No_Kill_Inventory.Data
+
+<PageTitle>Inventory Entry</PageTitle>
+
+<h3>Inventory Entry</h3>
+
+<div class="row">
+    <div class="col-md4">
+        <EditForm Model="Input" method></EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+
+    private sealed class InputModel
+    {
+        [Required] public string ItemType { get; set; } = "";
+        
+        
+    }
+}

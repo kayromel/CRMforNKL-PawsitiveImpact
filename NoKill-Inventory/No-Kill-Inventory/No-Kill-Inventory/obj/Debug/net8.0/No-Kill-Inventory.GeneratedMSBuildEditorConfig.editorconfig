@@ -110,6 +110,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/Downloads/School/IUS/Capstone/Project/No-Kill-Louisville-Inventory-System-CapstoneF23/NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/Components/Inventory/Pages/EditInventory.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbnZlbnRvcnlcUGFnZXNcRWRpdEludmVudG9yeS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Downloads/School/IUS/Capstone/Project/No-Kill-Louisville-Inventory-System-CapstoneF23/NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/Components/Inventory/Pages/InventoryEntry.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbnZlbnRvcnlcUGFnZXNcSW52ZW50b3J5RW50cnkucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Downloads/School/IUS/Capstone/Project/No-Kill-Louisville-Inventory-System-CapstoneF23/NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/Components/Inventory/Pages/ViewInventory.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbnZlbnRvcnlcUGFnZXNcVmlld0ludmVudG9yeS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/Downloads/School/IUS/Capstone/Project/No-Kill-Louisville-Inventory-System-CapstoneF23/NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/Components/Pages/Auth.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdXRoLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
