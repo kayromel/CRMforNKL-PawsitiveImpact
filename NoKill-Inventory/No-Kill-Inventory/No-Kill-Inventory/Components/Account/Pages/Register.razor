@@ -70,28 +70,42 @@
     {
         var user = CreateUser();
 
+        // Set user's email
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        
+        // Set email using email store
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        
+        // Create user in database wtih hashed password
         var result = await UserManager.CreateAsync(user, Input.Password);
 
+        // Registration error
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
             return;
         }
 
+        // Registration succeeded
+        
+        // Log information
         Logger.LogInformation("User created a new account with password.");
 
+        // Generate email confirmation token
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        
+        // Callback URL for confirmation
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
             NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
 
+        // Send confirmation email
         await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
 
+        // Redirect to confirmation page if needed
         if (UserManager.Options.SignIn.RequireConfirmedAccount)
         {
             RedirectManager.RedirectTo(
@@ -99,7 +113,10 @@
                 new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
         }
 
+        // Sign in user
         await SignInManager.SignInAsync(user, isPersistent: false);
+        
+        // Redirect to return URL
         RedirectManager.RedirectTo(ReturnUrl);
     }
 
