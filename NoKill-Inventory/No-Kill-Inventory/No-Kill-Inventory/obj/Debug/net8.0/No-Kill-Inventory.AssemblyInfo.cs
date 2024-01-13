@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("No-Kill-Inventory")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64c425eabcc9f68c177fcd9bb0b285624ddff540")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e86f726f7e629f2e4a434d6d3861074e18d69f9c")]
 [assembly: System.Reflection.AssemblyProductAttribute("No-Kill-Inventory")]
 [assembly: System.Reflection.AssemblyTitleAttribute("No-Kill-Inventory")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
