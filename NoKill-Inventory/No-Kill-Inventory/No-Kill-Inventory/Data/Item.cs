@@ -3,6 +3,8 @@ using System;
 
 public class Item
 {
+    public String Brand { get; set; }
+
     public String Animal { get; set; }
     
     public bool Prescription { get; set; }
