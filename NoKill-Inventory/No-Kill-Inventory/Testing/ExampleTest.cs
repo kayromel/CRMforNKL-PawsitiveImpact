@@ -15,4 +15,10 @@ public class ExampleTest : BunitTestContext
         
         cut.MarkupMatches("<h3>HelloWorld</h3>");
     }
+
+    [TestMethod]
+    public void TestLogin()
+    {
+        
+    }
 }
