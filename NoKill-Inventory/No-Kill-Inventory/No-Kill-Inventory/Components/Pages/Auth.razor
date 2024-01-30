@@ -1,8 +1,26 @@
 ﻿@page "/auth"
 
 @using Microsoft.AspNetCore.Authorization
+@using No_Kill_Inventory.Data
+@inject ApplicationDbContext Context
 
 @attribute [Authorize]
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%; 
+    }
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+</style>
 
 <PageTitle>Auth</PageTitle>
 
@@ -10,4 +28,19 @@
 
 <AuthorizeView>
     Hello @context.User.Identity?.Name!
+    
+    <div>
+        <table>
+            <tr>
+                <th>Username</th>
+            </tr>
+            @foreach (var u in Context.Users)
+            {
+                <tr>
+                    <td>@u.UserName</td>
+                </tr>
+            }
+        </table>
+    </div>
+
 </AuthorizeView>
