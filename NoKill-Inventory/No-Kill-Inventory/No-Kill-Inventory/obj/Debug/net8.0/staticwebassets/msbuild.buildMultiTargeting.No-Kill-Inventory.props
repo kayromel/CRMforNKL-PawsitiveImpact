@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\No-Kill-Inventory.props" />
-</Project>

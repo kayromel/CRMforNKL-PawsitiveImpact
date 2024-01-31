@@ -564,3 +564,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/rider,windows,macos,linux,vim,dotnetcore,aspnetcore,database,visualstudiocode,jetbrains
+/NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/bin/
+/NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/obj/
