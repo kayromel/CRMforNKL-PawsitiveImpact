@@ -3,6 +3,8 @@ using System;
 
 public class Item
 {
+    public int itemID { get; set; }
+    
     public String Brand { get; set; }
 
     public String Animal { get; set; }

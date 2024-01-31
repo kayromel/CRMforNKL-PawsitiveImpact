@@ -3,15 +3,24 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Net.Http.Headers
 @using No_Kill_Inventory.Data
 
 <PageTitle>Inventory Entry</PageTitle>
 
-<h3>Inventory Entry</h3>
+<h1>Inventory Entry</h1>
 
 <div class="row">
     <div class="col-md4">
-        <EditForm Model="Input" method></EditForm>
+        <EditForm Model="Input" method>
+            <DataAnnotationsValidator/>
+            <h2>All fields must be filled</h2>
+            <hr/>
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="form-floating mb-3">
+                <InputNumber @bind-Value="Input.ItemID"/>
+            </div>
+        </EditForm>
     </div>
 </div>
 
@@ -20,8 +29,69 @@
 
     private sealed class InputModel
     {
-        [Required] public string ItemType { get; set; } = "";
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be a numerical value.")]
+        [Display(Name = "ItemID")]
+        public int ItemID { get; set; } = 0;
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be a text value.")]
+        [Display(Name = "Brand")]
+        public string Brand { get; set; } = "";
         
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be a text value.")]
+        [Display(Name = "Animal")]
+        public string Animal { get; set; } = "";
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false.")]
+        [Display(Name = "Prescription")]
+        public bool Prescription { get; set; } = false;
         
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be a text value.")]
+        [Display(Name = "Prescription Description")]
+        public string PrescriptionDesc { get; set; } = "";
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be a text value.")]
+        [Display(Name = "Dry or Wet")]
+        public string DryWet { get; set; } = "";
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be a text value.")]
+        [Display(Name = "Age")]
+        public string Age { get; set; } = "";
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false.")]
+        [Display(Name = "Grain Free")]
+        public bool GrainFree { get; set; } = false;
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false.")]
+        [Display(Name = "Weight Control")]
+        public bool WeightCtrl { get; set; } = false;
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false.")]
+        [Display(Name = "Small Bites")]
+        public bool SmallBites { get; set; } = false;
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false.")]
+        [Display(Name = "Junk")]
+        public bool Junk { get; set; } = false;
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be a numerical value.")]
+        [Display(Name = "Quantity")]
+        public int Qty { get; set; } = 0;
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be a numerical value.")]
+        [Display(Name = "FoodWeight")]
+        public bool FoodWeight { get; set; } = false;
     }
 }

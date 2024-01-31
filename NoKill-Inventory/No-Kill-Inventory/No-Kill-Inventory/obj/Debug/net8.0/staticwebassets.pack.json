@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Nic\\RiderProjects\\No-Kill-Louisville-Inventory-System-CapstoneF23\\NoKill-Inventory\\No-Kill-Inventory\\No-Kill-Inventory\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\No-Kill-Inventory.bundle.scp.css",
+      "PackagePath": "staticwebassets\\No-Kill-Inventory.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\Nic\\RiderProjects\\No-Kill-Louisville-Inventory-System-CapstoneF23\\NoKill-Inventory\\No-Kill-Inventory\\No-Kill-Inventory\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\Nic\\RiderProjects\\No-Kill-Louisville-Inventory-System-CapstoneF23\\NoKill-Inventory\\No-Kill-Inventory\\No-Kill-Inventory\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\Nic\\RiderProjects\\No-Kill-Louisville-Inventory-System-CapstoneF23\\NoKill-Inventory\\No-Kill-Inventory\\No-Kill-Inventory\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\Nic\\RiderProjects\\No-Kill-Louisville-Inventory-System-CapstoneF23\\NoKill-Inventory\\No-Kill-Inventory\\No-Kill-Inventory\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.No-Kill-Inventory.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.No-Kill-Inventory.props",
+      "PackagePath": "build\\No-Kill-Inventory.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.No-Kill-Inventory.props",
+      "PackagePath": "buildMultiTargeting\\No-Kill-Inventory.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.No-Kill-Inventory.props",
+      "PackagePath": "buildTransitive\\No-Kill-Inventory.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
