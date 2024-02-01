@@ -1,10 +1,14 @@
 ﻿@page "/InventoryEntry"
 
 @using System.ComponentModel.DataAnnotations
+@using Humanizer
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.Extensions.Options
 @using Microsoft.Net.Http.Headers
 @using No_Kill_Inventory.Data
+@rendermode InteractiveServer
 
 <PageTitle>Inventory Entry</PageTitle>
 
@@ -20,6 +24,12 @@
             <div class="form-floating mb-3">
                 <InputNumber @bind-Value="Input.ItemID"/>
             </div>
+            <div>
+                <button type="button" class="btn btn-primary" @onclick="(() => { ItemStore();})">
+                    Test Input
+                </button>
+            </div>
+          
         </EditForm>
     </div>
 </div>
@@ -27,6 +37,44 @@
 @code {
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
+    public void ItemStore()
+    {
+        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        {
+            var newItem = new Item
+            {
+                itemID = 2,
+                Brand = "Not Blue",
+                Animal = "Dog",
+                Prescription = true,
+                PrescriptionDesc = "Arthritis",
+                DryWet = "Dry",
+                Age = "Adult",
+                GrainFree = false,
+                WeightCtrl = false,
+                SmallBites = true,
+                Junk = false,
+                Qty = 14,
+                FoodWeight = 20
+                // itemID = Input.ItemID,
+                // Brand = Input.Brand,
+                // Animal = Input.Animal,
+                // Prescription = Input.Prescription,
+                // PrescriptionDesc = Input.PrescriptionDesc,
+                // DryWet = Input.DryWet,
+                // Age = Input.Age,
+                // GrainFree = Input.GrainFree,
+                // WeightCtrl = Input.WeightCtrl,
+                // SmallBites = Input.SmallBites,
+                // Junk = Input.Junk,
+                // Qty = Input.Qty,
+                // FoodWeight = Input.FoodWeight
+            };
+            context.Add(newItem);
+            context.SaveChanges();
+        }
+    }
+    
     private sealed class InputModel
     {
         [Required]
@@ -92,6 +140,6 @@
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be a numerical value.")]
         [Display(Name = "FoodWeight")]
-        public bool FoodWeight { get; set; } = false;
+        public int FoodWeight { get; set; } = 0;
     }
 }
