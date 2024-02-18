@@ -11,3 +11,49 @@
 
     Welcome to your new app.
 @* </AuthorizeView> *@
+
+@* @if (user is not null) *@
+@* { *@
+@*     <h3>@user.Identity.Name</h3> *@
+@*     <div class="m-2 p-2"> *@
+@*         Is Authenticated: @user.Identity.IsAuthenticated *@
+@*     </div> *@
+@*     <div class="m-2 p-2"> *@
+@*         Authentication Type: @user.Identity.AuthenticationType *@
+@*     </div> *@
+@*     <div class="m-2 p-2"> *@
+@*         Admin Role: @user.IsInRole("Admin") *@
+@*     </div> *@
+@*     <div class="m-2 p-2"> *@
+@*         <h5>Claims</h5> *@
+@*         @foreach (var claim in user.Claims) *@
+@*         { *@
+@*             <span> *@
+@*                 @claim.Type *@
+@*             </span> *@
+@*             <span>:</span> *@
+@*             <span> *@
+@*                 @claim.Value *@
+@*             </span> *@
+@*             <br /> *@
+@*         } *@
+@*     </div> *@
+@* } *@
+@* else *@
+@* { *@
+@*     <div class="m-2 p-2"> *@
+@*         No User Exists *@
+@*     </div> *@
+@* } *@
+
+@code {
+    [CascadingParameter] public Task<AuthenticationState> AuthTask { get; set; }
+
+    private System.Security.Claims.ClaimsPrincipal user;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await AuthTask;
+        this.user = authState.User;
+    }
+}

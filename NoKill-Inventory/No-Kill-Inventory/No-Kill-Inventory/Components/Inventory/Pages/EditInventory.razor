@@ -1,5 +1,16 @@
 ﻿@page "/EditInventory"
-<h3>EditInventory</h3>
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+<PageTitle>Edit Inventory</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h3>EditInventory</h3>
+    </Authorized>
+</AuthorizeView>
+
 
 @code {
     

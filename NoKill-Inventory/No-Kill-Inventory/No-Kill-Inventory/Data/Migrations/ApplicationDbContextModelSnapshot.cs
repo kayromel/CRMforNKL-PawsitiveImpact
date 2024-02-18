@@ -41,6 +41,22 @@ namespace No_Kill_Inventory.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "fab4fac1-c546-41de-aebc-a14da6895711",
+                            ConcurrencyStamp = "1",
+                            Name = "Admin",
+                            NormalizedName = "Admin"
+                        },
+                        new
+                        {
+                            Id = "c7b013f0-5201-4317-abd8-c211f91b7330",
+                            ConcurrencyStamp = "2",
+                            Name = "User",
+                            NormalizedName = "User"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -124,6 +140,13 @@ namespace No_Kill_Inventory.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "b74ddd14-6340-4840-95c2-db12554843e5",
+                            RoleId = "fab4fac1-c546-41de-aebc-a14da6895711"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -211,17 +234,17 @@ namespace No_Kill_Inventory.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c87f125f-55dc-49e9-9e82-30e4e5811951",
+                            Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "",
+                            ConcurrencyStamp = "fc4fc6a4-0a42-46b4-a7e7-e16adcb1435b",
                             Email = "adminuser",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMINUSER",
                             NormalizedUserName = "ADMINUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEC2nlncqTRsANLkvUS2tV1A7S41bZTLJRZwTHC12KCSlgeLTJdO/Xwa20WjvoVDkcA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH8E2rK/PbRK8uznBTsTxLpchnquer29rQFdtQOFewDqxrbfMmNOydb2/be7vDIrTg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b60868c5-0270-41e2-a7ef-2d37c3e64150",
+                            SecurityStamp = "d5d64753-2e7c-411a-b2a9-bf53e1d7063c",
                             TwoFactorEnabled = false,
                             UserName = "adminuser"
                         });
