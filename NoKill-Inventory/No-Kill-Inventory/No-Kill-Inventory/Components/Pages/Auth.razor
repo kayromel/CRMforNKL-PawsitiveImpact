@@ -1,10 +1,14 @@
 ﻿@page "/auth"
 
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 @using No_Kill_Inventory.Data
 @inject ApplicationDbContext Context
+@inject SignInManager<ApplicationUser> SignInManager
+@rendermode InteractiveServer
 
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 
 <style>
     table {
@@ -33,14 +37,43 @@
         <table>
             <tr>
                 <th>Username</th>
+                <th>Role</th>
+                <th>Remove</th>
             </tr>
             @foreach (var u in Context.Users)
             {
+                var userRole = Context.UserRoles
+                    .Where(ur => ur.UserId == u.Id)
+                    .Join(Context.Roles,
+                        ur => ur.RoleId,
+                        role => role.Id,
+                        (ur, role) => role.Name)
+                    .FirstOrDefault();
                 <tr>
                     <td>@u.UserName</td>
+                    <td>@userRole</td> 
+                    <td>
+                        @if(u.Id != SignInManager.UserManager.GetUserId(SignInManager.Context.User)){
+                            <button type="button" @onclick="(async () => await DeleteUser(u.Id))">Delete</button>
+                        }
+                    </td>
                 </tr>
             }
         </table>
     </div>
 
 </AuthorizeView>
+
+@code
+{
+    private async Task DeleteUser(string UserID)
+    {
+        var user = await Context.Users.FindAsync(UserID);
+        
+        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        {
+            context.Users.Remove(user);
+            await context.SaveChangesAsync();
+        }
+    }
+}

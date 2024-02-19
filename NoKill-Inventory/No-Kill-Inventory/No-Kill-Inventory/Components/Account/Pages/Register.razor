@@ -10,17 +10,17 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
 @inject SignInManager<ApplicationUser> SignInManager
-@inject IEmailSender<ApplicationUser> EmailSender
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
 
 @attribute [Authorize]
 
 <PageTitle>Register</PageTitle>
 
-Uncomment to lock registration behind login
+@* Uncomment to lock registration behind login *@
 <AuthorizeView>
     <Authorized>
         <h1>Add User</h1>
@@ -108,7 +108,7 @@ Uncomment to lock registration behind login
                 "Account/RegisterConfirmation",
                 new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
         }
-
+        
         // Sign in user
         await SignInManager.SignInAsync(user, isPersistent: false);
         
@@ -157,5 +157,4 @@ Uncomment to lock registration behind login
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
     }
-
 }
