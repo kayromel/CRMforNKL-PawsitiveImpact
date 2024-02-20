@@ -11,8 +11,8 @@ using No_Kill_Inventory.Data;
 namespace No_Kill_Inventory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240130044110_AddItemTable")]
-    partial class AddItemTable
+    [Migration("20240220185335_DogCatItems")]
+    partial class DogCatItems
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,22 @@ namespace No_Kill_Inventory.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "fab4fac1-c546-41de-aebc-a14da6895711",
+                            ConcurrencyStamp = "1",
+                            Name = "Admin",
+                            NormalizedName = "Admin"
+                        },
+                        new
+                        {
+                            Id = "c7b013f0-5201-4317-abd8-c211f91b7330",
+                            ConcurrencyStamp = "2",
+                            Name = "User",
+                            NormalizedName = "User"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -127,6 +143,13 @@ namespace No_Kill_Inventory.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "b74ddd14-6340-4840-95c2-db12554843e5",
+                            RoleId = "fab4fac1-c546-41de-aebc-a14da6895711"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -210,6 +233,82 @@ namespace No_Kill_Inventory.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "b74ddd14-6340-4840-95c2-db12554843e5",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f4d13749-b218-4f00-968c-85f68f16ef49",
+                            Email = "adminuser",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "ADMINUSER",
+                            NormalizedUserName = "ADMINUSER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPu/Vd45DRRsb25MdOvFkrJVZ7u51BMCFNqTAd3khWqTIPuBKw9+GSlSlXz1wyrH6g==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "64708746-a16c-4ee2-af0f-3e76dbb572b9",
+                            TwoFactorEnabled = false,
+                            UserName = "adminuser"
+                        });
+                });
+
+            modelBuilder.Entity("No_Kill_Inventory.Data.CatItem", b =>
+                {
+                    b.Property<int>("ItemID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Adult")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Kitty")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Special")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Weight")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Wet")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ItemID");
+
+                    b.ToTable("CatItems");
+                });
+
+            modelBuilder.Entity("No_Kill_Inventory.Data.DogItem", b =>
+                {
+                    b.Property<int>("ItemID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("GrainFree")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Puppy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("SmBites")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Special")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Weight")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Wet")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("WgtCtrl")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ItemID");
+
+                    b.ToTable("DogItems");
                 });
 
             modelBuilder.Entity("No_Kill_Inventory.Data.Item", b =>
