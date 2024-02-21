@@ -2,6 +2,7 @@
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @using No_Kill_Inventory.Data
 @rendermode InteractiveServer
@@ -22,10 +23,10 @@
                     <hr/>
                     <ValidationSummary class="text-danger" role="alert"/>
                     <div class="form-floating mb-3">
-                        <InputNumber @bind-Value="Input.ItemID"/>
+                        <InputCheckbox></InputCheckbox>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-primary" @onclick="(() => { ItemStore(); })">
+                        <button type="button" class="btn btn-primary" @onclick="(() => { })">
                             Test Input
                         </button>
                     </div>
@@ -38,109 +39,98 @@
 @code {
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
-    public void ItemStore()
+    public void CatItemStore()
     {
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
         {
-            var newItem = new Item
+            var newCatItem = new CatItem
             {
-                itemID = 2,
-                Brand = "Not Blue",
-                Animal = "Dog",
-                Prescription = true,
-                PrescriptionDesc = "Arthritis",
-                DryWet = "Dry",
-                Age = "Adult",
-                GrainFree = false,
-                WeightCtrl = false,
-                SmallBites = true,
-                Junk = false,
-                Qty = 14,
-                FoodWeight = 20
-                // itemID = Input.ItemID,
-                // Brand = Input.Brand,
-                // Animal = Input.Animal,
-                // Prescription = Input.Prescription,
-                // PrescriptionDesc = Input.PrescriptionDesc,
-                // DryWet = Input.DryWet,
-                // Age = Input.Age,
-                // GrainFree = Input.GrainFree,
-                // WeightCtrl = Input.WeightCtrl,
-                // SmallBites = Input.SmallBites,
-                // Junk = Input.Junk,
-                // Qty = Input.Qty,
-                // FoodWeight = Input.FoodWeight
+                Wet = Input.WetCat,
+                Adult = Input.AdultCat,
+                Kitty = Input.Kitty,
+                Special = Input.SpecialCat,
+                Weight = Input.WeightCat
             };
-            context.Add(newItem);
-            context.SaveChanges();
+        }
+    }
+
+    public void DogItemStore()
+    {
+        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        {
+            var newDogItem = new DogItem()
+            {
+                Wet = Input.WetDog,
+                Puppy = Input.Puppy,
+                WgtCtrl = Input.WgtControl,
+                GrainFree = Input.GrainFree,
+                SmBites = Input.SmBites,
+                Special = Input.SpecialDog,
+                Weight = Input.WeightDog
+            };
         }
     }
     
     private sealed class InputModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be a numerical value.")]
-        [Display(Name = "ItemID")]
-        public int ItemID { get; set; } = 0;
-
+        [StringLength(100, ErrorMessage = "The {0} must be true of false")]
+        [Display(Name = "WetCat")]
+        public bool WetCat { get; set; }
+     
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be a text value.")]
-        [Display(Name = "Brand")]
-        public string Brand { get; set; } = "";
+        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
+        [Display(Name = "AdultCat")]
+        public bool AdultCat { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be a text value.")]
-        [Display(Name = "Animal")]
-        public string Animal { get; set; } = "";
-
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false.")]
-        [Display(Name = "Prescription")]
-        public bool Prescription { get; set; } = false;
+        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
+        [Display(Name = "Kitty")]
+        public bool Kitty { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be a text value.")]
-        [Display(Name = "Prescription Description")]
-        public string PrescriptionDesc { get; set; } = "";
+        [StringLength(100, ErrorMessage = "")]
+        [Display(Name = "SpecialCat")]
+        public String? SpecialCat { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be a text value.")]
-        [Display(Name = "Dry or Wet")]
-        public string DryWet { get; set; } = "";
+        [StringLength(100, ErrorMessage = "Should input a number")]
+        [Display(Name = "WeightCat")]
+        public int WeightCat { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be a text value.")]
-        [Display(Name = "Age")]
-        public string Age { get; set; } = "";
+        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
+        [Display(Name = "WetDog")]
+        public bool WetDog { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false.")]
-        [Display(Name = "Grain Free")]
-        public bool GrainFree { get; set; } = false;
+        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
+        [Display(Name = "Puppy")]
+        public bool Puppy { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false.")]
-        [Display(Name = "Weight Control")]
-        public bool WeightCtrl { get; set; } = false;
+        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
+        [Display(Name = "WgtControl")]
+        public bool WgtControl { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false.")]
-        [Display(Name = "Small Bites")]
-        public bool SmallBites { get; set; } = false;
+        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
+        [Display(Name = "GrainFree")]
+        public bool GrainFree { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false.")]
-        [Display(Name = "Junk")]
-        public bool Junk { get; set; } = false;
+        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
+        [Display(Name = "SmBites")]
+        public bool SmBites { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be a numerical value.")]
-        [Display(Name = "Quantity")]
-        public int Qty { get; set; } = 0;
+        [StringLength(100, ErrorMessage = "")]
+        [Display(Name = "SpecialDog")]
+        public String? SpecialDog { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be a numerical value.")]
-        [Display(Name = "FoodWeight")]
-        public int FoodWeight { get; set; } = 0;
+        [StringLength(100, ErrorMessage = "Should input a number")]
+        [Display(Name = "WeightDog")]
+        public int WeightDog { get; set; }
     }
 }

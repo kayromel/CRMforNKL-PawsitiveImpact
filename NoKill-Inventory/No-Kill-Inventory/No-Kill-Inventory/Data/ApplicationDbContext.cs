@@ -13,6 +13,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     }
     
     public DbSet<Item> Items { get; set; }
+    public DbSet<CatItem> CatItems { get; set; }
+    public DbSet<DogItem> DogItems { get; set; }
+    
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
