@@ -1,0 +1,82 @@
+﻿@page "/CatFoodInventoryEntry"
+
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using No_Kill_Inventory.Data
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+<PageTitle>Cat Food Inventory Entry</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Cat Food Inventory Entry</h1>
+
+        <div class="row">
+            <div class="col-md4">
+                <EditForm Model="Input" method Context="editContext">
+                    <DataAnnotationsValidator/>
+                    <h2>All fields must be filled</h2>
+                    <hr/>
+                    <ValidationSummary class="text-danger" role="alert"/>
+
+                    <div>
+                        <button type="button" class="btn btn-primary" @onclick="(() => { })">
+                            Test Input
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+
+    public void CatItemStore()
+    {
+        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        {
+            var newCatItem = new CatItem
+            {
+                Wet = Input.WetCat,
+                Adult = Input.AdultCat,
+                Kitty = Input.Kitty,
+                Special = Input.SpecialCat,
+                Weight = Input.WeightCat
+            };
+        }
+    }
+    
+    
+    private sealed class InputModel
+    {
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true of false")]
+        [Display(Name = "WetCat")]
+        public bool WetCat { get; set; }
+     
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
+        [Display(Name = "AdultCat")]
+        public bool AdultCat { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
+        [Display(Name = "Kitty")]
+        public bool Kitty { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "")]
+        [Display(Name = "SpecialCat")]
+        public String? SpecialCat { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "Should input a number")]
+        [Display(Name = "WeightCat")]
+        public int WeightCat { get; set; }
+    }
+}

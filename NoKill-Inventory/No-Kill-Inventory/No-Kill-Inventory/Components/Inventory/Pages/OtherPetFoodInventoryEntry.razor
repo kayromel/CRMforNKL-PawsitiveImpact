@@ -1,0 +1,89 @@
+﻿@page "/OtherPetFoodInventoryEntry"
+
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using No_Kill_Inventory.Data
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+<PageTitle>Other Pet Food Inventory Entry</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Other Pet Food Inventory Entry</h1>
+
+        <div class="row">
+            <div class="col-md4">
+                <EditForm Model="Input" method Context="editContext">
+                    <DataAnnotationsValidator/>
+                    <h2>All fields must be filled</h2>
+                    <hr/>
+                    <ValidationSummary class="text-danger" role="alert"/>
+
+                    <div>
+                        <button type="button" class="btn btn-primary" @onclick="(() => { })">
+                            Test Input
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+
+    public void CatItemStore()
+    {
+        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        {
+            var newItem = new Item
+            {
+                Animal = Input.Animal,
+                Prescription = Input.Prescription,
+                DryWet = Input.DryWet,
+                GrainFree = Input.GrainFree,
+                WeightCtrl = Input.WgtControl,
+                Qty = Input.Qty
+                
+            };
+        }
+    }
+    
+    
+    private sealed class InputModel
+    {
+        [Required]
+        [StringLength(100, ErrorMessage = "Should enter type of animal")]
+        [Display(Name = "Animal")]
+        public string Animal { get; set; }
+     
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
+        [Display(Name = "Prescription")]
+        public bool Prescription { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "Should say wet or dry")]
+        [Display(Name = "DryWet")]
+        public String DryWet { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
+        [Display(Name = "GrainFree")]
+        public bool GrainFree { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
+        [Display(Name = "WgtControl")]
+        public bool WgtControl { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "Should input a number")]
+        [Display(Name = "Qty")]
+        public int Qty { get; set; }
+    }
+}

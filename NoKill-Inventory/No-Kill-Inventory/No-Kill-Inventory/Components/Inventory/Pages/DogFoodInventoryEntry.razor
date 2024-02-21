@@ -1,0 +1,93 @@
+﻿@page "/DogFoodInventoryEntry"
+
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using No_Kill_Inventory.Data
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+<PageTitle>Dog Food Inventory Entry</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Dog Food Inventory Entry</h1>
+
+        <div class="row">
+            <div class="col-md4">
+                <EditForm Model="Input" method Context="editContext">
+                    <DataAnnotationsValidator/>
+                    <h2>All fields must be filled</h2>
+                    <hr/>
+                    <ValidationSummary class="text-danger" role="alert"/>
+
+                    <div>
+                        <button type="button" class="btn btn-primary" @onclick="(() => { })">
+                            Test Input
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+    
+@code {
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+
+    public void DogItemStore()
+    {
+        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        {
+            var newDogItem = new DogItem()
+            {
+                Wet = Input.WetDog,
+                Puppy = Input.Puppy,
+                WgtCtrl = Input.WgtControl,
+                GrainFree = Input.GrainFree,
+                SmBites = Input.SmBites,
+                Special = Input.SpecialDog,
+                Weight = Input.WeightDog
+            };
+        }
+    }
+    
+    private sealed class InputModel
+    {
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
+        [Display(Name = "WetDog")]
+        public bool WetDog { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
+        [Display(Name = "Puppy")]
+        public bool Puppy { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
+        [Display(Name = "WgtControl")]
+        public bool WgtControl { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
+        [Display(Name = "GrainFree")]
+        public bool GrainFree { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
+        [Display(Name = "SmBites")]
+        public bool SmBites { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "")]
+        [Display(Name = "SpecialDog")]
+        public String? SpecialDog { get; set; }
+        
+        [Required]
+        [StringLength(100, ErrorMessage = "Should input a number")]
+        [Display(Name = "WeightDog")]
+        public int WeightDog { get; set; }
+    }
+}
