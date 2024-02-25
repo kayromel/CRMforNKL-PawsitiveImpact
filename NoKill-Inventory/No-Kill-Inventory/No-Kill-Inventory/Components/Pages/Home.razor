@@ -1,15 +1,70 @@
 ﻿@page "/"
 
 @using Microsoft.AspNetCore.Authorization
+@using No_Kill_Inventory.Data
+@inject ApplicationDbContext Context
 
 @attribute [Authorize]
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%; 
+    }
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+</style>
 
 <PageTitle>Home</PageTitle>
 
 <AuthorizeView>
-    <h1>Hello, world!</h1>
+    <h1>Hello, @context.User.Identity.Name</h1>
 
-    Welcome to your new app.
+    The current inventory is below
+    
+    <div>
+        <table>
+            <caption>Dog</caption>
+            <tr>
+
+            </tr>
+            @foreach (var item in Context.DogItems)
+            {
+
+            }
+        </table>
+    </div>
+    <div>
+        <caption>Cat</caption>
+        <tr>
+
+        </tr>
+        <table>
+            @foreach (var item in Context.CatItems)
+            {
+
+            }
+        </table>
+    </div>
+    <div>
+        <caption>Other</caption>
+        <tr>
+
+        </tr>
+        <table>
+            @foreach (var item in Context.Items)
+            {
+
+            }
+        </table>
+    </div>
 </AuthorizeView>
 
 @code {
