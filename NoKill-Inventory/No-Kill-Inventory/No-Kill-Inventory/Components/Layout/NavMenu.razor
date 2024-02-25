@@ -19,33 +19,28 @@
                         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
                     </NavLink>
                 </div>
-                 <div class="nav-item px-3">
-                     <NavLink class="nav-link" href="/InventoryEntry" Match="NavLinkMatch.All">
-                         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Inventory Entry
-                     </NavLink>
-                 </div>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="auth">
-                        <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
+                    <NavLink class="nav-link" href="/InventoryEntry" Match="NavLinkMatch.All">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Inventory Entry
                     </NavLink>
                 </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Add User
-                    </NavLink>
-                </div>
+                <AuthorizeView Roles="Admin" Context="adminContext">
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="auth">
+                            <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> User Management
+                        </NavLink>
+                    </div>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="Account/Register">
+                            <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Add User
+                        </NavLink>
+                    </div>
+                </AuthorizeView>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Manage/ChangePassword">
                         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
                     </NavLink>
                 </div>
-                @* Register locked behind login, comment this and uncomment code below if needed to register a user for testing *@
-                @* Will be deleted before final testing and implementation *@
-                @* <div class="nav-item px-3"> *@
-                @*     <NavLink class="nav-link" href="Account/Register"> *@
-                @*         <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register *@
-                @*     </NavLink> *@
-                @* </div> *@
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
                         <AntiforgeryToken/>

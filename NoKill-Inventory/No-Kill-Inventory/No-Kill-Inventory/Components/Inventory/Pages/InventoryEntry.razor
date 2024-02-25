@@ -89,7 +89,7 @@
 
 @code {
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
-
+    
     public void CatItemStore()
     {
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
@@ -104,7 +104,7 @@
             };
         }
     }
-
+    
     public void DogItemStore()
     {
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
@@ -128,7 +128,7 @@
         [StringLength(100, ErrorMessage = "The {0} must be true of false")]
         [Display(Name = "WetCat")]
         public bool WetCat { get; set; }
-     
+        
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be true or false")]
         [Display(Name = "AdultCat")]
