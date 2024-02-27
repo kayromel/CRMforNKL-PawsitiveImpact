@@ -31,38 +31,52 @@
     
     <div>
         <table>
-            <caption>Dog</caption>
+            <h2>Dog</h2>
             <tr>
-
+                <th>Type</th>
+                <th>Weight</th>
             </tr>
             @foreach (var item in Context.DogItems)
             {
-
+                <tr>
+                    <td>@item.Type</td>
+                    <td>@item.Weight</td>
+                </tr>
             }
         </table>
     </div>
     <div>
-        <caption>Cat</caption>
-        <tr>
-
-        </tr>
         <table>
-            @foreach (var item in Context.CatItems)
-            {
-
-            }
+            <h2>Cat</h2>
+            <tr>
+                <th>Type</th>
+                <th>Weight</th>
+            </tr>
+                @foreach (var item in Context.CatItems)
+                {
+                    <tr>
+                        <td>@item.Type</td>
+                        <td>@item.Weight</td>
+                    </tr>
+                }
         </table>
     </div>
     <div>
-        <caption>Other</caption>
-        <tr>
-
-        </tr>
         <table>
-            @foreach (var item in Context.OtherItems)
-            {
-                
-            }
+            <h2>Other</h2>
+            <tr>
+                <th>Type</th>
+                <th>Desc</th>
+                <th>Weight</th>
+            </tr>
+                @foreach (var item in Context.OtherItems)
+                {
+                    <tr>
+                        <td>@item.Animal</td>
+                        <td>@item.Desc</td>
+                        <td>@item.Weight</td>
+                    </tr>
+                }
         </table>
     </div>
 </AuthorizeView>
