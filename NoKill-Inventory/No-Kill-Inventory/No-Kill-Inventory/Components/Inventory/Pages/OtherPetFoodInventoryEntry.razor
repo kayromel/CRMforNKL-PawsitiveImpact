@@ -17,17 +17,32 @@
 
         <div class="row">
             <div class="col-md4">
-                <EditForm Model="Input" method Context="editContext">
+                <EditForm Model="Input" FormName="Cat" OnValidSubmit="() => HandleValidSubmit()" Context="editContext">
                     <DataAnnotationsValidator/>
-                    <h2>All fields must be filled</h2>
+                    @if (formSubmitted)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            Form successfully submitted!
+                        </div>
+                    }
                     <hr/>
                     <ValidationSummary class="text-danger" role="alert"/>
 
-                    <div>
-                        <button type="button" class="btn btn-primary" @onclick="(() => { })">
-                            Test Input
-                        </button>
-                    </div>
+                    <table style="width:100%">
+                        <tr>
+                            <th>Animal</th>
+                            <th>Description</th>
+                            <th>Quantity (lbs)</th>
+                        </tr>
+                        <tr>
+                            <td><InputText @bind-Value="Input.Animal"/></td>
+                            <td><InputText @bind-Value="Input.Desc"/></td>
+                            <td><InputNumber @bind-Value="Input.WeightOther"/></td>
+                        </tr>
+                    </table>
+                    <button type="submit" class="btn btn-primary" @onclick="(() => { OtherItemStore(); })">
+                        Submit
+                    </button>
                 </EditForm>
             </div>
         </div>
@@ -36,8 +51,18 @@
 
 @code {
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+    
+    private bool formSubmitted = false;
+    
+    public Task HandleValidSubmit()
+    {
+        formSubmitted = true;
+        Input = new InputModel(); // Clear form fields
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 
-    public void CatItemStore()
+    public void OtherItemStore()
     {
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
         {
@@ -45,8 +70,11 @@
             {
                 Animal = Input.Animal,
                 Desc = Input.Desc,
-                Weight = Input.WeightOther
+                Weight = Input.WeightOther,
+                
             };
+            context.Add(newOtherItem);
+            context.SaveChanges();
         }
     }
     
@@ -63,8 +91,7 @@
         [Display(Name = "Desc")]
         public String Desc { get; set; }
         
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input a number")]
+        [Required(ErrorMessage = "Should input a number")]
         [Display(Name = "WeightOther")]
         public int WeightOther { get; set; }
     }
