@@ -96,10 +96,7 @@
         {
             var newCatItem = new CatItem
             {
-                Wet = Input.WetCat,
-                Adult = Input.AdultCat,
-                Kitty = Input.Kitty,
-                Special = Input.SpecialCat,
+                Type = Input.TypeCat,
                 Weight = Input.WeightCat
             };
         }
@@ -111,13 +108,21 @@
         {
             var newDogItem = new DogItem()
             {
-                Wet = Input.WetDog,
-                Puppy = Input.Puppy,
-                WgtCtrl = Input.WgtControl,
-                GrainFree = Input.GrainFree,
-                SmBites = Input.SmBites,
-                Special = Input.SpecialDog,
+                Type   = Input.TypeDog,
                 Weight = Input.WeightDog
+            };
+        }
+    }
+    
+    public void OtherItemStore()
+    {
+        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        {
+            var newOtherItem = new OtherItem()
+            {
+                Animal = Input.Animal,
+                Desc = Input.Desc,
+                Weight = Input.WeightOther
             };
         }
     }
@@ -125,24 +130,19 @@
     private sealed class InputModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true of false")]
-        [Display(Name = "WetCat")]
-        public bool WetCat { get; set; }
+        [StringLength(100, ErrorMessage = "Should input from the dropdown")]
+        [Display(Name = "TypeDog")]
+        public String TypeDog { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
-        [Display(Name = "AdultCat")]
-        public bool AdultCat { get; set; }
+        [StringLength(100, ErrorMessage = "Should input a number")]
+        [Display(Name = "WeightDog")]
+        public int WeightDog { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
-        [Display(Name = "Kitty")]
-        public bool Kitty { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "")]
-        [Display(Name = "SpecialCat")]
-        public String? SpecialCat { get; set; }
+        [StringLength(100, ErrorMessage = "Should input from the dropdown")]
+        [Display(Name = "TypeCat")]
+        public String TypeCat { get; set; }
         
         [Required]
         [StringLength(100, ErrorMessage = "Should input a number")]
@@ -150,38 +150,18 @@
         public int WeightCat { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
-        [Display(Name = "WetDog")]
-        public bool WetDog { get; set; }
+        [StringLength(100, ErrorMessage = "Should input a String")]
+        [Display(Name = "Animal")]
+        public String Animal { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
-        [Display(Name = "Puppy")]
-        public bool Puppy { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
-        [Display(Name = "WgtControl")]
-        public bool WgtControl { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
-        [Display(Name = "GrainFree")]
-        public bool GrainFree { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true and false")]
-        [Display(Name = "SmBites")]
-        public bool SmBites { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "")]
-        [Display(Name = "SpecialDog")]
-        public String? SpecialDog { get; set; }
+        [StringLength(100, ErrorMessage = "Should input a String")]
+        [Display(Name = "Desc")]
+        public String Desc { get; set; }
         
         [Required]
         [StringLength(100, ErrorMessage = "Should input a number")]
-        [Display(Name = "WeightDog")]
-        public int WeightDog { get; set; }
+        [Display(Name = "WeightOther")]
+        public int WeightOther { get; set; }
     }
 }

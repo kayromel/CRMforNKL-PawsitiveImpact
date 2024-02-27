@@ -11,8 +11,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         optionsBuilder.UseSqlite("Data Source=data/app.db");
     }
-    
-    public DbSet<Item> Items { get; set; }
+    public DbSet<OtherItem> OtherItems { get; set; }
     public DbSet<CatItem> CatItems { get; set; }
     public DbSet<DogItem> DogItems { get; set; }
     

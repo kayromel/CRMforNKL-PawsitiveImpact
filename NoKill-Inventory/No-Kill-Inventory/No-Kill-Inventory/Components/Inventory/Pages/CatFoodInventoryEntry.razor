@@ -2,6 +2,7 @@
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @using No_Kill_Inventory.Data
 @rendermode InteractiveServer
@@ -42,11 +43,8 @@
         {
             var newCatItem = new CatItem
             {
-                Wet = Input.WetCat,
-                Adult = Input.AdultCat,
-                Kitty = Input.Kitty,
-                Special = Input.SpecialCat,
-                Weight = Input.WeightCat
+               Type = Input.TypeCat,
+               Weight = Input.WeightCat
             };
         }
     }
@@ -55,24 +53,9 @@
     private sealed class InputModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true of false")]
-        [Display(Name = "WetCat")]
-        public bool WetCat { get; set; }
-     
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
-        [Display(Name = "AdultCat")]
-        public bool AdultCat { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
-        [Display(Name = "Kitty")]
-        public bool Kitty { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "")]
-        [Display(Name = "SpecialCat")]
-        public String? SpecialCat { get; set; }
+        [StringLength(100, ErrorMessage = "Should input from the dropdown")]
+        [Display(Name = "TypeCat")]
+        public String TypeCat { get; set; }
         
         [Required]
         [StringLength(100, ErrorMessage = "Should input a number")]
