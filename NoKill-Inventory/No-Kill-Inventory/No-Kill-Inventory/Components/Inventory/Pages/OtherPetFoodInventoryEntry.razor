@@ -1,6 +1,7 @@
 ﻿@page "/OtherPetFoodInventoryEntry"
 
 @using System.ComponentModel.DataAnnotations
+@using Humanizer
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using No_Kill_Inventory.Data
@@ -40,15 +41,11 @@
     {
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
         {
-            var newItem = new Item
+            var newOtherItem = new OtherItem
             {
                 Animal = Input.Animal,
-                Prescription = Input.Prescription,
-                DryWet = Input.DryWet,
-                GrainFree = Input.GrainFree,
-                WeightCtrl = Input.WgtControl,
-                Qty = Input.Qty
-                
+                Desc = Input.Desc,
+                Weight = Input.WeightOther
             };
         }
     }
@@ -57,33 +54,18 @@
     private sealed class InputModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "Should enter type of animal")]
+        [StringLength(100, ErrorMessage = "Should input a String")]
         [Display(Name = "Animal")]
-        public string Animal { get; set; }
-     
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
-        [Display(Name = "Prescription")]
-        public bool Prescription { get; set; }
+        public String Animal { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "Should say wet or dry")]
-        [Display(Name = "DryWet")]
-        public String DryWet { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
-        [Display(Name = "GrainFree")]
-        public bool GrainFree { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be true or false")]
-        [Display(Name = "WgtControl")]
-        public bool WgtControl { get; set; }
+        [StringLength(100, ErrorMessage = "Should input a String")]
+        [Display(Name = "Desc")]
+        public String Desc { get; set; }
         
         [Required]
         [StringLength(100, ErrorMessage = "Should input a number")]
-        [Display(Name = "Qty")]
-        public int Qty { get; set; }
+        [Display(Name = "WeightOther")]
+        public int WeightOther { get; set; }
     }
 }
