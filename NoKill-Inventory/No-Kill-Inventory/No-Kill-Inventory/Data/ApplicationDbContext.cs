@@ -75,5 +75,92 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             }
         );
 
+        modelBuilder.Entity<DogItem>().HasData(
+            new DogItem()
+            {
+                ItemID = 1,
+                Type = "Adult",
+                Weight = 0
+            });
+            
+        modelBuilder.Entity<DogItem>().HasData(
+            new DogItem()
+            {
+                ItemID = 2,
+                Type = "Puppy",
+                Weight = 0
+            });
+        
+        modelBuilder.Entity<DogItem>().HasData(
+            new DogItem()
+            {
+                ItemID = 3,
+                Type = "Weight Control",
+                Weight = 0
+            });
+        
+        modelBuilder.Entity<DogItem>().HasData(
+            new DogItem()
+            {
+                ItemID = 4,
+                Type = "Grain Free",
+                Weight = 0
+            });
+        
+        modelBuilder.Entity<DogItem>().HasData(
+            new DogItem()
+            {
+                ItemID = 5,
+                Type = "Small Bites",
+                Weight = 0
+            });
+        
+        modelBuilder.Entity<DogItem>().HasData(
+            new DogItem()
+            {
+                ItemID = 6,
+                Type = "Wet",
+                Weight = 0
+            });
+        
+        modelBuilder.Entity<DogItem>().HasData(
+            new DogItem()
+            {
+                ItemID = 7,
+                Type = "Special",
+                Weight = 0
+            });
+        
+        modelBuilder.Entity<CatItem>().HasData(
+            new CatItem()
+            {
+                ItemID = 1,
+                Type = "Adult",
+                Weight = 0
+            });
+        
+        modelBuilder.Entity<CatItem>().HasData(
+            new CatItem()
+            {
+                ItemID = 2,
+                Type = "Kitty",
+                Weight = 0
+            });
+        
+        modelBuilder.Entity<CatItem>().HasData(
+            new CatItem()
+            {
+                ItemID = 3,
+                Type = "Wet",
+                Weight = 0
+            });
+        
+        modelBuilder.Entity<CatItem>().HasData(
+            new CatItem()
+            {
+                ItemID = 4,
+                Type = "Special",
+                Weight = 0
+            });
     }
 }
