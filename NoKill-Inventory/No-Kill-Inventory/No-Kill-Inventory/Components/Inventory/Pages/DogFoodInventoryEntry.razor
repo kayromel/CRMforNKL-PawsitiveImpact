@@ -2,8 +2,13 @@
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc
 @using Microsoft.EntityFrameworkCore
 @using No_Kill_Inventory.Data
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
 @rendermode InteractiveServer
 
 @attribute [Authorize]
@@ -16,18 +21,64 @@
 
         <div class="row">
             <div class="col-md4">
-                <EditForm Model="Input" method Context="editContext">
+                <EditForm Model="Input" FormName="Dog" OnValidSubmit="() => HandleValidSubmit()" Context="editContext">
                     <DataAnnotationsValidator/>
-                    <h2>All fields must be filled</h2>
+                    @if (formSubmitted)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            Form successfully submitted!
+                        </div>
+                    }
                     <hr/>
                     <ValidationSummary class="text-danger" role="alert"/>
-
-                    <div>
-                        <button type="button" class="btn btn-primary" @onclick="(() => { })">
-                            Test Input
-                        </button>
-                    </div>
-                </EditForm>
+                    
+                    <table style="width:100%">
+                      <tr>
+                        <th>Food Type</th>
+                        <th>Quantity (lbs)</th>
+                      </tr>
+                      <tr>
+                        <td>Dry</td>
+                        <td><InputNumber @bind-Value="Input.DryWeight"/>
+                        </td>
+                      </tr>
+                      <tr>
+                          <td>Wet</td>
+                          <td><InputNumber @bind-Value="Input.WetWeight"/></td>
+                      </tr>
+                      <tr>
+                          <td>Weight Control</td>
+                          <td><InputNumber @bind-Value="Input.WeightControlWeight"/></td>
+                      </tr>
+                      <tr>
+                          <td>Puppy</td>
+                          <td><InputNumber @bind-Value="Input.PuppyWeight"/></td>
+                      </tr>
+                      <tr>
+                          <td>Grain Free</td>
+                          <td><InputNumber @bind-Value="Input.GrainFreeWeight"/></td>
+                      </tr>
+                      <tr>
+                          <td>Small Bites</td>
+                          <td><InputNumber @bind-Value="Input.SmallBitesWeight"/></td>
+                      </tr>
+                      <tr>
+                          <td>Special</td>
+                          <td><InputNumber @bind-Value="Input.SpecialWeight"/></td>
+                      </tr>
+                      
+                      
+                    </table>
+                    <button type="submit" class="btn btn-primary" @onclick="(() => {DogItemStore(1, Input.DryWeight);
+                                                                      DogItemStore(2, Input.PuppyWeight);
+                                                                      DogItemStore(3, Input.WeightControlWeight);
+                                                                      DogItemStore(4, Input.GrainFreeWeight);
+                                                                      DogItemStore(5, Input.SmallBitesWeight);
+                                                                      DogItemStore(6, Input.WetWeight);
+                                                                      DogItemStore(7, Input.SpecialWeight);})">
+                        Submit
+                    </button>
+                </EditForm>                    
             </div>
         </div>
     </Authorized>
@@ -35,29 +86,57 @@
     
 @code {
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+    
+    private bool formSubmitted = false;
+    
+    public Task HandleValidSubmit()
+    {
+        formSubmitted = true;
+        Input = new InputModel(); // Clear form fields
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 
-    public void DogItemStore()
+    public async Task DogItemStore(int itemID, int qty)
     {
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
         {
-            var newDogItem = new DogItem()
+            var updateQty = context.DogItems.First(a => a.ItemID == itemID);
             {
-                Type   = Input.TypeDog,
-                Weight = Input.WeightDog
-            };
+                updateQty.Weight += qty;
+                await context.SaveChangesAsync();
+            }
         }
     }
     
     private sealed class InputModel
     {
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input from the dropdown")]
-        [Display(Name = "TypeDog")]
-        public String TypeDog { get; set; }
+        [Required(ErrorMessage = "Should input a number")]
+        [Display(Name = "DryWeight")]
+        public int DryWeight { get; set; }
         
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input a number")]
-        [Display(Name = "WeightDog")]
-        public int WeightDog { get; set; }
+        [Required(ErrorMessage = "Should input a number")]
+        [Display(Name = "PuppyWeight")]
+        public int PuppyWeight { get; set; }
+        
+        [Required(ErrorMessage = "Should input a number")]
+        [Display(Name = "WeightControlWeight")]
+        public int WeightControlWeight { get; set; }
+        
+        [Required(ErrorMessage = "Should input a number")]
+        [Display(Name = "GrainFreeWeight")]
+        public int GrainFreeWeight { get; set; }
+        
+        [Required(ErrorMessage = "Should input a number")]
+        [Display(Name = "SmallBitesWeight")]
+        public int SmallBitesWeight { get; set; }
+        
+        [Required(ErrorMessage = "Should input a number")]
+        [Display(Name = "WetWeight")]
+        public int WetWeight { get; set; }
+        
+        [Required(ErrorMessage = "Should input a number")]
+        [Display(Name = "SpecialWeight")]
+        public int SpecialWeight { get; set; }
     }
 }
