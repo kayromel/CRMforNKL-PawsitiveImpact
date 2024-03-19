@@ -1,8 +1,10 @@
 ﻿@page "/"
 
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
 @using No_Kill_Inventory.Data
 @inject ApplicationDbContext Context
+@rendermode InteractiveServer
 
 @attribute [Authorize]
 
@@ -66,8 +68,9 @@
             <h2>Other</h2>
             <tr>
                 <th>Type</th>
-                <th>Desc</th>
+                <th>Description</th>
                 <th>Weight</th>
+                <th>Remove</th>
             </tr>
                 @foreach (var item in Context.OtherItems)
                 {
@@ -75,6 +78,7 @@
                         <td>@item.Animal</td>
                         <td>@item.Desc</td>
                         <td>@item.Weight</td>
+                        <td><button type="button" @onclick="(async () => await DeleteItem(item.ItemID))">Delete</button></td>
                     </tr>
                 }
         </table>
@@ -82,5 +86,14 @@
 </AuthorizeView>
 
 @code {
-    
+    private async Task DeleteItem(int ItemID)
+    {
+        var item = await Context.OtherItems.FindAsync(ItemID);
+        
+        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        {
+            context.OtherItems.Remove(item);
+            await context.SaveChangesAsync();
+        }
+    }
 }
