@@ -17,12 +17,18 @@
 
         <div class="row">
             <div class="col-md4">
-                <EditForm Model="Input" FormName="Cat" OnValidSubmit="() => HandleValidSubmit()" Context="editContext">
+                <EditForm Model="Input" FormName="Cat" OnValidSubmit="HandleValidSubmit" Context="editContext">
                     <DataAnnotationsValidator/>
                     @if (formSubmitted)
                     {
                         <div class="alert alert-success" role="alert">
                             Form successfully submitted!
+                        </div>
+                    }
+                    @if (formError)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            Animal or Description too long.
                         </div>
                     }
                     <hr/>
@@ -40,9 +46,7 @@
                             <td><InputNumber @bind-Value="Input.WeightOther"/></td>
                         </tr>
                     </table>
-                    <button type="submit" class="btn btn-primary" @onclick="(() => { OtherItemStore(); })">
-                        Submit
-                    </button>
+                    <button type="submit" class="btn btn-lg btn-primary">Submit</button>
                 </EditForm>
             </div>
         </div>
@@ -53,12 +57,22 @@
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
     
     private bool formSubmitted = false;
+
+    private bool formError = false;
     
     public Task HandleValidSubmit()
     {
-        formSubmitted = true;
-        Input = new InputModel(); // Clear form fields
-        StateHasChanged();
+        if (Input.Animal.Length < 100 && Input.Desc.Length < 500)
+        {
+            OtherItemStore();
+            formSubmitted = true;
+            Input = new InputModel(); // Clear form fields
+            StateHasChanged();
+        }
+        else
+        {
+            formError = true;
+        }
         return Task.CompletedTask;
     }
 
@@ -82,16 +96,16 @@
     private sealed class InputModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "Should input a String")]
+        [MaxLength(100, ErrorMessage = "Animal Too Long")]
         [Display(Name = "Animal")]
         public String Animal { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "Should input a String")]
+        [MaxLength(500, ErrorMessage = "Description Too Long")]
         [Display(Name = "Desc")]
         public String Desc { get; set; }
         
-        [Required(ErrorMessage = "Should input a number")]
+        [Required(ErrorMessage = "Input A Number")]
         [Display(Name = "WeightOther")]
         public int WeightOther { get; set; }
     }
