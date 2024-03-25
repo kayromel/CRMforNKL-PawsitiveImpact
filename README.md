@@ -1,6 +1,20 @@
 # NoKillInventory-CapstoneF23
 
-### Overview
+## Overview
 
-### Setup
+## Requirements
+
+- .NET 8 Runtime
+- Docker and Docker Compose
+- Tailscale VPN
+
+## Setup
+
+### EF Core
+
+### Docker
+
+### Tailscale
+
+## Using The App
 

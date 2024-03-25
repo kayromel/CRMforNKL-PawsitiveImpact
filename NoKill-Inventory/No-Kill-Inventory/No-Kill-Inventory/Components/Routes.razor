@@ -1,4 +1,8 @@
 ﻿@using No_Kill_Inventory.Components.Account.Shared
+
+@*
+    If not logged in, redirect user to the login page 
+*@
 <Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)">

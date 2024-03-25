@@ -10,6 +10,10 @@
 
 @attribute [Authorize(Roles = "Admin")]
 
+@*
+    This page is the admin dashboard, where they can view all current users and delete them if needed
+*@
+
 <style>
     table {
         border-collapse: collapse;
@@ -66,10 +70,13 @@
 
 @code
 {
+    // Deletes the selected user from the table
     private async Task DeleteUser(string UserID)
     {
+        // Finds the user based on their UserID
         var user = await Context.Users.FindAsync(UserID);
         
+        // Deletes them from the table and saves
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
         {
             context.Users.Remove(user);

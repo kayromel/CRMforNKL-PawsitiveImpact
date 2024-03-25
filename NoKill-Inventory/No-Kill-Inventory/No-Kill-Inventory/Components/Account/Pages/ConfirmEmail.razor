@@ -14,6 +14,13 @@
 <StatusMessage Message="@statusMessage"/>
 
 @code {
+    /*
+     * This page confirms email addresses.
+     *
+     * Currently, email addresses aren't required to confirm accounts,
+     * but can be used if an email service is set up
+     */
+    
     private string? statusMessage;
 
     [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;

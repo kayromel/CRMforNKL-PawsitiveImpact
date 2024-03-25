@@ -20,7 +20,9 @@
 
 <PageTitle>Register</PageTitle>
 
-@* Uncomment to lock registration behind login *@
+@*
+    This is the page where an admin can register a new user
+*@
 <AuthorizeView>
      <Authorized>
         <h1>Add User</h1>
@@ -32,6 +34,11 @@
                     <DataAnnotationsValidator/>
                     <hr/>
                     <ValidationSummary class="text-danger" role="alert"/>
+                    @*
+                        Each field binds an Input value to one of the attributes declared below in InputModel
+                        
+                        When the submit button is clicked, each vield is validated to see if it holds valid information
+                    *@
                     <div class="form-floating mb-3">
                         <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
                         <label for="email">Username</label>
@@ -116,6 +123,7 @@
         RedirectManager.RedirectTo(ReturnUrl);
     }
 
+    // Attempts to create a new user
     private ApplicationUser CreateUser()
     {
         try
@@ -139,6 +147,7 @@
         return (IUserEmailStore<ApplicationUser>)UserStore;
     }
 
+    // This defines the input fields in the InputForm on the page
     private sealed class InputModel
     {
         [Required]
