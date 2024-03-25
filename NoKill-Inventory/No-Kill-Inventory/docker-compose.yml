@@ -1,0 +1,40 @@
+﻿version: '3.9'
+services:
+  caddy_reverse_proxy:
+    # Use the caddy:latest image from Docker Hub
+    image: caddy:latest
+    # Restart policy: restart the container unless explicitly stopped
+    restart: unless-stopped
+    container_name: caddy_proxy
+    # ports for Caddy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      # Mount the host Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    # Connect the Caddy container caddy_net
+    networks:
+      - caddy_net
+        
+  no-kill-inventory:
+    image: no-kill-inventory
+    build:
+      context: .
+      dockerfile: No-Kill-Inventory/Dockerfile
+    pull_policy: always
+    restart: always
+    networks: 
+      - caddy_net
+
+volumes:
+  # persist data caddy_data
+  caddy_data:
+  # caddy_config Docker volume
+  caddy_config:
+
+networks:
+  # Docker network for Caddy
+  caddy_net:
