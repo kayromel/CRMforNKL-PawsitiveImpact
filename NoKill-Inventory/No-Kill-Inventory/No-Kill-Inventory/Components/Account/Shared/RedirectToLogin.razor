@@ -1,7 +1,7 @@
 ﻿@inject NavigationManager NavigationManager
 
 @code {
-
+    // Redirect to login if not logged in
     protected override void OnInitialized()
     {
         NavigationManager.NavigateTo($"Account/Login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}", forceLoad: true);

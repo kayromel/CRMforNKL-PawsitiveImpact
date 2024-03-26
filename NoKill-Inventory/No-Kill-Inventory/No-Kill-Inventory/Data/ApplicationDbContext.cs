@@ -4,28 +4,42 @@ using Microsoft.EntityFrameworkCore;
 
 namespace No_Kill_Inventory.Data;
 
+/**
+ * This is the DbContext, it is how the program talks to the database, instead of using SQL
+ */
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : IdentityDbContext<ApplicationUser>(options)
 {
+    // When starting, tell the program to use SQLite and where the .db file is located in the project
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=data/app.db");
     }
+    // Telling the context what the tables that have been created are
     public DbSet<OtherItem> OtherItems { get; set; }
     public DbSet<CatItem> CatItems { get; set; }
     public DbSet<DogItem> DogItems { get; set; }
     
-    
+    // When the model (schema) is created, do these things
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        
+        // Creating an object to hash passwords
         var hasher = new PasswordHasher<IdentityUser>();
 
+        // These are unused, but they generated random ID strings
         var adminId = Guid.NewGuid().ToString();
         var adminRoleId = Guid.NewGuid().ToString();
         var userRoleId = Guid.NewGuid().ToString();
         
+        /*
+         * In the Application user data, create a new user with the below data
+         *
+         * This creates the admin user
+         *
+         * Each field (ID, UserName, etc) is a column in the table that the data will go into
+         */
         modelBuilder.Entity<ApplicationUser>().HasData(
             new ApplicationUser()
             {
@@ -46,7 +60,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 AccessFailedCount = 0
             }
         );
-
+        
+        // In the IdentityRole table, create the Admin role with the below data
         modelBuilder.Entity<IdentityRole>().HasData(
             new IdentityRole()
             {
@@ -57,6 +72,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             }
         );
         
+        // In the IdentityROle table, create a User role with the below data
         modelBuilder.Entity<IdentityRole>().HasData(
             new IdentityRole()
             {
@@ -67,6 +83,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             }
         );
 
+        // In the IdentityUserRole table, createa a new IdentityUserRole with the below ID's
+        // This is so that the Admin role is assigned the correct priveleges
         modelBuilder.Entity<IdentityUserRole<string>>().HasData(
             new IdentityUserRole<string>
             {
