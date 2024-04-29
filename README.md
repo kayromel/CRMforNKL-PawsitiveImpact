@@ -2,7 +2,7 @@
 
 ## Overview
 
-The No Kill Louisville Inventory System is an ASP.NET Blazor web app that provides a simple system for No Kill Louisville to track their inventory with.
+The No Kill Louisville Inventory System is an ASP.NET Blazor web app that provides a simple system for No Kill Louisville to track their inventory.
 
 ## Requirements
 
