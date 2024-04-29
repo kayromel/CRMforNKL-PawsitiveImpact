@@ -49,6 +49,8 @@ Download Tailscale [here](https://tailscale.com/).
 
 ## Using The App
 
+See the User's Manual or Programmer's Manual in the /Documents/Implementation/ folder.
+
 ## Additional Help
 
 ### Migrating The Database
