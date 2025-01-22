@@ -17,31 +17,64 @@
     <nav class="flex-column">
         <AuthorizeView>
             <Authorized>
+                <!--Dashboard Link-->
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Dashboard
                     </NavLink>
                 </div>
+                
+                <!--Schedule Link-->
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="/InventoryEntry" Match="NavLinkMatch.All">
+                    <NavLink class="nav-link" href="/Schedule" Match="NavLinkMatch.All">
+                        <span class="bi bi-calendar-check-fill-nav-menu" aria-hidden="true"></span> Schedule
+                    </NavLink>
+                </div>
+
+                <!--Inventory Links-->
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/Inventory/ViewInventory" Match="NavLinkMatch.All">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> View Inventory
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/Inventory/InventoryEntry" Match="NavLinkMatch.All">
                         <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Inventory Entry
                     </NavLink>
                 </div>
+                
                 @* 
                     Restricting certain items in the nav bar to Admins only
                 *@
                 <AuthorizeView Roles="Admin" Context="adminContext">
+                    <!--User Management Links-->
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="auth">
-                            <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> User Management
+                        <NavLink class="nav-link" href="auth" Match="NavLinkMatch.All">
+                            <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Manage Users
                         </NavLink>
                     </div>
+
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="Account/Register">
-                            <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Add User
+                        <NavLink class="nav-link" href="Account/Register" Match="NavLinkMatch.All">
+                            <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Add Users
+                        </NavLink>
+                    </div>
+
+                    <!--Recipient Management Links-->
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="auth" Match="NavLinkMatch.All">
+                            <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Manage Recipients
+                        </NavLink>
+                    </div>
+
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="Account/Register" Match="NavLinkMatch.All">
+                            <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Add Recipients
                         </NavLink>
                     </div>
                 </AuthorizeView>
+                
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Manage/ChangePassword">
                         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
