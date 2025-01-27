@@ -4,12 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using No_Kill_Inventory.Components;
 using No_Kill_Inventory.Components.Account;
 using No_Kill_Inventory.Data;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddMudServices();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();

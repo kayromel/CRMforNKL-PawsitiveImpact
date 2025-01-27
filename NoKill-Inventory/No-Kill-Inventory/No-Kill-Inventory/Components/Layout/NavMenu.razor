@@ -5,101 +5,53 @@
     This page is the side bar navigation menu
 *@
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">No-Kill-Inventory</a>
-    </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <AuthorizeView>
+<MudNavMenu>
+    <AuthorizeView>
             <Authorized>
                 <!--Dashboard Link-->
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Dashboard
-                    </NavLink>
-                </div>
+                <MudNavLink Href="" Icon="@Icons.Material.Filled.House" Match="NavLinkMatch.All">Dashboard</MudNavLink>
                 
                 <!--Schedule Link-->
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="/Schedule" Match="NavLinkMatch.All">
-                        <span class="bi bi-calendar-check-fill-nav-menu" aria-hidden="true"></span> Schedule
-                    </NavLink>
-                </div>
+                <MudNavLink Href="/Schedule" Icon="@Icons.Material.Filled.CalendarMonth" Match="NavLinkMatch.All">Schedule</MudNavLink>
 
                 <!--Inventory Links-->
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="/Inventory/ViewInventory" Match="NavLinkMatch.All">
-                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> View Inventory
-                    </NavLink>
-                </div>
-
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="/Inventory/InventoryEntry" Match="NavLinkMatch.All">
-                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Inventory Entry
-                    </NavLink>
-                </div>
+                <MudNavGroup Title="Inventory" Icon="@Icons.Material.Filled.Inventory" Expanded="false">
+                    <MudNavLink Href="/Inventory/ViewInventory" Icon="@Icons.Material.Filled.Inventory" Match="NavLinkMatch.Prefix">View Inventory</MudNavLink>
+                    <MudNavLink Href="/Inventory/InventoryEntry" Icon="@Icons.Material.Filled.Inventory" Match="NavLinkMatch.Prefix">Enter Inventory</MudNavLink>
+                </MudNavGroup>
                 
                 @* 
                     Restricting certain items in the nav bar to Admins only
                 *@
                 <AuthorizeView Roles="Admin" Context="adminContext">
                     <!--User Management Links-->
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="auth" Match="NavLinkMatch.All">
-                            <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Manage Users
-                        </NavLink>
-                    </div>
-
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="Account/Register" Match="NavLinkMatch.All">
-                            <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Add Users
-                        </NavLink>
-                    </div>
+                    <MudNavGroup Title="Users" Icon="@Icons.Material.Filled.VerifiedUser" Expanded="false">
+                        <MudNavLink Href="auth" Icon="@Icons.Material.Filled.VerifiedUser" Match="NavLinkMatch.Prefix">Manage Users</MudNavLink>
+                        <MudNavLink Href="Account/Register" Icon="@Icons.Material.Filled.VerifiedUser" Match="NavLinkMatch.Prefix">Add Users</MudNavLink>
+                    </MudNavGroup>
 
                     <!--Recipient Management Links-->
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="auth" Match="NavLinkMatch.All">
-                            <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Manage Recipients
-                        </NavLink>
-                    </div>
-
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="Account/Register" Match="NavLinkMatch.All">
-                            <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Add Recipients
-                        </NavLink>
-                    </div>
+                    <MudNavGroup Title="Recipients" Icon="@Icons.Material.Filled.SupervisedUserCircle" Expanded="false">
+                        <MudNavLink Href="auth" Icon="@Icons.Material.Filled.SupervisedUserCircle" Match="NavLinkMatch.Prefix">Manage Recipients</MudNavLink>
+                        <MudNavLink Href="Account/Register" Icon="@Icons.Material.Filled.SupervisedUserCircle" Match="NavLinkMatch.Prefix">Add Recipients</MudNavLink>
+                    </MudNavGroup>
                 </AuthorizeView>
                 
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage/ChangePassword">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
-                </div>
+                <MudNavLink Href="Account/Manage/ChangePassword" Icon="@Icons.Material.Filled.ManageAccounts">@context.User.Identity?.Name</MudNavLink>
+                
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
                         <AntiforgeryToken/>
                         <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-                        </button>
+                        <MudButton StartIcon="@Icons.Material.Filled.Logout" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Logout</MudButton>
                     </form>
                 </div>
             </Authorized>
             <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
-                </div>
+                <MudNavLink Href="Account/Login" Icon="@Icons.Material.Filled.Login" Match="NavLinkMatch.All">Login</MudNavLink>
             </NotAuthorized>
         </AuthorizeView>
-    </nav>
-</div>
+</MudNavMenu>
 
 @code {
     private string? currentUrl;
