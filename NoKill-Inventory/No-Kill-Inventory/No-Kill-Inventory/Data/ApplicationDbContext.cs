@@ -20,6 +20,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<CatItem> CatItems { get; set; }
     public DbSet<DogItem> DogItems { get; set; }
     
+    public DbSet<Recipient> Recipients { get; set; }
+    
+    public DbSet<Pet> Pets { get; set; }
+    
     // When the model (schema) is created, do these things
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
