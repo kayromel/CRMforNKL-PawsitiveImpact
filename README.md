@@ -23,7 +23,7 @@ You can find the runtime and hosting bundle [here](https://dotnet.microsoft.com/
 ### EF Core
 
 The steps to initialize and create the SQLite database are:
-1. Open a terminal and cd to the `NoKill-Inventory/No-Kill-Inventory/` directory
+1. Open a terminal and cd to the `NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory` directory
 2. Run the command `dotnet ef database update`
 3. Wait for the command to finish, and verify the `app.db` file has been created in the `NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/Data/` directory
 
