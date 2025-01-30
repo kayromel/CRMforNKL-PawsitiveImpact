@@ -1,338 +1,95 @@
 ﻿@page "/Recipients/Entry"
 
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.EntityFrameworkCore
+@using System.ComponentModel.DataAnnotations
 @using No_Kill_Inventory.Data
+@using Microsoft.AspNetCore.Authorization
+
 @inject ApplicationDbContext Context
+@inject NavigationManager NavigationManager
 
 @attribute [Authorize]
 
-<style>
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-    th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-    }
-    tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-    tr:hover {
-        background-color: #f1f1f1;
-        cursor: pointer;
-    }
-    .expanded-row {
-        background-color: #f4f4f4;
-    }
-    .details {
-        padding: 10px;
-        border-top: 1px solid #ddd;
-    }
-    .search-bar {
-        margin-bottom: 20px;
-        width: 300px;
-    }
-</style>
+<PageTitle>Register</PageTitle>
 
-<PageTitle>Customers</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <h1>Add Recipient</h1>
 
-<h1>Customers</h1>
+        <MudGrid>
+            <MudItem xs="12" sm="7">
+                <MudPaper Class="pa-4">
+                    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" OnValidSubmit="AddRecipient">
+                        <MudText Typo="Typo.h5">Add New Recipient</MudText>
 
-<div>
-    <input type="text" @bind="SearchTerm" class="search-bar" placeholder="Search by name..." />
-</div>
+                        <MudTextField T="string" Label="First Name" Required="true" RequiredError="First name is required!" @bind-Value="newRecipient.FirstName" />
+                        <MudTextField T="string" Label="Last Name" Required="true" RequiredError="Last name is required!" @bind-Value="newRecipient.LastName" />
+                        <MudTextField T="string" Label="Phone Number" Required="true" RequiredError="Phone number is required!" @bind-Value="newRecipient.PhoneNumber"
+                                      Validation="@(new Func<string, string>(ValidatePhoneNumber))"/>
+                        <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
+                                      Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" @bind-Value="newRecipient.Email"/>
 
-<table>
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Phone</th>
-        <th>Email</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var customer in FilteredCustomers)
-    {
-        <tr @onclick="() => ToggleCustomerDetails(customer)">
-            <td>@customer.Name</td>
-            <td>@customer.PhoneNumber</td>
-            <td>@customer.Email</td>
-        </tr>
-        @if (ExpandedCustomer == customer)
-        {
-            <tr class="expanded-row">
-                <td colspan="3">
-                    <div class="details">
-                        <h4>Pets</h4>
-                        <ul>
-                            @foreach (var pet in customer.Pets)
-                            {
-                                <li>@pet.Type: @pet.Name</li>
-                            }
-                        </ul>
-                        <h4>Food Preferences</h4>
-                        <ul>
-                            @foreach (var food in customer.FoodPreferences)
-                            {
-                                <li>@food</li>
-                            }
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        }
-    }
-    </tbody>
-</table>
+                        <div class="d-flex align-center justify-space-between mt-4">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="@AddRecipient" Class="ml-auto" Type="submit">Submit</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@ResetForm" Class="ml-2">Reset</MudButton>
+                        </div>
+                    </MudForm>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="5">
+                <MudPaper Class="pa-4 mud-height-full">
+                    <MudText Typo="Typo.subtitle2">@($"Errors ({errors.Length})")</MudText>
+                    @foreach (var error in errors)
+                    {
+                        <MudText Color="@Color.Error">@error</MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+
+    </Authorized>
+
+    <NotAuthorized></NotAuthorized>
+</AuthorizeView>
 
 @code {
-    private List<Customer> Customers { get; set; } = new();
-    private string SearchTerm { get; set; } = string.Empty;
-    private Customer? ExpandedCustomer { get; set; }
+    private MudForm form;
+    private bool success;
+    private string[] errors = { };
 
-    protected override void OnInitialized()
+    private Recipient newRecipient = new Recipient();
+
+    // Function to validate phone number format
+    private string ValidatePhoneNumber(string phone)
     {
-        // Example customers
-        Customers = new List<Customer>
-        {
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-        };
+        if (string.IsNullOrWhiteSpace(phone))
+            return "Phone number is required!";
+        if (!System.Text.RegularExpressions.Regex.IsMatch(phone, @"^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"))
+            return "Phone number is improperly formatted";
+        return null;
     }
 
-    private List<Customer> FilteredCustomers => Customers
-        .Where(c => string.IsNullOrWhiteSpace(SearchTerm) || c.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
-        .ToList();
-
-    private void ToggleCustomerDetails(Customer customer)
+    // Function to add a new recipient to the database
+    private async Task AddRecipient()
     {
-        if (ExpandedCustomer == customer)
+        try
         {
-            ExpandedCustomer = null;
+            Context.Recipients.Add(newRecipient);
+            await Context.SaveChangesAsync();
+
+            // Reset form and navigate
+            ResetForm();
+            NavigationManager.NavigateTo("/recipients"); // Change this to your recipient list page
         }
-        else
+        catch (Exception ex)
         {
-            ExpandedCustomer = customer;
+            errors = new[] { "Error adding recipient: " + ex.Message };
         }
     }
 
-    public class Customer
+    // Reset form fields
+    private void ResetForm()
     {
-        public string Name { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public List<Pet> Pets { get; set; } = new();
-        public List<string> FoodPreferences { get; set; } = new();
-    }
-
-    public class Pet
-    {
-        public string Type { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
+        newRecipient = new Recipient();
+        form.ResetAsync();
     }
 }
