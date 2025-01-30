@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices.JavaScript;
-using Microsoft.AspNetCore.Components;
 
 namespace No_Kill_Inventory.Data;
 
