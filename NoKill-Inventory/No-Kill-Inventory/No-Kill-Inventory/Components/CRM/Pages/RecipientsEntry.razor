@@ -5,7 +5,6 @@
 @using Microsoft.AspNetCore.Authorization
 
 @inject ApplicationDbContext Context
-@inject NavigationManager NavigationManager
 
 @attribute [Authorize]
 
@@ -29,7 +28,7 @@
                                       Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" @bind-Value="newRecipient.Email"/>
 
                         <div class="d-flex align-center justify-space-between mt-4">
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="@AddRecipient" Class="ml-auto" Type="submit">Submit</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="AddRecipient" Class="ml-auto" Type="submit">Submit</MudButton>
                             <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@ResetForm" Class="ml-2">Reset</MudButton>
                         </div>
                     </MudForm>
@@ -71,6 +70,10 @@
     // Function to add a new recipient to the database
     private async Task AddRecipient()
     {
+        Console.WriteLine($"First Name: {newRecipient.FirstName}");
+        Console.WriteLine($"Last Name: {newRecipient.LastName}");
+        Console.WriteLine($"Email: {newRecipient.Email}");
+        Console.WriteLine($"Phone: {newRecipient.PhoneNumber}");
         try
         {
             Context.Recipients.Add(newRecipient);
@@ -78,7 +81,7 @@
 
             // Reset form and navigate
             ResetForm();
-            NavigationManager.NavigateTo("/recipients"); // Change this to your recipient list page
+            // NavigationManager.NavigateTo("/recipients"); // Change this to your recipient list page
         }
         catch (Exception ex)
         {
