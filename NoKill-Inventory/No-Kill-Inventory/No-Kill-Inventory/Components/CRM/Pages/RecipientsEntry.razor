@@ -1,0 +1,98 @@
+﻿@page "/Recipients/Entry"
+
+@using System.ComponentModel.DataAnnotations
+@using No_Kill_Inventory.Data
+@using Microsoft.AspNetCore.Authorization
+
+@inject ApplicationDbContext Context
+
+@attribute [Authorize]
+
+<PageTitle>Register</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Add Recipient</h1>
+
+        <MudGrid>
+            <MudItem xs="12" sm="7">
+                <MudPaper Class="pa-4">
+                    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" OnValidSubmit="AddRecipient">
+                        <MudText Typo="Typo.h5">Add New Recipient</MudText>
+
+                        <MudTextField T="string" Label="First Name" Required="true" RequiredError="First name is required!" @bind-Value="newRecipient.FirstName" />
+                        <MudTextField T="string" Label="Last Name" Required="true" RequiredError="Last name is required!" @bind-Value="newRecipient.LastName" />
+                        <MudTextField T="string" Label="Phone Number" Required="true" RequiredError="Phone number is required!" @bind-Value="newRecipient.PhoneNumber"
+                                      Validation="@(new Func<string, string>(ValidatePhoneNumber))"/>
+                        <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
+                                      Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" @bind-Value="newRecipient.Email"/>
+
+                        <div class="d-flex align-center justify-space-between mt-4">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="AddRecipient" Class="ml-auto" Type="submit">Submit</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@ResetForm" Class="ml-2">Reset</MudButton>
+                        </div>
+                    </MudForm>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="5">
+                <MudPaper Class="pa-4 mud-height-full">
+                    <MudText Typo="Typo.subtitle2">@($"Errors ({errors.Length})")</MudText>
+                    @foreach (var error in errors)
+                    {
+                        <MudText Color="@Color.Error">@error</MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+
+    </Authorized>
+
+    <NotAuthorized></NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private MudForm form;
+    private bool success;
+    private string[] errors = { };
+
+    private Recipient newRecipient = new Recipient();
+
+    // Function to validate phone number format
+    private string ValidatePhoneNumber(string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
+            return "Phone number is required!";
+        if (!System.Text.RegularExpressions.Regex.IsMatch(phone, @"^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"))
+            return "Phone number is improperly formatted";
+        return null;
+    }
+
+    // Function to add a new recipient to the database
+    private async Task AddRecipient()
+    {
+        Console.WriteLine($"First Name: {newRecipient.FirstName}");
+        Console.WriteLine($"Last Name: {newRecipient.LastName}");
+        Console.WriteLine($"Email: {newRecipient.Email}");
+        Console.WriteLine($"Phone: {newRecipient.PhoneNumber}");
+        try
+        {
+            Context.Recipients.Add(newRecipient);
+            await Context.SaveChangesAsync();
+
+            // Reset form and navigate
+            ResetForm();
+            // NavigationManager.NavigateTo("/recipients"); // Change this to your recipient list page
+        }
+        catch (Exception ex)
+        {
+            errors = new[] { "Error adding recipient: " + ex.Message };
+        }
+    }
+
+    // Reset form fields
+    private void ResetForm()
+    {
+        newRecipient = new Recipient();
+        form.ResetAsync();
+    }
+}

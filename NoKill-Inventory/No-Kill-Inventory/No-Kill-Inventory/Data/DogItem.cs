@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices.JavaScript;
 
 namespace No_Kill_Inventory.Data;
 public class DogItem
