@@ -15,7 +15,7 @@
                 <MudNavLink Href="/Schedule" Icon="@Icons.Material.Filled.CalendarMonth" Match="NavLinkMatch.All">Schedule</MudNavLink>
 
                 <!--Inventory Links-->
-                <MudNavGroup Title="Inventory" Icon="@Icons.Material.Filled.Inventory" Expanded="false">
+                <MudNavGroup Title="Inventory" Icon="@Icons.Material.Filled.Inventory" Expanded="true">
                     <MudNavLink Href="/Inventory/ViewInventory" Icon="@Icons.Material.Filled.Inventory" Match="NavLinkMatch.Prefix">View Inventory</MudNavLink>
                     <MudNavLink Href="/Inventory/InventoryEntry" Icon="@Icons.Material.Filled.Inventory" Match="NavLinkMatch.Prefix">Enter Inventory</MudNavLink>
                 </MudNavGroup>
@@ -25,13 +25,13 @@
                 *@
                 <AuthorizeView Roles="Admin" Context="adminContext">
                     <!--User Management Links-->
-                    <MudNavGroup Title="Users" Icon="@Icons.Material.Filled.VerifiedUser" Expanded="false">
+                    <MudNavGroup Title="Users" Icon="@Icons.Material.Filled.VerifiedUser" Expanded="true">
                         <MudNavLink Href="auth" Icon="@Icons.Material.Filled.VerifiedUser" Match="NavLinkMatch.Prefix">Manage Users</MudNavLink>
                         <MudNavLink Href="Account/Register" Icon="@Icons.Material.Filled.VerifiedUser" Match="NavLinkMatch.Prefix">Add Users</MudNavLink>
                     </MudNavGroup>
 
                     <!--Recipient Management Links-->
-                    <MudNavGroup Title="Recipients" Icon="@Icons.Material.Filled.SupervisedUserCircle" Expanded="false">
+                  <MudNavGroup Title="Recipients" Icon="@Icons.Material.Filled.SupervisedUserCircle" Expanded="true">
                         <MudNavLink Href="/Recipients/View" Icon="@Icons.Material.Filled.SupervisedUserCircle" Match="NavLinkMatch.Prefix">Manage Recipients</MudNavLink>
                         <MudNavLink Href="/Recipients/Entry" Icon="@Icons.Material.Filled.SupervisedUserCircle" Match="NavLinkMatch.Prefix">Add Recipients</MudNavLink>
                     </MudNavGroup>

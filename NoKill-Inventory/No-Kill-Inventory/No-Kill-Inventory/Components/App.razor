@@ -43,8 +43,7 @@
     private bool ShouldUseInteractiveMode()
     {
         // Check if the user is logged in and not navigating to ChangePassword
-        return isUserLoggedIn && !currentUrl.Contains("Account", StringComparison.OrdinalIgnoreCase) && !currentUrl.Contains("Account/Register", StringComparison.OrdinalIgnoreCase);
+        return isUserLoggedIn && !currentUrl.Contains("Account", StringComparison.OrdinalIgnoreCase);
     }
 }
-
 </html>
