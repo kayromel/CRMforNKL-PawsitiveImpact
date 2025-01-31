@@ -36,6 +36,8 @@
                         <MudNavLink Href="Account/Register" Icon="@Icons.Material.Filled.SupervisedUserCircle" Match="NavLinkMatch.Prefix">Add Recipients</MudNavLink>
                     </MudNavGroup>
                 </AuthorizeView>
+
+                <MudNavLink Href="/Notifications" Icon="@Icons.Material.Filled.NotificationsActive" Match="NavLinkMatch.All">Notifications</MudNavLink>
                 
                 <MudNavLink Href="Account/Manage/ChangePassword" Icon="@Icons.Material.Filled.ManageAccounts">@context.User.Identity?.Name</MudNavLink>
                 
