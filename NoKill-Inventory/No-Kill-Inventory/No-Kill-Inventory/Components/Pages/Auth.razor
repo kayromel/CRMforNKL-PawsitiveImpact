@@ -79,8 +79,11 @@
         // Deletes them from the table and saves
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
         {
-            context.Users.Remove(user);
-            await context.SaveChangesAsync();
+            if (user != null)
+            {
+                context.Users.Remove(user);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

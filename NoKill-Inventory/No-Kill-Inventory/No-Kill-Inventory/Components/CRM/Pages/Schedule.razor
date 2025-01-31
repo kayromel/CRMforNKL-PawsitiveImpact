@@ -1,0 +1,17 @@
+@page "/Schedule"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using No_Kill_Inventory.Data
+@inject ApplicationDbContext Context
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+<AuthorizeView>
+    <h3>Schedule</h3>
+</AuthorizeView>
+
+@code {
+    
+}
