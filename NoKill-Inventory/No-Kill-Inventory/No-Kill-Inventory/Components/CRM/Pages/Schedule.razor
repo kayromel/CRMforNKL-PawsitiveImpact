@@ -143,7 +143,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var recipient in recipients.Where(r => r.Status != "Completed"))
+                @foreach (var recipient in recipients.Where(r => r.Status != RecipientStatus.Completed))
                 {
                     <tr>
                         <td>@recipient.FirstName</td>
@@ -171,7 +171,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var recipient in recipients.Where(r => r.Status == "Completed"))
+                @foreach (var recipient in recipients.Where(r => r.Status == RecipientStatus.Completed))
                 {
                     <tr>
                         <td>@recipient.FirstName</td>
@@ -231,14 +231,14 @@ protected override async Task OnInitializedAsync()
                         {
                             FirstName = firstName,
                             LastName = lastName,
-                            Status = "Not Started"
+                            Status = RecipientStatus.NotStarted
                         };
 
                         Context.Recipients.Add(newRecipient);
                     }
                     else
                     {
-                        existingRecipient.Status = existingRecipient.Status ?? "Not Started";
+                        // existingRecipient.Status = existingRecipient.Status ?? "Not Started";
                         Context.Recipients.Update(existingRecipient);
                     }
                 }
@@ -277,17 +277,17 @@ protected override async Task OnInitializedAsync()
 
     private async Task UpdateRecipientStatus(Recipient recipient)
 {
-    if (recipient.Status == "Not Started")
+    if (recipient.Status == RecipientStatus.NotStarted)
     {
-        recipient.Status = "In Progress";
+        recipient.Status = RecipientStatus.InProgress;
     }
-    else if (recipient.Status == "In Progress")
+    else if (recipient.Status == RecipientStatus.InProgress)
     {
-        recipient.Status = "Completed";
+        recipient.Status = RecipientStatus.Completed;
     }
     else
     {
-        recipient.Status = "Not Started";
+        recipient.Status = RecipientStatus.NotStarted;
     }
 
     Context.Recipients.Update(recipient);
@@ -376,7 +376,7 @@ private async Task ResetAllRecipients()
     // Reset all recipient statuses to "Not Started"
     foreach (var recipient in recipients)
     {
-        recipient.Status = "Not Started";
+        recipient.Status = RecipientStatus.NotStarted;
         Context.Recipients.Update(recipient);
     }
 

@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace No_Kill_Inventory.Data;
 public class Recipient
@@ -13,6 +13,8 @@ public class Recipient
     public String PhoneNumber { get; set; }
 
     public String Email { get; set; }
+    
+    public RecipientStatus Status { get; set; }
     
     public Pet[] Pets { get; set; }
 }
