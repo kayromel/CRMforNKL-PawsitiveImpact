@@ -1,12 +1,18 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
+namespace No_Kill_Inventory.Data;
 public class Recipient
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Ensures auto-increment behavior
-    public int Id { get; set; } // Primary key, auto-incremented
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Status { get; set; }
+    public int Id { get; set; }
+    
+    public String FirstName { get; set; }
+    
+    public String LastName { get; set; }
+    
+    public String PhoneNumber { get; set; }
+
+    public String Email { get; set; }
+    
+    public Pet[] Pets { get; set; }
 }

@@ -15,36 +15,67 @@
 @*
     This page is the login page for users and admins
 *@
-<h1>Log in</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <StatusMessage Message="@errorMessage"/>
-            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
-                <DataAnnotationsValidator/>
-                <hr/>
-                <ValidationSummary class="text-danger" role="alert"/>
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Username" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
-                    <label for="username" class="form-label">Username</label>
-                    <ValidationMessage For="() => Input.Username" class="text-danger"/>
+<div class="d-flex flex-column gap-y-3">
+    <div class="d-flex flex-column">
+        <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login" Enhance>
+            <DataAnnotationsValidator/>
+            <MudText Typo="Typo.h4" GutterBottom="true">Login</MudText>
+            <StatusMessage Message="@errorMessage" Error="true"/>
+            
+            <div class="mud-input-control mud-input-input-control my-4">
+                <div class="mud-input-control-input-container">
+                    <!--!--><!--!-->
+                    <div class="mud-input mud-input-outlined mud-shrink">
+                        <InputText @bind-Value="Input.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="Username"/>
+                        <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
+                        <!--!-->
+                        <div class="mud-input-outlined-border"></div>
+                    </div>
+                    <!--!-->
+                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="userName">Username</label>
                 </div>
-                <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password"/>
-                    <label for="password" class="form-label">Password</label>
-                    <ValidationMessage For="() => Input.Password" class="text-danger"/>
+                <div class="mud-input-helper-text mud-input-error">
+                    <div class="d-flex">
+                        <ValidationMessage For="() => Input.UserName" class="mud-input-error"/>
+                    </div>
                 </div>
-                <div class="checkbox mb-3">
-                    <label class="form-label">
-                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input"/>
-                        Remember me
-                    </label>
+            </div>
+            
+            <div class="mud-input-control mud-input-input-control my-4">
+                <div class="mud-input-control-input-container">
+                    <!--!--><!--!-->
+                    <div class="mud-input mud-input-outlined mud-shrink">
+                        <InputText type="password" @bind-Value="Input.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="Password"/>
+                        <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
+                        <!--!-->
+                        <div class="mud-input-outlined-border"></div>
+                    </div>
+                    <!--!-->
+                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="password">Password</label>
                 </div>
-                <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                <div class="mud-input-helper-text mud-input-error">
+                    <div class="d-flex">
+                        <ValidationMessage For="() => Input.Password" class="mud-input-error"/>
+                    </div>
                 </div>
-            </EditForm>
-        </section>
+            </div>
+
+            <div Class="d-flex justify-space-between align-center mb-1">
+                <label class="form-label">
+                    <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input"/>
+                    Remember Me
+                </label>
+            </div>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       ButtonType="ButtonType.Submit"
+                       FullWidth="true">
+                <MudText>Sign In</MudText>
+            </MudButton>
+        </EditForm>
+
     </div>
 </div>
 
@@ -59,7 +90,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (HttpMethods.IsGet(HttpContext.Request.Method))
+        if (HttpContext is not null && HttpMethods.IsGet(HttpContext.Request.Method))
         {
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
@@ -70,7 +101,7 @@
     {
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+        var result = await SignInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: true);
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
@@ -95,13 +126,12 @@
 
     private sealed class InputModel
     {
-        [Required] public string Username { get; set; } = "";
+        [Required(ErrorMessage = "User name cannot be empty")]
+        public string UserName { get; set; } = "";
 
-        [Required]
-        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Password cannot be empty")]
         public string Password { get; set; } = "";
 
-        [Display(Name = "Remember me?")] public bool RememberMe { get; set; }
+        public bool RememberMe { get; set; } = true;
     }
-
 }

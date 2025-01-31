@@ -24,6 +24,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     
     public DbSet<Recipient> Recipients { get; set; }
     
+    public DbSet<Recipient> Recipients { get; set; }
+    
+    public DbSet<Pet> Pets { get; set; }
+    
     // When the model (schema) is created, do these things
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -96,6 +100,50 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                RoleId = "fab4fac1-c546-41de-aebc-a14da6895711"
             }
         );
+
+        modelBuilder.Entity<Recipient>().HasData(
+            new Recipient()
+            {
+                Id = 1,
+                FirstName = "Billy",
+                LastName = "Madison",
+                PhoneNumber = "555-555-5555",
+                Email = "billy@gmail.com"
+            },
+            new Recipient()
+            {
+                Id = 2,
+                FirstName = "Sarah",
+                LastName = "Connor",
+                PhoneNumber = "444-123-9876",
+                Email = "sarahc@gmail.com"
+            },
+            new Recipient()
+            {
+                Id = 3,
+                FirstName = "John",
+                LastName = "Doe",
+                PhoneNumber = "333-456-7890",
+                Email = "johndoe@example.com"
+            },
+            new Recipient()
+            {
+                Id = 4,
+                FirstName = "Jane",
+                LastName = "Smith",
+                PhoneNumber = "222-654-3210",
+                Email = "janesmith@hotmail.com"
+            },
+            new Recipient()
+            {
+                Id = 5,
+                FirstName = "Michael",
+                LastName = "Scott",
+                PhoneNumber = "111-777-8888",
+                Email = "mscott@dundermifflin.com"
+            });
+        
+        
 
         modelBuilder.Entity<DogItem>().HasData(
             new DogItem()
@@ -184,5 +232,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 Type = "Special",
                 Weight = 0
             });
+        
     }
 }
