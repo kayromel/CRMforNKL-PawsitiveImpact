@@ -19,6 +19,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<OtherItem> OtherItems { get; set; }
     public DbSet<CatItem> CatItems { get; set; }
     public DbSet<DogItem> DogItems { get; set; }
+
+    public DbSet<Volunteer> Volunteers { get; set; }
+    
+    public DbSet<Recipient> Recipients { get; set; }
     
     public DbSet<Recipient> Recipients { get; set; }
     
