@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace No_Kill_Inventory.Migrations
+namespace NoKillInventory.Migrations
 {
     /// <inheritdoc />
-    public partial class Lengths : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace No_Kill_Inventory.Migrations
                 keyColumn: "Id",
                 keyValue: "b74ddd14-6340-4840-95c2-db12554843e5",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "2ab830ef-168b-4b06-8e81-32e994b6c940", "AQAAAAIAAYagAAAAEIaOXzntZdCK5dGWUtXeYu5gOU8fFfJs86/HlR5WNP/EOk431crSJRdyQuESnVIdPA==", "f22202e5-051d-4382-bc53-7b440341e006" });
+                values: new object[] { "f318a940-3616-4bce-99f1-92a513c3fe48", "AQAAAAIAAYagAAAAEK6yKym4eFtbcNTzrk7Gy61BxXdfixkSz5KE+iwysAUWBD1ZXsgGJVP1LxMh6ANyEA==", "f8cfe669-1e7a-470f-91e4-ae3676119d0c" });
         }
 
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace No_Kill_Inventory.Migrations
                 keyColumn: "Id",
                 keyValue: "b74ddd14-6340-4840-95c2-db12554843e5",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "b83bd6ff-d0f6-4bc1-8174-a0d677488ca0", "AQAAAAIAAYagAAAAEDkeBrjsTK3Zi+7EID4KQHJW+s/j02Km3OwmzmoNwG7Mq8UySVIwC07F2jFF9Aeo4Q==", "487e0faf-3bb3-4b60-85d3-d3af35a9bed4" });
+                values: new object[] { "3c81c7f1-14f4-43b7-b173-2f8ba4732b45", "AQAAAAIAAYagAAAAEHnwn6S61R6grDslytR6urmFIrgWOvTkVGvstTH1GDfAuRhKYOxEc0LBpQey0klcrA==", "b7f23999-2429-439c-b6a0-64f2500e6b38" });
         }
     }
 }

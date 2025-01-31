@@ -8,11 +8,11 @@ using No_Kill_Inventory.Data;
 
 #nullable disable
 
-namespace No_Kill_Inventory.Migrations
+namespace NoKillInventory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240220185335_DogCatItems")]
-    partial class DogCatItems
+    [Migration("20250131032633_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,15 +239,15 @@ namespace No_Kill_Inventory.Migrations
                         {
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f4d13749-b218-4f00-968c-85f68f16ef49",
+                            ConcurrencyStamp = "f318a940-3616-4bce-99f1-92a513c3fe48",
                             Email = "adminuser",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMINUSER",
                             NormalizedUserName = "ADMINUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPu/Vd45DRRsb25MdOvFkrJVZ7u51BMCFNqTAd3khWqTIPuBKw9+GSlSlXz1wyrH6g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEK6yKym4eFtbcNTzrk7Gy61BxXdfixkSz5KE+iwysAUWBD1ZXsgGJVP1LxMh6ANyEA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "64708746-a16c-4ee2-af0f-3e76dbb572b9",
+                            SecurityStamp = "f8cfe669-1e7a-470f-91e4-ae3676119d0c",
                             TwoFactorEnabled = false,
                             UserName = "adminuser"
                         });
@@ -259,24 +259,42 @@ namespace No_Kill_Inventory.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Adult")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Kitty")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Special")
+                    b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Weight")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Wet")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("ItemID");
 
                     b.ToTable("CatItems");
+
+                    b.HasData(
+                        new
+                        {
+                            ItemID = 1,
+                            Type = "Adult",
+                            Weight = 0
+                        },
+                        new
+                        {
+                            ItemID = 2,
+                            Type = "Kitty",
+                            Weight = 0
+                        },
+                        new
+                        {
+                            ItemID = 3,
+                            Type = "Wet",
+                            Weight = 0
+                        },
+                        new
+                        {
+                            ItemID = 4,
+                            Type = "Special",
+                            Weight = 0
+                        });
                 });
 
             modelBuilder.Entity("No_Kill_Inventory.Data.DogItem", b =>
@@ -285,81 +303,209 @@ namespace No_Kill_Inventory.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("GrainFree")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Puppy")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("SmBites")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Special")
+                    b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Weight")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Wet")
+                    b.HasKey("ItemID");
+
+                    b.ToTable("DogItems");
+
+                    b.HasData(
+                        new
+                        {
+                            ItemID = 1,
+                            Type = "Adult",
+                            Weight = 0
+                        },
+                        new
+                        {
+                            ItemID = 2,
+                            Type = "Puppy",
+                            Weight = 0
+                        },
+                        new
+                        {
+                            ItemID = 3,
+                            Type = "Weight Control",
+                            Weight = 0
+                        },
+                        new
+                        {
+                            ItemID = 4,
+                            Type = "Grain Free",
+                            Weight = 0
+                        },
+                        new
+                        {
+                            ItemID = 5,
+                            Type = "Small Bites",
+                            Weight = 0
+                        },
+                        new
+                        {
+                            ItemID = 6,
+                            Type = "Wet",
+                            Weight = 0
+                        },
+                        new
+                        {
+                            ItemID = 7,
+                            Type = "Special",
+                            Weight = 0
+                        });
+                });
+
+            modelBuilder.Entity("No_Kill_Inventory.Data.OtherItem", b =>
+                {
+                    b.Property<int>("ItemID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("WgtCtrl")
+                    b.Property<string>("Animal")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Desc")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Weight")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ItemID");
 
-                    b.ToTable("DogItems");
+                    b.ToTable("OtherItems");
                 });
 
-            modelBuilder.Entity("No_Kill_Inventory.Data.Item", b =>
+            modelBuilder.Entity("No_Kill_Inventory.Data.Pet", b =>
                 {
-                    b.Property<int>("itemID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Age")
+                    b.Property<int>("FoodAmount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FoodType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Animal")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Brand")
+                    b.Property<int>("RecipientId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("Pets");
+                });
+
+            modelBuilder.Entity("No_Kill_Inventory.Data.Recipient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("DryWet")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("FoodWeight")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("GrainFree")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Junk")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Prescription")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PrescriptionDesc")
+                    b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Qty")
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("SmallBites")
+                    b.HasKey("Id");
+
+                    b.ToTable("Recipients");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "billy@gmail.com",
+                            FirstName = "Billy",
+                            LastName = "Madison",
+                            PhoneNumber = "555-555-5555",
+                            Status = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "sarahc@gmail.com",
+                            FirstName = "Sarah",
+                            LastName = "Connor",
+                            PhoneNumber = "444-123-9876",
+                            Status = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Email = "johndoe@example.com",
+                            FirstName = "John",
+                            LastName = "Doe",
+                            PhoneNumber = "333-456-7890",
+                            Status = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Email = "janesmith@hotmail.com",
+                            FirstName = "Jane",
+                            LastName = "Smith",
+                            PhoneNumber = "222-654-3210",
+                            Status = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Email = "mscott@dundermifflin.com",
+                            FirstName = "Michael",
+                            LastName = "Scott",
+                            PhoneNumber = "111-777-8888",
+                            Status = 0
+                        });
+                });
+
+            modelBuilder.Entity("Volunteer", b =>
+                {
+                    b.Property<int>("VolunteerID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("WeightCtrl")
+                    b.Property<bool>("IsAvailable")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("itemID");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.ToTable("Items");
+                    b.HasKey("VolunteerID");
+
+                    b.ToTable("Volunteers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -411,6 +557,22 @@ namespace No_Kill_Inventory.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("No_Kill_Inventory.Data.Pet", b =>
+                {
+                    b.HasOne("No_Kill_Inventory.Data.Recipient", "Recipient")
+                        .WithMany("Pets")
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipient");
+                });
+
+            modelBuilder.Entity("No_Kill_Inventory.Data.Recipient", b =>
+                {
+                    b.Navigation("Pets");
                 });
 #pragma warning restore 612, 618
         }

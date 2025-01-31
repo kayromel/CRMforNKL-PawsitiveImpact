@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace No_Kill_Inventory.Migrations
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace NoKillInventory.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateIdentitySchema : Migration
+    public partial class Tables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +22,10 @@ namespace No_Kill_Inventory.Migrations
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
                 },
-                constraints: table => { table.PrimaryKey("PK_AspNetRoles", x => x.Id); });
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
@@ -42,7 +47,84 @@ namespace No_Kill_Inventory.Migrations
                     LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
-                constraints: table => { table.PrimaryKey("PK_AspNetUsers", x => x.Id); });
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CatItems",
+                columns: table => new
+                {
+                    ItemID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    Weight = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CatItems", x => x.ItemID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DogItems",
+                columns: table => new
+                {
+                    ItemID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    Weight = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DogItems", x => x.ItemID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OtherItems",
+                columns: table => new
+                {
+                    ItemID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Animal = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Desc = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
+                    Weight = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OtherItems", x => x.ItemID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Recipients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recipients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Volunteers",
+                columns: table => new
+                {
+                    VolunteerID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Volunteers", x => x.VolunteerID);
+                });
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
@@ -150,6 +232,85 @@ namespace No_Kill_Inventory.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Pets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    FoodType = table.Column<string>(type: "TEXT", nullable: false),
+                    FoodAmount = table.Column<int>(type: "INTEGER", nullable: false),
+                    RecipientId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pets_Recipients_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "Recipients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "c7b013f0-5201-4317-abd8-c211f91b7330", "2", "User", "User" },
+                    { "fab4fac1-c546-41de-aebc-a14da6895711", "1", "Admin", "Admin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "b74ddd14-6340-4840-95c2-db12554843e5", 0, "3c81c7f1-14f4-43b7-b173-2f8ba4732b45", "adminuser", true, true, null, "ADMINUSER", "ADMINUSER", "AQAAAAIAAYagAAAAEHnwn6S61R6grDslytR6urmFIrgWOvTkVGvstTH1GDfAuRhKYOxEc0LBpQey0klcrA==", null, false, "b7f23999-2429-439c-b6a0-64f2500e6b38", false, "adminuser" });
+
+            migrationBuilder.InsertData(
+                table: "CatItems",
+                columns: new[] { "ItemID", "Type", "Weight" },
+                values: new object[,]
+                {
+                    { 1, "Adult", 0 },
+                    { 2, "Kitty", 0 },
+                    { 3, "Wet", 0 },
+                    { 4, "Special", 0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "DogItems",
+                columns: new[] { "ItemID", "Type", "Weight" },
+                values: new object[,]
+                {
+                    { 1, "Adult", 0 },
+                    { 2, "Puppy", 0 },
+                    { 3, "Weight Control", 0 },
+                    { 4, "Grain Free", 0 },
+                    { 5, "Small Bites", 0 },
+                    { 6, "Wet", 0 },
+                    { 7, "Special", 0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Recipients",
+                columns: new[] { "Id", "Email", "FirstName", "LastName", "PhoneNumber", "Status" },
+                values: new object[,]
+                {
+                    { 1, "billy@gmail.com", "Billy", "Madison", "555-555-5555", 0 },
+                    { 2, "sarahc@gmail.com", "Sarah", "Connor", "444-123-9876", 0 },
+                    { 3, "johndoe@example.com", "John", "Doe", "333-456-7890", 0 },
+                    { 4, "janesmith@hotmail.com", "Jane", "Smith", "222-654-3210", 0 },
+                    { 5, "mscott@dundermifflin.com", "Michael", "Scott", "111-777-8888", 0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "fab4fac1-c546-41de-aebc-a14da6895711", "b74ddd14-6340-4840-95c2-db12554843e5" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -186,6 +347,11 @@ namespace No_Kill_Inventory.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pets_RecipientId",
+                table: "Pets",
+                column: "RecipientId");
         }
 
         /// <inheritdoc />
@@ -207,10 +373,28 @@ namespace No_Kill_Inventory.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CatItems");
+
+            migrationBuilder.DropTable(
+                name: "DogItems");
+
+            migrationBuilder.DropTable(
+                name: "OtherItems");
+
+            migrationBuilder.DropTable(
+                name: "Pets");
+
+            migrationBuilder.DropTable(
+                name: "Volunteers");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Recipients");
         }
     }
 }
