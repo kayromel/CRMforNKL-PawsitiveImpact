@@ -16,5 +16,5 @@ public class Recipient
     
     public RecipientStatus Status { get; set; }
     
-    public Pet[] Pets { get; set; }
+    public List<Pet> Pets { get; set; }
 }
