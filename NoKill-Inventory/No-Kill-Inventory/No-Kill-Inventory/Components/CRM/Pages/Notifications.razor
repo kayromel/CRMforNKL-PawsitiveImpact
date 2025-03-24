@@ -1,0 +1,33 @@
+@page "/Notifications"
+@using No_Kill_Inventory.Data
+@rendermode InteractiveServer
+
+<MudDataGrid Items="@Alerts">
+    <Columns>
+        <PropertyColumn Property="x => x.FirstName" Title = "First Name" />
+        <PropertyColumn Property="x => x.LastName" Title = "Last Name"/>
+        <PropertyColumn Property="x => x.Form" Title = "Form"/>
+        <PropertyColumn Property="x => x.date" Title = "Expiration Date" />
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudButton Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">View Form</MudButton>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+
+@code {
+
+    public record Alert(string FirstName, string LastName, string Form, DateTime date);
+
+    private IEnumerable<Alert> Alerts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Alerts = new List<Alert>
+        {
+            new Alert("Logan", "Combs", "Application Expiration", new DateTime(2025, 2, 1)),
+            new Alert("Jay", "Chandiramani", "Application Expiration", new DateTime(2025, 2, 1))
+        };
+    }
+}
