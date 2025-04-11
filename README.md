@@ -1,8 +1,14 @@
-# NoKillInventory-CapstoneF23
+# Pawsitive Impact: NKL
 
 ## Overview
 
-The No Kill Louisville Inventory System is an ASP.NET Blazor web app that provides a simple system for No Kill Louisville to track their inventory.
+Integrating a CRM system to the existing NKL inventory system (ASP.NET Blazor web app). This will allow NKL volunteers to manage recipient information, volunteer information, and distribution activities along with inventory in one place.
+
+## Team Members:
+Kaylyn McGehee
+Jay Chandiramani
+Logan Combs
+Doran Martin
 
 ## Requirements
 
