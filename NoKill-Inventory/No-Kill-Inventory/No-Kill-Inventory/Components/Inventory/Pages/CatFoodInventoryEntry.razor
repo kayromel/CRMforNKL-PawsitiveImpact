@@ -5,6 +5,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @using No_Kill_Inventory.Data
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
 @rendermode InteractiveServer
 
 @attribute [Authorize]
@@ -12,64 +14,73 @@
 <PageTitle>Cat Food Inventory Entry</PageTitle>
 
 <AuthorizeView>
-    <Authorized>
-        <h1>Cat Food Inventory Entry</h1>
+    <Authorized Context="authContext">
+        <MudText Typo="Typo.h3" GutterBottom="true">Cat Food Inventory Entry</MudText>
 
-        <div class="row">
-            <div class="col-md4">
-                <EditForm Model="Input" FormName="Cat" OnValidSubmit="() => HandleValidSubmit()" Context="editContext">
-                    <DataAnnotationsValidator/>
-                    @if (formSubmitted)
-                    {
-                        <div class="alert alert-success" role="alert">
-                            Form successfully submitted!
-                        </div>
-                    }
-                    <hr/>
-                    <ValidationSummary class="text-danger" role="alert"/>
+        <EditForm Model="@Input" OnValidSubmit="HandleValidSubmit" Context="editContext">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-                    <table style="width:100%">
-                        <tr>
-                            <th>Food Type</th>
-                            <th>Quantity (lbs)</th>
-                        </tr>
-                        <tr>
-                            <td>Dry</td>
-                            <td><InputNumber @bind-Value="Input.DryWeight"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Wet</td>
-                            <td><InputNumber @bind-Value="Input.WetWeight"/></td>
-                        </tr>
-                        <tr>
-                            <td>Kitty</td>
-                            <td><InputNumber @bind-Value="Input.KittyWeight"/></td>
-                        </tr>
-                        <tr>
-                            <td>Special</td>
-                            <td><InputNumber @bind-Value="Input.SpecialWeight"/></td>
-                        </tr>
+            @if (formSubmitted)
+            {
+                <MudAlert Severity="Severity.Success" Elevation="0" Variant="Variant.Filled" Class="mb-4">
+                    Form successfully submitted!
+                </MudAlert>
+            }
 
+            <MudDivider Class="my-2" />
 
-                    </table>
-                    <button type="submit" class="btn btn-primary" @onclick="(() => { CatItemStore(1, Input.DryWeight); 
-                                                                      CatItemStore(2, Input.KittyWeight); 
-                                                                      CatItemStore(3, Input.WetWeight); 
-                                                                      CatItemStore(4, Input.SpecialWeight); })">
-                        Submit
-                    </button>
-                </EditForm>
-            </div>
-        </div>
+            <MudGrid Gutter="true">
+                <!-- Dry -->
+                <MudItem xs="6">
+                    <MudText>Dry</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudNumericField T="int" @bind-Value="Input.DryWeight" Label="Quantity (lbs)" />
+                </MudItem>
+
+                <!-- Wet -->
+                <MudItem xs="6">
+                    <MudText>Wet</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudNumericField T="int" @bind-Value="Input.WetWeight" Label="Quantity (lbs)" />
+                </MudItem>
+
+                <!-- Kitty -->
+                <MudItem xs="6">
+                    <MudText>Kitty</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudNumericField T="int" @bind-Value="Input.KittyWeight" Label="Quantity (lbs)" />
+                </MudItem>
+
+                <!-- Special -->
+                <MudItem xs="6">
+                    <MudText>Special</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudNumericField T="int" @bind-Value="Input.SpecialWeight" Label="Quantity (lbs)" />
+                </MudItem>
+            </MudGrid>
+
+            <MudButton Type="Submit" Color="Color.Primary" Class="mt-4" OnClick="@(async () =>
+                                                                                 {
+                                                                                     await CatItemStore(1, Input.DryWeight);
+                                                                                     await CatItemStore(2, Input.KittyWeight);
+                                                                                     await CatItemStore(3, Input.WetWeight);
+                                                                                     await CatItemStore(4, Input.SpecialWeight);
+                                                                                 })">
+                Submit
+            </MudButton>
+        </EditForm>
     </Authorized>
 </AuthorizeView>
 
 @code {
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
-
     private bool formSubmitted = false;
-    
+
     public Task HandleValidSubmit()
     {
         formSubmitted = true;
@@ -83,13 +94,11 @@
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
         {
             var updateQty = context.CatItems.First(a => a.ItemID == itemID);
-            {
-                updateQty.Weight += qty;
-                await context.SaveChangesAsync();
-            }
+            updateQty.Weight += qty;
+            await context.SaveChangesAsync();
         }
     }
-    
+
     private sealed class InputModel
     {
         [Required(ErrorMessage = "Should input a number")]
@@ -99,11 +108,11 @@
         [Required(ErrorMessage = "Should input a number")]
         [Display(Name = "KittyWeight")]
         public int KittyWeight { get; set; }
-        
+
         [Required(ErrorMessage = "Should input a number")]
         [Display(Name = "WetWeight")]
         public int WetWeight { get; set; }
-        
+
         [Required(ErrorMessage = "Should input a number")]
         [Display(Name = "SpecialWeight")]
         public int SpecialWeight { get; set; }

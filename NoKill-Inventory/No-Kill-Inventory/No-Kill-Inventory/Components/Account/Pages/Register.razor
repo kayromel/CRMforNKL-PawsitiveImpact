@@ -24,45 +24,100 @@
     This is the page where an admin can register a new user
 *@
 <AuthorizeView>
-     <Authorized>
-        <h1>Add User</h1>
+    <Authorized Context="authState">
+        <div class="d-flex flex-column gap-y-3">
+            <MudText Typo="Typo.h4" GutterBottom="true">Add User</MudText>
+            <StatusMessage Message="@Message"/>
 
-        <div class="row">
-            <div class="col-md-4">
-                <StatusMessage Message="@Message"/>
-                <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register" Context="editCtx">
-                    <DataAnnotationsValidator/>
-                    <hr/>
-                    <ValidationSummary class="text-danger" role="alert"/>
-                    @*
-                        Each field binds an Input value to one of the attributes declared below in InputModel
-                        
-                        When the submit button is clicked, each vield is validated to see if it holds valid information
-                    *@
-                    <div class="form-floating mb-3">
-                        <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
-                        <label for="email">Username</label>
-                        <ValidationMessage For="() => Input.Email" class="text-danger"/>
+            <EditForm Model="Input"
+                      asp-route-returnUrl="@ReturnUrl"
+                      method="post"
+                      OnValidSubmit="RegisterUser"
+                      FormName="register"
+                      Enhance>
+                <DataAnnotationsValidator />
+                <hr />
+
+                <ValidationSummary class="text-danger" role="alert"/>
+
+                <!-- Email / Username -->
+                <div class="mud-input-control mud-input-input-control my-4">
+                    <div class="mud-input-control-input-container">
+                        <div class="mud-input mud-input-outlined mud-shrink">
+                            <InputText @bind-Value="Input.Email"
+                                       class="mud-input-slot mud-input-root mud-input-root-outlined"
+                                       type="text"
+                                       autocomplete="username"
+                                       aria-required="true"
+                                       placeholder="Username" />
+                            <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
+                            <div class="mud-input-outlined-border"></div>
+                        </div>
+                        <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol"
+                               for="email">Username</label>
                     </div>
-                    <div class="form-floating mb-3">
-                        <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password"/>
-                        <label for="password">Password</label>
-                        <ValidationMessage For="() => Input.Password" class="text-danger"/>
+                    <div class="mud-input-helper-text mud-input-error">
+                        <ValidationMessage For="() => Input.Email" class="mud-input-error"/>
                     </div>
-                    <div class="form-floating mb-3">
-                        <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password"/>
-                        <label for="confirm-password">Confirm Password</label>
-                        <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger"/>
+                </div>
+
+                <!-- Password -->
+                <div class="mud-input-control mud-input-input-control my-4">
+                    <div class="mud-input-control-input-container">
+                        <div class="mud-input mud-input-outlined mud-shrink">
+                            <InputText @bind-Value="Input.Password"
+                                       class="mud-input-slot mud-input-root mud-input-root-outlined"
+                                       type="password"
+                                       autocomplete="new-password"
+                                       aria-required="true"
+                                       placeholder="Password" />
+                            <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
+                            <div class="mud-input-outlined-border"></div>
+                        </div>
+                        <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol"
+                               for="password">Password</label>
                     </div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-                </EditForm>
-            </div>
+                    <div class="mud-input-helper-text mud-input-error">
+                        <ValidationMessage For="() => Input.Password" class="mud-input-error"/>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mud-input-control mud-input-input-control my-4">
+                    <div class="mud-input-control-input-container">
+                        <div class="mud-input mud-input-outlined mud-shrink">
+                            <InputText @bind-Value="Input.ConfirmPassword"
+                                       class="mud-input-slot mud-input-root mud-input-root-outlined"
+                                       type="password"
+                                       autocomplete="new-password"
+                                       aria-required="true"
+                                       placeholder="Confirm Password" />
+                            <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
+                            <div class="mud-input-outlined-border"></div>
+                        </div>
+                        <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol"
+                               for="confirm-password">Confirm Password</label>
+                    </div>
+                    <div class="mud-input-helper-text mud-input-error">
+                        <ValidationMessage For="() => Input.ConfirmPassword" class="mud-input-error"/>
+                    </div>
+                </div>
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           ButtonType="ButtonType.Submit"
+                           FullWidth="true">
+                    Register
+                </MudButton>
+            </EditForm>
         </div>
     </Authorized>
     <NotAuthorized>
-
+        
     </NotAuthorized>
 </AuthorizeView>
+
 @code {
     private IEnumerable<IdentityError>? identityErrors;
 
