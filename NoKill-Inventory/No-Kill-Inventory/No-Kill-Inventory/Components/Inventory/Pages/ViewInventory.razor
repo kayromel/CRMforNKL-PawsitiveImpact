@@ -11,25 +11,6 @@
 *@
 @attribute [Authorize]
 
-@*
-    Styling for the tables and their elements
-*@
-<style>
-    table {
-        border-collapse: collapse;
-        width: 100%; 
-    }
-    td, th {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-    }
-    
-    tr:nth-child(even) {
-      background-color: #dddddd;
-    }
-</style>
-
 <PageTitle>Home</PageTitle>
 
 @* 
@@ -38,83 +19,27 @@
   This section deisplay the user's username and each table of items to see the current inventory  
 *@
 <AuthorizeView>
-    <h1>Hello, @context.User.Identity.Name</h1>
-
-    The current inventory is below
+    <MudText Typo="Typo.h3">Hello, @context.User.Identity.Name</MudText>
+    <MudText Typo="Typo.subtitle1">The current inventory is below.</MudText>
     
-    <div>
-        <table>
-            <h2>Dog</h2>
-            <tr>
-                <th>Type</th>
-                <th>Weight</th>
-            </tr>
-            @foreach (var item in Context.DogItems)
-            {
-                <tr>
-                    <td>@item.Type</td>
-                    <td>@item.Weight</td>
-                </tr>
-            }
-        </table>
-    </div>
-    <div>
-        <table>
-            <h2>Cat</h2>
-            <tr>
-                <th>Type</th>
-                <th>Weight</th>
-            </tr>
-                @foreach (var item in Context.CatItems)
-                {
-                    <tr>
-                        <td>@item.Type</td>
-                        <td>@item.Weight</td>
-                    </tr>
-                }
-        </table>
-    </div>
-    <div>
-        <table>
-            <h2>Other</h2>
-            <tr>
-                <th>Type</th>
-                <th>Description</th>
-                <th>Weight</th>
-                <th>Remove</th>
-            </tr>
-                @foreach (var item in Context.OtherItems)
-                {
-                    <tr>
-                        <td>@item.Animal</td>
-                        <td>@item.Desc</td>
-                        <td>@item.Weight</td>
-                        @*
-                            When button is clicked, get that item's ItemID and pass it to DeleteItem
-                        *@
-                        <td><button type="button" @onclick="(async () => await DeleteItem(item.ItemID))">Delete</button></td>
-                    </tr>
-                }
-        </table>
-    </div>
+    <MudTable T="FoodPallet" Items="@Context.FoodPallets" Hover="true" Breakpoint="Breakpoint.Sm">
+        <HeaderContent>
+            <MudTh>Item ID Number</MudTh>
+            <MudTh>Animal</MudTh>
+            <MudTh>Arrival Date</MudTh>
+            <MudTh>Expiration Date</MudTh>
+            <MudTh>Location Description</MudTh>
+        </HeaderContent>
+        <RowTemplate Context="pallet">
+            <MudTd DataLabel="ID">@pallet.ItemID</MudTd>
+            <MudTd DataLabel="Animal">@pallet.Animal</MudTd>
+            <MudTd DataLabel="Arrival">@pallet.ArrivalDate.ToString("MM/dd/yyyy")</MudTd>
+            <MudTd DataLabel="Expiration">@pallet.ExpirationDate.ToString("MM/dd/yyyy")</MudTd>
+            <MudTd DataLabel="Location">@pallet.LocationDesc</MudTd>
+        </RowTemplate>
+    </MudTable>
+    
 </AuthorizeView>
 
 @code {
-    /**
-     * Deleting an item
-     */
-    private async Task DeleteItem(int ItemID)
-    {
-        // Finding the item based on the ID passed to it
-        var item = await Context.OtherItems.FindAsync(ItemID);
-        
-        // Connecting to the OtherItems table in the database using the ApplicationDbContext
-        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
-        {
-            // Removing the item from the OtherItems table
-            context.OtherItems.Remove(item);
-            // Saving the changes made to the table
-            await context.SaveChangesAsync();
-        }
-    }
 }

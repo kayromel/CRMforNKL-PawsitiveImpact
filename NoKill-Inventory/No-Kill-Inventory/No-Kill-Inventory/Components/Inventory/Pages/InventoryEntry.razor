@@ -3,165 +3,93 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
 @using Microsoft.EntityFrameworkCore
 @using No_Kill_Inventory.Data
+@inject ApplicationDbContext Context
 @rendermode InteractiveServer
 
 @attribute [Authorize]
 
-<PageTitle>Inventory Entry</PageTitle>
+<MudText Typo="Typo.h4">Add Inventory</MudText>
+<MudText Typo="Typo.body1">Fill out the forum below to add a pallet</MudText>
 
-<AuthorizeView>
-    <Authorized>
-        <h1>Inventory Entry</h1>
-        
-        <div class="row">
-            <div class="col-md4">
-                <EditForm Model="Input" method Context="editContext">
-                    <DataAnnotationsValidator/>
-                    <h2>All fields must be filled</h2>
-                    <hr/>
-                    <h6>Choose what type of food you are adding to the inventory</h6>
-                    <ValidationSummary class="text-danger" role="alert"/>
-                    <style>
-                    /* Style The Dropdown Button */
-                    .dropbtn {
-                      background-color: #286fc0;
-                      color: white;
-                      padding: 8px;
-                      font-size: 16px;
-                      border: none;
-                      cursor: pointer;
-                      border-radius: 4px;
-                    }
+<MudPaper Class="pa-16 ma-2" Outlined="true">
+    <MudStack Spacing="4">
+        @if (_submitted)
+        {
+            <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Success" >Inventory Added!</MudText>
+            <MudButton Variant="Variant.Filled" OnClick="@NewForm" Color="Color.Primary">
+                <MudText>Add More?</MudText>
+            </MudButton>
+            
+        }
+        else
+        {
+            <MudSelect @bind-Value="_enumValue" Label="Select Species" Placeholder="Please Select" AdornmentColor="Color.Primary">
+                @foreach (Species Item in Enum.GetValues(typeof(Species)))
+                {
+                    <MudSelectItem Value="@Item">@Item</MudSelectItem>
+                }
+            </MudSelect>
+            <MudTextField @bind-Value="_locationDesc" Label="Enter Location" Placeholder="Ex: Spot 1" AdornmentColor="Color.Primary"></MudTextField>
+            <MudStack Row="true" Spacing="8">
+                <MudDatePicker Label="Enter Arrival Date" @bind-Date="_arrivalDate" Editable="true" ShowToolbar="false"/>
+                <MudDatePicker Label="Enter Experation Date" @bind-Date="_expirationDate" Editable="true" ShowToolbar="false"/>
+            </MudStack>
 
-                    /* The container - needed to position the dropdown content */
-                    .dropdown {
-                      position: relative;
-                      display: inline-block;
-                    }
+            <MudButton Disabled="@_processing" Variant="Variant.Filled" OnClick="AddPallet" Color="Color.Primary">
+                @if (_processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Medium" Indeterminate="true"/>
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>Add Pallet</MudText>
+                }
+            </MudButton>
+        }
+    </MudStack>
+</MudPaper>
 
-                    /* Dropdown Content (Hidden by Default) */
-                    .dropdown-content {
-                      display: none;
-                      position: absolute;
-                      background-color: #f9f9f9;
-                      min-width: 160px;
-                      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                      z-index: 1;
-                    }
-
-                    /* Links inside the dropdown */
-                    .dropdown-content a {
-                      color: black;
-                      padding: 12px 16px;
-                      text-decoration: none;
-                      display: block;
-                    }
-
-                    /* Change color of dropdown links on hover */
-                    .dropdown-content a:hover {background-color: #f1f1f1}
-
-                    /* Show the dropdown menu on hover */
-                    .dropdown:hover .dropdown-content {
-                      display: block;
-                    }
-
-                    /* Change the background color of the dropdown button when the dropdown content is shown */
-                    .dropdown:hover .dropbtn {
-                      background-color: #3e8e41;
-                    }
-                    </style>
-
-                    <div class="dropdown">
-                      <button class="dropbtn">Food Type</button>
-                      <div class="dropdown-content">
-                        <a href="/DogFoodInventoryEntry">Dog</a>
-                        <a href="/CatFoodInventoryEntry">Cat</a>
-                        <a href="/OtherPetFoodInventoryEntry">Other Pets</a>
-                      </div>
-                    </div>
-                </EditForm>
-            </div>
-        </div>
-    </Authorized>
-</AuthorizeView>
 
 @code {
-    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+    private bool _processing = false;
+    private bool _submitted = false;
+
+    private Species _enumValue;
+    private String _locationDesc;
+    private DateTime? _arrivalDate;
+    private DateTime? _expirationDate;
     
-    public void CatItemStore()
+    async Task AddPallet()
     {
-        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        _processing = true;
+        
+        Context.FoodPallets.Add( new FoodPallet
         {
-            var newCatItem = new CatItem
-            {
-                Type = Input.TypeCat,
-                Weight = Input.WeightCat
-            };
-        }
+
+            Status = Status.Active,
+            Animal = _enumValue,
+            ArrivalDate = (DateTime)_arrivalDate,
+            ExpirationDate = (DateTime)_expirationDate,
+            LocationDesc = _locationDesc
+        });
+        
+        await Context.SaveChangesAsync();
+        
+        _processing = false;
+        _submitted = true;
     }
-    
-    public void DogItemStore()
+
+    async Task NewForm()
     {
-        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
-        {
-            var newDogItem = new DogItem()
-            {
-                Type   = Input.TypeDog,
-                Weight = Input.WeightDog
-            };
-        }
-    }
-    
-    public void OtherItemStore()
-    {
-        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
-        {
-            var newOtherItem = new OtherItem()
-            {
-                Animal = Input.Animal,
-                Desc = Input.Desc,
-                Weight = Input.WeightOther
-            };
-        }
-    }
-    
-    private sealed class InputModel
-    {
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input from the dropdown")]
-        [Display(Name = "TypeDog")]
-        public String TypeDog { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input a number")]
-        [Display(Name = "WeightDog")]
-        public int WeightDog { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input from the dropdown")]
-        [Display(Name = "TypeCat")]
-        public String TypeCat { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input a number")]
-        [Display(Name = "WeightCat")]
-        public int WeightCat { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input a String")]
-        [Display(Name = "Animal")]
-        public String Animal { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input a String")]
-        [Display(Name = "Desc")]
-        public String Desc { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input a number")]
-        [Display(Name = "WeightOther")]
-        public int WeightOther { get; set; }
+        _enumValue = Species.Dog;
+        _locationDesc = "";
+        _arrivalDate = null;
+        _expirationDate = null;
+
+        _submitted = false;
     }
 }

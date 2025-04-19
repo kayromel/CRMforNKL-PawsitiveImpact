@@ -16,9 +16,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         optionsBuilder.UseSqlite("Data Source=data/app.db");
     }
     // Telling the context what the tables that have been created are
-    public DbSet<OtherItem> OtherItems { get; set; }
-    public DbSet<CatItem> CatItems { get; set; }
-    public DbSet<DogItem> DogItems { get; set; }
+    public DbSet<FoodPallet> FoodPallets { get; set; }
     
     // When the model (schema) is created, do these things
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -179,6 +177,29 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 ItemID = 4,
                 Type = "Special",
                 Weight = 0
+            });
+
+        modelBuilder.Entity<FoodPallet>().HasData(
+            new FoodPallet()
+            {
+                ItemID = 1,
+                Status = Status.Active,
+                Animal = Species.Dog,
+                ArrivalDate = DateTime.UnixEpoch,
+                ExpirationDate = DateTime.Now,
+                LocationDesc = "Back Right of building"
+
+            });
+        modelBuilder.Entity<FoodPallet>().HasData(
+            new FoodPallet()
+            {
+                ItemID = 2,
+                Status = Status.Active,
+                Animal = Species.Cat,
+                ArrivalDate = DateTime.UnixEpoch,
+                ExpirationDate = DateTime.Now,
+                LocationDesc = "Back Left of building"
+
             });
     }
 }
