@@ -1,33 +1,64 @@
 @page "/Notifications"
+
+@using Microsoft.AspNetCore.Authorization
 @using No_Kill_Inventory.Data
+@inject ApplicationDbContext Context
 @rendermode InteractiveServer
 
-<MudDataGrid Items="@Alerts">
-    <Columns>
-        <PropertyColumn Property="x => x.FirstName" Title = "First Name" />
-        <PropertyColumn Property="x => x.LastName" Title = "Last Name"/>
-        <PropertyColumn Property="x => x.Form" Title = "Form"/>
-        <PropertyColumn Property="x => x.date" Title = "Expiration Date" />
-        <TemplateColumn CellClass="d-flex justify-end">
-            <CellTemplate>
-                <MudButton Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">View Form</MudButton>
-            </CellTemplate>
-        </TemplateColumn>
-    </Columns>
-</MudDataGrid>
+@attribute [Authorize]
+
+<AuthorizeView>
+    <MudTable T="Notification" Items="@TotalNotifications" Hover="true">
+        <HeaderContent>
+            <MudTh>Expiration Form Type</MudTh>
+            <MudTh>Days Until Expiration</MudTh>
+            <MudTh>Expiration Date</MudTh>
+        </HeaderContent>
+        <RowTemplate Context ="item">
+            <MudTd>@item.Form</MudTd>
+            <MudTd>@item.DaysLeft</MudTd>
+            <MudTd>@item.Expiration.ToString("MM/dd/yyyy")</MudTd>
+        </RowTemplate>
+    </MudTable>
+</AuthorizeView>
 
 @code {
+    private List<Notification> TotalNotifications = new List<Notification>();
 
-    public record Alert(string FirstName, string LastName, string Form, DateTime date);
+    private struct Notification
+    {
+        public Notification(FormType form, int daysLeft, DateTime expiration)
+        {
+            Form = form;
+            DaysLeft = daysLeft;
+            Expiration = expiration;
+        }
+        public FormType Form;
+        public int DaysLeft;
+        public DateTime Expiration;
+    }
 
-    private IEnumerable<Alert> Alerts;
+    private enum FormType
+    {
+        FoodExpiration,
 
+    }
+
+    private void GetFoodNotifications()
+    {
+        foreach (var item in Context.FoodPallets)
+        {
+            if ((item.ExpirationDate - DateTime.Today).TotalDays <= 7 && item.Status == Status.Alive)
+            {
+                var p1 = new Notification(FormType.FoodExpiration, (int)(item.ExpirationDate - DateTime.Today).TotalDays, item.ExpirationDate.Date);
+                TotalNotifications.Add(p1);
+            }
+        }
+        Console.WriteLine(TotalNotifications);
+    }
+    
     protected override async Task OnInitializedAsync()
     {
-        Alerts = new List<Alert>
-        {
-            new Alert("Logan", "Combs", "Application Expiration", new DateTime(2025, 2, 1)),
-            new Alert("Jay", "Chandiramani", "Application Expiration", new DateTime(2025, 2, 1))
-        };
+        GetFoodNotifications();
     }
 }

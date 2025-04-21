@@ -50,6 +50,10 @@
                     <MudText>Add Pallet</MudText>
                 }
             </MudButton>
+            @if (_error)
+            {
+                <MudText Color="Color.Error">One or more fields are blank. Please fill out all fields to submit form.</MudText>
+            }
         }
     </MudStack>
 </MudPaper>
@@ -58,6 +62,7 @@
 @code {
     private bool _processing = false;
     private bool _submitted = false;
+    private bool _error = false;
 
     private Species _enumValue;
     private String _locationDesc;
@@ -68,22 +73,31 @@
     async Task AddPallet()
     {
         _processing = true;
-        
-        Context.FoodPallets.Add( new FoodPallet
+
+        if (_enumValue == null || _weight == 0 || _arrivalDate == null || _expirationDate == null || _locationDesc == null)
         {
-            Animal = _enumValue,
-            Status = Status.Alive,
-            InitWeight = _weight,
-            CurrentWeight = _weight,
-            ArrivalDate = (DateTime)_arrivalDate,
-            ExpirationDate = (DateTime)_expirationDate,
-            LocationDesc = _locationDesc
-        });
+            _error = true;
+            _processing = false;
+        }
+        else
+        {
+            Context.FoodPallets.Add( new FoodPallet
+            {
+                Animal = _enumValue,
+                Status = Status.Alive,
+                InitWeight = _weight,
+                CurrentWeight = _weight,
+                ArrivalDate = (DateTime)_arrivalDate,
+                ExpirationDate = (DateTime)_expirationDate,
+                LocationDesc = _locationDesc
+            });
         
-        await Context.SaveChangesAsync();
-        
+            await Context.SaveChangesAsync();
+            
+            _submitted = true;
+        }
+
         _processing = false;
-        _submitted = true;
     }
 
     async Task NewForm()
