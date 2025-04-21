@@ -183,8 +183,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             new FoodPallet()
             {
                 ItemID = 1,
-                Status = Status.Active,
                 Animal = Species.Dog,
+                Status = Status.Alive,
+                InitWeight = 50,
+                CurrentWeight = 50,
                 ArrivalDate = DateTime.UnixEpoch,
                 ExpirationDate = DateTime.Now,
                 LocationDesc = "Back Right of building"
@@ -194,8 +196,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             new FoodPallet()
             {
                 ItemID = 2,
-                Status = Status.Active,
                 Animal = Species.Cat,
+                Status = Status.Alive,
+                InitWeight = 50,
+                CurrentWeight = 50,
                 ArrivalDate = DateTime.UnixEpoch,
                 ExpirationDate = DateTime.Now,
                 LocationDesc = "Back Left of building"

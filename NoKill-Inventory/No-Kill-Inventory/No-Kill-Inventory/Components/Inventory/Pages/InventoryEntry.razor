@@ -12,10 +12,10 @@
 @attribute [Authorize]
 
 <MudText Typo="Typo.h4">Add Inventory</MudText>
-<MudText Typo="Typo.body1">Fill out the forum below to add a pallet</MudText>
+<MudText Typo="Typo.body1">Fill out the forum below to add a pallet.</MudText>
 
 <MudPaper Class="pa-16 ma-2" Outlined="true">
-    <MudStack Spacing="4">
+    <MudStack Spacing="4" AlignItems="AlignItems.Center">
         @if (_submitted)
         {
             <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Success" >Inventory Added!</MudText>
@@ -26,14 +26,15 @@
         }
         else
         {
-            <MudSelect @bind-Value="_enumValue" Label="Select Species" Placeholder="Please Select" AdornmentColor="Color.Primary">
+            <MudSelect @bind-Value="_enumValue" Label="Select Species" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
                 @foreach (Species Item in Enum.GetValues(typeof(Species)))
                 {
                     <MudSelectItem Value="@Item">@Item</MudSelectItem>
                 }
             </MudSelect>
-            <MudTextField @bind-Value="_locationDesc" Label="Enter Location" Placeholder="Ex: Spot 1" AdornmentColor="Color.Primary"></MudTextField>
-            <MudStack Row="true" Spacing="8">
+            <MudTextField @bind-Value="_locationDesc" Label="Enter Location" Placeholder="Ex: Spot 1" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
+            <MudTextField @bind-Value="_weight" Label="Enter Weight (lb)" Placeholder="Ex: 50lb" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
+            <MudStack Row="true" Spacing="16">
                 <MudDatePicker Label="Enter Arrival Date" @bind-Date="_arrivalDate" Editable="true" ShowToolbar="false"/>
                 <MudDatePicker Label="Enter Experation Date" @bind-Date="_expirationDate" Editable="true" ShowToolbar="false"/>
             </MudStack>
@@ -60,6 +61,7 @@
 
     private Species _enumValue;
     private String _locationDesc;
+    private int _weight;
     private DateTime? _arrivalDate;
     private DateTime? _expirationDate;
     
@@ -69,9 +71,10 @@
         
         Context.FoodPallets.Add( new FoodPallet
         {
-
-            Status = Status.Active,
             Animal = _enumValue,
+            Status = Status.Alive,
+            InitWeight = _weight,
+            CurrentWeight = _weight,
             ArrivalDate = (DateTime)_arrivalDate,
             ExpirationDate = (DateTime)_expirationDate,
             LocationDesc = _locationDesc

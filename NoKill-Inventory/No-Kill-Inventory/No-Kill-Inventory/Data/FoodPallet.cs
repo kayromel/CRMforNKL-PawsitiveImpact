@@ -13,22 +13,27 @@ public enum Species
 
 public enum Status
 {
-    Active,
+    Alive,
     Used
 }
+
 
 public class FoodPallet
 {
     [Key]
     public int ItemID { get; set; }
     
-    public Status Status { get; set; }
-    
     public Species Animal { get; set; }
+    
+    public Status Status { get; set; }
     
     public DateTime ArrivalDate { get; set; }
     
     public DateTime ExpirationDate { get; set; }
+    
+    public int InitWeight { get; set; }
+    
+    public int CurrentWeight { get; set; }
     
     [StringLength(100)]
     public String LocationDesc { get; set; }
