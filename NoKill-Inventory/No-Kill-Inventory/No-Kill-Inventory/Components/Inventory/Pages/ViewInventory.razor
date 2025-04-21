@@ -20,7 +20,7 @@
   This section deisplay the user's username and each table of items to see the current inventory  
 *@
 <AuthorizeView>
-    @if (!_twostep)
+    @if (!_twostepremove && !_twostepsubtract)
     {
         <MudText Typo="Typo.h4">Hello, @context.User.Identity.Name</MudText>
         <MudText Typo="Typo.body1">The current inventory is below.</MudText>
@@ -33,6 +33,8 @@
                 <MudTh>Arrival Date</MudTh>
                 <MudTh>Expiration Date</MudTh>
                 <MudTh>Location Description</MudTh>
+                <MudTh>Subtract Inventory</MudTh>
+                <MudTh>Remove Pallet</MudTh>
             </HeaderContent>
             <RowTemplate Context="pallet">
                 @if (pallet.Status == Status.Alive)
@@ -43,9 +45,16 @@
                     <MudTd DataLabel="Arrival">@pallet.ArrivalDate.ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="Expiration">@pallet.ExpirationDate.ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="Location">@pallet.LocationDesc</MudTd>
-                    <MudButton Variant="Variant.Filled" OnClick="() => ConfirmRemove(pallet.ItemID)" Color="Color.Primary">
-                        <MudText>Remove Pallet</MudText>
-                    </MudButton>
+                    <MudTd>
+                        <MudButton Variant="Variant.Filled" OnClick="() => ConfirmSubtract(pallet.ItemID)" Color="Color.Primary">
+                            <MudText>Subtract</MudText>
+                        </MudButton>
+                    </MudTd>
+                    <MudTd>
+                        <MudButton Variant="Variant.Filled" OnClick="() => ConfirmRemove(pallet.ItemID)" Color="Color.Primary">
+                            <MudText>Remove Pallet</MudText>
+                        </MudButton>
+                    </MudTd>
                 }
             </RowTemplate>
         </MudTable>
@@ -54,7 +63,7 @@
             <MudText Color="Color.Success">Success!</MudText>
         }
     }
-    else
+    else if(_twostepremove)
     {
         <MudPaper Class="pa-16 ma-2" Outlined="true">
             <MudStack AlignItems="AlignItems.Center">
@@ -74,25 +83,55 @@
             </MudStack>
         </MudPaper>
     }
+    else if (_twostepsubtract)
+    {
+        <MudPaper Class="pa-16 ma-2" Outlined="true">
+            <MudStack AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.h4" Color="Color.Error">Remove Pallet?</MudText>
+                <MudText Typo="Typo.body1" Color="Color.Primary">
+                    This will subtract the amount entered from the pallet. Please ensure the amount subtracted is correct before selecting Confirm.
+                </MudText>
+                <MudTextField @bind-Value="_subtractamount" Label="Enter Weight (lb)" Placeholder="Ex: 50lb" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
+                <MudStack Row="true" Spacing="4">
+                    <MudButton Variant="Variant.Filled" OnClick="@Subtract" Color="Color.Primary">
+                        <MudText>Confirm</MudText>
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" OnClick="@GoBack" Color="Color.Primary">
+                        <MudText>Go Back</MudText>
+                    </MudButton>
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+    }
 
 </AuthorizeView>
 
 @code {
     private bool _success = false;
-    private bool _twostep = false;
+    private bool _twostepremove = false;
+    private bool _twostepsubtract = false;
     private int SelectedPallet;
+    private int _subtractamount;
     
     
     private void ConfirmRemove(int ID)
     {
         SelectedPallet = ID;
-        _twostep = true;
+        _twostepremove = true;
+        
+    }
+    
+    private void ConfirmSubtract(int ID)
+    {
+        SelectedPallet = ID;
+        _twostepsubtract = true;
         
     }
 
     private void GoBack()
     {
-        _twostep = false;
+        _twostepremove = false;
+        _twostepsubtract = false;
     }
     
     async Task Remove()
@@ -105,6 +144,19 @@
         }
 
         await Context.SaveChangesAsync();
-        _twostep = false;
+        GoBack();
+    }
+    
+    async Task Subtract()
+    {
+        var entry = Context.FoodPallets.FirstOrDefault(item => item.ItemID == SelectedPallet);
+
+        if (entry != null)
+        {
+            entry.CurrentWeight -= _subtractamount;
+        }
+
+        await Context.SaveChangesAsync();
+        GoBack();
     }
 }
