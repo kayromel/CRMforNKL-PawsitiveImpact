@@ -84,8 +84,19 @@
 <PageTitle>Manage Volunteers</PageTitle>
 
 <AuthorizeView>
-<div class="container" style="margin-top: 20px !important; max-width: 1000px; margin: auto; font-family: Arial, sans-serif;">
+    <div class="container" style="margin-top: 20px !important; max-width: 1000px; margin: auto; font-family: Arial, sans-serif;">
     <h1 style="text-align: center; color: #333;">Volunteers</h1>
+
+    @if (selectedVolunteer != null)
+    {
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+            <button @onclick="ShowConfirmationModal"
+                    style="padding: 8px 12px; background-color: #c16770; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Remove Volunteer
+            </button>
+        </div>
+    }
+
     <div style="margin-top: 20px; overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; text-align: center;">
             <thead style="background-color: #f2f2f2;">
@@ -100,7 +111,8 @@
             <tbody>
                 @foreach (var volunteer in allVolunteers)
                 {
-                    <tr>
+                    <tr @onclick="() => SelectVolunteer(volunteer)" 
+                        style="cursor: pointer; background-color: @(selectedVolunteer?.VolunteerID == volunteer.VolunteerID ? "#d1e7dd" : "")">
                         <td>@volunteer.VolunteerID</td>
                         <td>@volunteer.Name</td>
                         <td>@(volunteer.IsAvailable ? "Yes" : "No")</td>
@@ -114,53 +126,87 @@
 </div>
 
 
-
+    @if (showConfirmation)
+    {
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0, 0, 0, 0.5); display: flex; align-items: center;
+                    justify-content: center; z-index: 999;">
+            <div style="background: white; padding: 20px; border-radius: 10px; max-width: 400px; text-align: center;">
+                <h3>Are you sure?</h3>
+                <p>Do you really want to remove <strong>@selectedVolunteer?.Name</strong>?</p>
+                <button style="margin-right: 10px;" @onclick="ConfirmDelete">Yes, Remove</button>
+                <button @onclick="CancelDelete">Cancel</button>
+            </div>
+        </div>
+    }
 </AuthorizeView>
 
 @code {
     private int volunteersCount;
     private List<Recipient> recipients = new List<Recipient>();
-
     private string volunteerName = string.Empty;
     private List<Volunteer> availableVolunteers = new List<Volunteer>();
-
     private string recipientItemsReceivingToShow;
-
     private List<Volunteer> allVolunteers = new List<Volunteer>();
 
-    private async Task LoadAllVolunteers()
-    {
-        allVolunteers = await Context.Volunteers.ToListAsync();
-    }
+    private Volunteer? selectedVolunteer = null;
+    private bool showConfirmation = false;
 
     protected override async Task OnInitializedAsync()
     {
-        // Load available volunteers
         availableVolunteers = await Context.Volunteers.Where(v => v.IsAvailable).ToListAsync();
         volunteersCount = availableVolunteers.Count;
-        // Load recipients from the database
         await LoadRecipientsFromDatabase();
         allVolunteers = await Context.Volunteers.ToListAsync();
     }
 
-        private async Task LoadRecipientsFromDatabase()
+    private async Task LoadRecipientsFromDatabase()
+    {
+        recipients = await Context.Recipients.ToListAsync();
+    }
+
+    private async Task AddVolunteer()
+    {
+        var volunteer = new Volunteer
         {
-            recipients = await Context.Recipients.ToListAsync();
-        }
+            Name = "Volunteer " + (volunteersCount + 1),
+            IsAvailable = true
+        };
 
+        Context.Volunteers.Add(volunteer);
+        await Context.SaveChangesAsync();
 
-        private async Task AddVolunteer()
+        volunteersCount++;
+        allVolunteers.Add(volunteer);
+    }
+
+    private void SelectVolunteer(Volunteer volunteer)
+    {
+        selectedVolunteer = volunteer;
+    }
+
+    private void ShowConfirmationModal()
+    {
+        showConfirmation = true;
+    }
+
+    private void CancelDelete()
+    {
+        showConfirmation = false;
+        selectedVolunteer = null;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (selectedVolunteer != null)
         {
-            var volunteer = new Volunteer
-            {
-                Name = "Volunteer " + (volunteersCount + 1),
-                IsAvailable = true
-            };
-
-            Context.Volunteers.Add(volunteer);
+            Context.Volunteers.Remove(selectedVolunteer);
             await Context.SaveChangesAsync();
 
-            volunteersCount++;
+            allVolunteers.Remove(selectedVolunteer);
+            availableVolunteers.Remove(selectedVolunteer);
+            selectedVolunteer = null;
+            showConfirmation = false;
         }
-
+    }
 }
