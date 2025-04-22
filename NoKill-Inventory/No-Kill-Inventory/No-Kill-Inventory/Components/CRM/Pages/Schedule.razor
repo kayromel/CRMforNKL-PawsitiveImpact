@@ -126,10 +126,23 @@
     </div>
 </div>
 
-<div class="container" style="margin-top: 40px !important; max-width: 1000px; margin: auto; font-family: Arial, sans-serif;">
+<div class="container" style="margin-top: 60px !important; max-width: 1000px; margin: auto; font-family: Arial, sans-serif;">
     <h1 style="text-align: center; color: #333; padding-bottom: 20px;">Recipients</h1>
-    
-    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background-color: #f9f9f9;">
+
+    <!-- Search Input -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <input type="text"
+       value="@searchTerm"
+       @oninput="OnSearchInput"
+       @onfocus="ResetToFirstPage"
+       placeholder="Search by name..."
+       style="padding: 8px 12px; width: 60%; border: 1px solid #ccc; border-radius: 5px;" />
+
+
+    </div>
+
+    <!-- Table -->
+    <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background-color: #f9f9f9;">
         <table style="width: 100%; border-collapse: collapse; text-align: center;">
             <thead>
                 <tr style="background-color: #007BFF; color: white;">
@@ -140,7 +153,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var recipient in recipients.Where(r => r.Status != RecipientStatus.Completed))
+                @foreach (var recipient in FilteredRecipients)
                 {
                     <tr>
                         <td style="padding: 10px; border: 1px solid #ddd;">@recipient.FirstName</td>
@@ -156,6 +169,21 @@
                 }
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div style="text-align: center; margin-top: 15px;">
+        <button @onclick="PreviousPage" disabled="@(currentPage == 1)"
+            style="padding: 8px 12px; margin-right: 10px; background-color: #a2a2a2; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Previous
+        </button>
+
+        <span>Page @currentPage of @TotalPages</span>
+
+        <button @onclick="NextPage" disabled="@(currentPage == TotalPages)"
+            style="padding: 8px 12px; margin-left: 10px; background-color: #a2a2a2; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Next
+        </button>
     </div>
 </div>
 
@@ -197,13 +225,14 @@
         </div>
     </div>
 }
-
-
 </AuthorizeView>
 
 @code {
+    private int currentPage = 1;
+    private int pageSize = 15;
     private int volunteersCount;
     private List<Recipient> recipients = new List<Recipient>();
+    private string searchTerm = "";
 
 private string volunteerName = string.Empty;
 private List<Volunteer> availableVolunteers = new List<Volunteer>();
@@ -231,46 +260,6 @@ protected override async Task OnInitializedAsync()
     private async Task LoadRecipientsFromDatabase()
     {
         recipients = await Context.Recipients.ToListAsync();
-    }
-
-    private async Task LoadRecipientsFromExcel()
-    {
-        var path = Path.Combine(HostEnvironment.ContentRootPath, "wwwroot", "Data", "Recipients.xlsx");
-        if (File.Exists(path))
-        {
-            using (var package = new ExcelPackage(new FileInfo(path)))
-            {
-                var worksheet = package.Workbook.Worksheets[0];
-                int rowCount = worksheet.Dimension.Rows;
-
-                for (int row = 2; row <= rowCount; row++)
-                {
-                    var firstName = worksheet.Cells[row, 1].Text;
-                    var lastName = worksheet.Cells[row, 2].Text;
-
-                    var existingRecipient = await Context.Recipients
-                        .FirstOrDefaultAsync(r => r.FirstName == firstName && r.LastName == lastName);
-
-                    if (existingRecipient == null)
-                    {
-                        var newRecipient = new Recipient
-                        {
-                            FirstName = firstName,
-                            LastName = lastName,
-                            Status = RecipientStatus.NotStarted
-                        };
-
-                        Context.Recipients.Add(newRecipient);
-                    }
-                    else
-                    {
-                        // existingRecipient.Status = existingRecipient.Status ?? "Not Started";
-                        Context.Recipients.Update(existingRecipient);
-                    }
-                }
-                await Context.SaveChangesAsync();
-            }
-        }
     }
 
     private async Task AddVolunteer()
@@ -448,5 +437,51 @@ private async Task ResetAllRecipients()
     // Refresh the recipient list to update the UI
     recipients = await Context.Recipients.ToListAsync();
 }
+
+private IEnumerable<Recipient> PagedRecipients => recipients
+        .Where(r => r.Status != RecipientStatus.Completed)
+        .Skip((currentPage - 1) * pageSize)
+        .Take(pageSize);
+
+    private int TotalPages => (int)Math.Ceiling((double)GetFilteredRecipients().Count() / pageSize);
+
+    private void NextPage()
+    {
+        if (currentPage < TotalPages)
+            currentPage++;
+    }
+
+    private void PreviousPage()
+    {
+        if (currentPage > 1)
+            currentPage--;
+    }
+
+
+
+    private IEnumerable<Recipient> FilteredRecipients => GetFilteredRecipients()
+        .Skip((currentPage - 1) * pageSize)
+        .Take(pageSize);
+
+    private IEnumerable<Recipient> GetFilteredRecipients()
+    {
+        return recipients
+            .Where(r => r.Status != RecipientStatus.Completed)
+            .Where(r => string.IsNullOrWhiteSpace(searchTerm) || 
+                r.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                r.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+    }        
+
+    private void ResetToFirstPage()
+{
+    currentPage = 1;
+}
+
+private void OnSearchInput(ChangeEventArgs e)
+{
+    searchTerm = e.Value?.ToString() ?? "";
+    ResetToFirstPage();
+}
+
 
 }
