@@ -61,7 +61,6 @@ public class CSVImporter
 
         var entities = records.Select(r => new PetFoodRequest
         {
-            RecipientId = existingRecipient.Id,
             Timestamp = r.Timestamp,
             AgreementToGuidelines = r.AgreementToGuidelines,
             TermsAndConditionsPart1 = r.TermsAndConditionsPart1,
