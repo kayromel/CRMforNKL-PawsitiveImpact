@@ -29,7 +29,7 @@ public class CSVImporter
         }
 
         // Step 3: Format to xxx-xxx-xxxx
-        return $"{digits.Substring(1, 3)}-{digits.Substring(4, 3)}-{digits.Substring(7, 4)}";
+        return $"{digits.Substring(0, 3)}-{digits.Substring(3, 3)}-{digits.Substring(6, 4)}";
     }
 
     public async Task ImportPetFoodRequestsAsync(string csvFilePath)
