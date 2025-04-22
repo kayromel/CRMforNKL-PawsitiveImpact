@@ -5,11 +5,6 @@ namespace No_Kill_Inventory.Data;
 
 public class PetFoodRequest
 {
-    public int? RecipientId { get; set; }
-    [ForeignKey("RecipientId")]
-    public Recipient? Recipient { get; set; }
-    
-    
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
