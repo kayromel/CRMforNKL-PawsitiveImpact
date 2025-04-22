@@ -443,7 +443,8 @@ private IEnumerable<Recipient> PagedRecipients => recipients
         .Skip((currentPage - 1) * pageSize)
         .Take(pageSize);
 
-    private int TotalPages => (int)Math.Ceiling((double)GetFilteredRecipients().Count() / pageSize);
+    private int TotalPages => (int)Math.Ceiling((double)AllMatchingRecipients.Count() / pageSize);
+
 
     private void NextPage()
     {
@@ -459,18 +460,17 @@ private IEnumerable<Recipient> PagedRecipients => recipients
 
 
 
-    private IEnumerable<Recipient> FilteredRecipients => GetFilteredRecipients()
-        .Skip((currentPage - 1) * pageSize)
-        .Take(pageSize);
+    private IEnumerable<Recipient> FilteredRecipients => AllMatchingRecipients
+    .Skip((currentPage - 1) * pageSize)
+    .Take(pageSize);
 
-    private IEnumerable<Recipient> GetFilteredRecipients()
-    {
-        return recipients
-            .Where(r => r.Status != RecipientStatus.Completed)
-            .Where(r => string.IsNullOrWhiteSpace(searchTerm) || 
-                r.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
-                r.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-    }        
+    private IEnumerable<Recipient> AllMatchingRecipients => recipients
+        .Where(r => r.Status != RecipientStatus.Completed &&
+            (string.IsNullOrWhiteSpace(searchTerm) ||
+            r.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            r.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            r.Status.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)));
+        
 
     private void ResetToFirstPage()
 {
