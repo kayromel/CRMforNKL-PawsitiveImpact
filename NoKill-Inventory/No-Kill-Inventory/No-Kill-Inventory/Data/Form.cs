@@ -7,8 +7,7 @@ public enum FormType
 {
     Application,
     ProofOfIncome,
-    SpayNeuter,
-    FoodExpiration
+    SpayNeuter
 }
 
 public class Form

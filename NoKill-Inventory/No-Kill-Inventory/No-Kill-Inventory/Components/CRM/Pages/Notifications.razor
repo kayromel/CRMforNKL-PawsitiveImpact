@@ -15,7 +15,7 @@
             <MudTh>Expiration Date</MudTh>
         </HeaderContent>
         <RowTemplate Context ="item">
-            <MudTd>@item.Form</MudTd>
+            <MudTd>@item.notification</MudTd>
             <MudTd>@item.DaysLeft</MudTd>
             <MudTd>@item.Expiration.ToString("MM/dd/yyyy")</MudTd>
         </RowTemplate>
@@ -25,15 +25,23 @@
 @code {
     private List<Notification> TotalNotifications = new List<Notification>();
 
+    public enum NotificationType
+    {
+        Application,
+        ProofOfIncome,
+        SpayNeuter,
+        FoodExpiration
+    }
+
     private struct Notification
     {
-        public Notification(FormType form, int daysLeft, DateTime expiration)
+        public Notification(NotificationType notification, int daysLeft, DateTime expiration)
         {
-            Form = form;
+            this.notification = notification;
             DaysLeft = daysLeft;
             Expiration = expiration;
         }
-        public FormType Form;
+        public NotificationType notification;
         public int DaysLeft;
         public DateTime Expiration;
     }
@@ -44,7 +52,7 @@
         {
             if ((item.ExpirationDate - DateTime.Today).TotalDays <= 7 && item.Status == Status.Alive)
             {
-                var p1 = new Notification(FormType.FoodExpiration, (int)(item.ExpirationDate - DateTime.Today).TotalDays, item.ExpirationDate.Date);
+                var p1 = new Notification(NotificationType.FoodExpiration, (int)(item.ExpirationDate - DateTime.Today).TotalDays, item.ExpirationDate.Date);
                 TotalNotifications.Add(p1);
             }
         }
