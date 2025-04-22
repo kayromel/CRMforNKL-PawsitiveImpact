@@ -12,20 +12,28 @@
 
 <PageTitle>Register confirmation</PageTitle>
 
-<h1>Register confirmation</h1>
+<div class="d-flex flex-column gap-y-3">
+    <MudText Typo="Typo.h4" GutterBottom="true">Register confirmation</MudText>
 
-<StatusMessage Message="@statusMessage"/>
+    <StatusMessage Message="@statusMessage"/>
 
-@if (emailConfirmationLink is not null)
-{
-    <p>
-       <a href="@emailConfirmationLink">Click here to confirm the account</a>
-    </p>
-}
-else
-{
-    <p>Please check your email to confirm the account.</p>
-}
+    @if (emailConfirmationLink is not null)
+    {
+        <div class="my-4">
+            <MudButton Href="@emailConfirmationLink"
+                       Variant="Variant.Outlined"
+                       Color="Color.Primary"
+                       Size="Size.Medium"
+                       FullWidth="false">
+                Confirm your account
+            </MudButton>
+        </div>
+    }
+    else
+    {
+        <MudText Typo="Typo.body1">Please check your email to confirm the account.</MudText>
+    }
+</div>
 
 @code {
     /*

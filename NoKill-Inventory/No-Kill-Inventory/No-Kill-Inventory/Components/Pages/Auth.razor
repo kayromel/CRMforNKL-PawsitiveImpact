@@ -10,73 +10,56 @@
 
 @attribute [Authorize(Roles = "Admin")]
 
-@*
-    This page is the admin dashboard, where they can view all current users and delete them if needed
-*@
-
-<style>
-    table {
-        border-collapse: collapse;
-        width: 100%; 
-    }
-    td, th {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-    }
-    
-    tr:nth-child(even) {
-      background-color: #dddddd;
-    }
-</style>
-
 <PageTitle>Auth</PageTitle>
 
-<h1>Manage Users</h1>
+<MudText Typo="Typo.h4" Class="mb-4">Manage Users</MudText>
 
 <AuthorizeView>
-    Hello @context.User.Identity?.Name!
-    
-    <div>
-        <table>
-            <tr>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Remove</th>
-            </tr>
-            @foreach (var u in Context.Users)
-            {
-                var userRole = Context.UserRoles
-                    .Where(ur => ur.UserId == u.Id)
-                    .Join(Context.Roles,
-                        ur => ur.RoleId,
-                        role => role.Id,
-                        (ur, role) => role.Name)
-                    .FirstOrDefault();
-                <tr>
-                    <td>@u.UserName</td>
-                    <td>@userRole</td> 
-                    <td>
-                        @if(u.Id != SignInManager.UserManager.GetUserId(SignInManager.Context.User)){
-                            <button type="button" @onclick="(async () => await DeleteUser(u.Id))">Delete</button>
-                        }
-                    </td>
-                </tr>
-            }
-        </table>
-    </div>
-
+    <Authorized>
+        <MudText Typo="Typo.h6" Class="mb-4">Hello @context.User.Identity?.Name!</MudText>
+        
+        <MudTable Items="Context.Users.ToList()">
+            <HeaderContent>
+                <MudTh>Username</MudTh>
+                <MudTh>Role</MudTh>
+                <MudTh>Remove</MudTh>
+            </HeaderContent>
+            <RowTemplate Context="user">
+                @{
+                    var userRole = Context.UserRoles
+                        .Where(ur => ur.UserId == user.Id)
+                        .Join(Context.Roles,
+                              ur => ur.RoleId,
+                              role => role.Id,
+                              (ur, role) => role.Name)
+                        .FirstOrDefault();
+                }
+                <MudTd DataLabel="Username">@user.UserName</MudTd>
+                <MudTd DataLabel="Role">@userRole</MudTd>
+                <MudTd DataLabel="Remove">
+                    @if(user.Id != SignInManager.UserManager.GetUserId(SignInManager.Context.User))
+                    {
+                        <MudButton Color="Color.Error" OnClick="@(() => DeleteUser(user.Id))">
+                            Delete
+                        </MudButton>
+                    }
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </Authorized>
+    <NotAuthorized>
+        <MudText Typo="Typo.subtitle1">You are not authorized to view this page.</MudText>
+    </NotAuthorized>
 </AuthorizeView>
 
-@code
-{
+@code {
     // Deletes the selected user from the table
     private async Task DeleteUser(string UserID)
     {
         // Finds the user based on their UserID
         var user = await Context.Users.FindAsync(UserID);
         
-        // Deletes them from the table and saves
+        // Deletes the user and saves changes
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
         {
             if (user != null)

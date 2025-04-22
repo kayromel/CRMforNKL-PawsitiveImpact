@@ -7,89 +7,53 @@
 @using No_Kill_Inventory.Data
 @rendermode InteractiveServer
 
+@inject NavigationManager NavigationManager
+
 @attribute [Authorize]
 
 <PageTitle>Inventory Entry</PageTitle>
 
 <AuthorizeView>
     <Authorized>
-        <h1>Inventory Entry</h1>
-        
-        <div class="row">
-            <div class="col-md4">
-                <EditForm Model="Input" method Context="editContext">
-                    <DataAnnotationsValidator/>
-                    <h2>All fields must be filled</h2>
-                    <hr/>
-                    <h6>Choose what type of food you are adding to the inventory</h6>
-                    <ValidationSummary class="text-danger" role="alert"/>
-                    <style>
-                    /* Style The Dropdown Button */
-                    .dropbtn {
-                      background-color: #286fc0;
-                      color: white;
-                      padding: 8px;
-                      font-size: 16px;
-                      border: none;
-                      cursor: pointer;
-                      border-radius: 4px;
-                    }
+        <MudText Typo="Typo.h3" GutterBottom="true">Inventory Entry</MudText>
 
-                    /* The container - needed to position the dropdown content */
-                    .dropdown {
-                      position: relative;
-                      display: inline-block;
-                    }
+        <MudGrid>
+            <MudItem xs="12" sm="4">
+                <MudForm @ref="form" Model="@Input">
+                    <MudText Typo="Typo.h6">All fields must be filled</MudText>
+                    <MudDivider Class="my-2" />
+                    <MudText Typo="Typo.subtitle1">Choose what type of food you are adding to the inventory</MudText>
 
-                    /* Dropdown Content (Hidden by Default) */
-                    .dropdown-content {
-                      display: none;
-                      position: absolute;
-                      background-color: #f9f9f9;
-                      min-width: 160px;
-                      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                      z-index: 1;
-                    }
-
-                    /* Links inside the dropdown */
-                    .dropdown-content a {
-                      color: black;
-                      padding: 12px 16px;
-                      text-decoration: none;
-                      display: block;
-                    }
-
-                    /* Change color of dropdown links on hover */
-                    .dropdown-content a:hover {background-color: #f1f1f1}
-
-                    /* Show the dropdown menu on hover */
-                    .dropdown:hover .dropdown-content {
-                      display: block;
-                    }
-
-                    /* Change the background color of the dropdown button when the dropdown content is shown */
-                    .dropdown:hover .dropbtn {
-                      background-color: #3e8e41;
-                    }
-                    </style>
-
-                    <div class="dropdown">
-                      <button class="dropbtn">Food Type</button>
-                      <div class="dropdown-content">
-                        <a href="/DogFoodInventoryEntry">Dog</a>
-                        <a href="/CatFoodInventoryEntry">Cat</a>
-                        <a href="/OtherPetFoodInventoryEntry">Other Pets</a>
-                      </div>
-                    </div>
-                </EditForm>
-            </div>
-        </div>
+                    <MudPaper Class="pa-4 mt-4">
+                        <MudMenu Label="Food Type" Variant="Variant.Filled">
+                            <MudMenuItem OnClick="@GoToDogFoodInventoryEntry">Dog</MudMenuItem>
+                            <MudMenuItem OnClick="@GoToCatFoodInventoryEntry">Cat</MudMenuItem>
+                            <MudMenuItem OnClick="@GoToOtherPetFoodInventoryEntry">Other Pets</MudMenuItem>
+                        </MudMenu>
+                    </MudPaper>
+                </MudForm>
+            </MudItem>
+        </MudGrid>
     </Authorized>
 </AuthorizeView>
 
 @code {
-    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+    private void GoToDogFoodInventoryEntry() 
+    {
+        NavigationManager.NavigateTo("/DogFoodInventoryEntry");
+    }
+    private void GoToCatFoodInventoryEntry() 
+    {
+        NavigationManager.NavigateTo("/CatFoodInventoryEntry");
+    }
+    private void GoToOtherPetFoodInventoryEntry() 
+    {
+        NavigationManager.NavigateTo("/OtherPetFoodInventoryEntry");
+    }
     
+    private MudForm form;
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+
     public void CatItemStore()
     {
         using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
@@ -99,6 +63,7 @@
                 Type = Input.TypeCat,
                 Weight = Input.WeightCat
             };
+            // Add saving logic here if needed
         }
     }
     
@@ -108,9 +73,10 @@
         {
             var newDogItem = new DogItem()
             {
-                Type   = Input.TypeDog,
+                Type = Input.TypeDog,
                 Weight = Input.WeightDog
             };
+            // Add saving logic here if needed
         }
     }
     
@@ -124,6 +90,7 @@
                 Desc = Input.Desc,
                 Weight = Input.WeightOther
             };
+            // Add saving logic here if needed
         }
     }
     
@@ -132,35 +99,32 @@
         [Required]
         [StringLength(100, ErrorMessage = "Should input from the dropdown")]
         [Display(Name = "TypeDog")]
-        public String TypeDog { get; set; }
+        public string TypeDog { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "Should input a number")]
         [Display(Name = "WeightDog")]
         public int WeightDog { get; set; }
         
         [Required]
         [StringLength(100, ErrorMessage = "Should input from the dropdown")]
         [Display(Name = "TypeCat")]
-        public String TypeCat { get; set; }
+        public string TypeCat { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "Should input a number")]
         [Display(Name = "WeightCat")]
         public int WeightCat { get; set; }
         
         [Required]
         [StringLength(100, ErrorMessage = "Should input a String")]
         [Display(Name = "Animal")]
-        public String Animal { get; set; }
+        public string Animal { get; set; }
         
         [Required]
         [StringLength(100, ErrorMessage = "Should input a String")]
         [Display(Name = "Desc")]
-        public String Desc { get; set; }
+        public string Desc { get; set; }
         
         [Required]
-        [StringLength(100, ErrorMessage = "Should input a number")]
         [Display(Name = "WeightOther")]
         public int WeightOther { get; set; }
     }
