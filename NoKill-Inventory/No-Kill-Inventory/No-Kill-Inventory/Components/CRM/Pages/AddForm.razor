@@ -12,13 +12,13 @@
 @attribute [Authorize]
 
 <MudText Typo="Typo.h4">Add Form</MudText>
-<MudText Typo="Typo.body1">Fill out the forum below to add a pallet.</MudText>
+<MudText Typo="Typo.body1">Fill out the document below to add a form.</MudText>
 
 <MudPaper Class="pa-16 ma-2" Outlined="true">
     <MudStack Spacing="4" AlignItems="AlignItems.Center">
         @if (_submitted)
         {
-            <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Success" >Inventory Added!</MudText>
+            <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Success" >Form Added!</MudText>
             <MudButton Variant="Variant.Filled" OnClick="@NewForm" Color="Color.Primary">
                 <MudText>Add More?</MudText>
             </MudButton>
