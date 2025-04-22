@@ -230,6 +230,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 Type = "Special",
                 Weight = 0
             });
-        
+
     }
 }

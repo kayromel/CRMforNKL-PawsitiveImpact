@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using No_Kill_Inventory.Data;
 
@@ -10,9 +11,11 @@ using No_Kill_Inventory.Data;
 namespace NoKillInventory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250421024428_AddLastAppointmentDateToRecipient")]
+    partial class AddLastAppointmentDateToRecipient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
@@ -236,15 +239,15 @@ namespace NoKillInventory.Migrations
                         {
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fc8b04f3-07a0-48c1-8926-0e43125b1626",
+                            ConcurrencyStamp = "4bd8c36f-c4bb-4ef1-8d40-be1902effd54",
                             Email = "adminuser",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMINUSER",
                             NormalizedUserName = "ADMINUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAsKBT9H4CSMqkx3haBdp3bcxv6896TaqZ0BEkd9OTCRFhH5c/tcSFqzwOfrEJoiSw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIqbCi+s51YBfEq8GFoSxfQqRafA1fXtE0nsM4D0gzqRykzmqJ8YZHC2toB2TyWpNg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "bc0d1491-5bb3-412d-a1d5-321d670fe8f5",
+                            SecurityStamp = "26005b3d-2f6b-4cf8-8d6e-212c4c537357",
                             TwoFactorEnabled = false,
                             UserName = "adminuser"
                         });
@@ -499,18 +502,12 @@ namespace NoKillInventory.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("CheckInTime")
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("TotalMinutes")
-                        .HasColumnType("REAL");
 
                     b.HasKey("VolunteerID");
 
