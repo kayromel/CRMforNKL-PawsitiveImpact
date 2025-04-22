@@ -17,6 +17,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     }
     // Telling the context what the tables that have been created are
     public DbSet<FoodPallet> FoodPallets { get; set; }
+    
+    public DbSet<PetFoodRequest> PetFoodRequests { get; set; }
 
     public DbSet<Volunteer> Volunteers { get; set; }
     
