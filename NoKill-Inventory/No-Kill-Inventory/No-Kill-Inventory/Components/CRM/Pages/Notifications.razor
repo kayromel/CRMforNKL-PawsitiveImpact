@@ -1,4 +1,4 @@
-@page "/Notifications/View"
+@page "/Notifications"
 
 @using Microsoft.AspNetCore.Authorization
 @using No_Kill_Inventory.Data
@@ -10,12 +10,14 @@
 <AuthorizeView>
     <MudTable T="Notification" Items="@TotalNotifications" Hover="true">
         <HeaderContent>
-            <MudTh>Expiration Form Type</MudTh>
+            <MudTh>Expiration Notification Type</MudTh>
+            <MudTh>Name</MudTh>
             <MudTh>Days Until Expiration</MudTh>
             <MudTh>Expiration Date</MudTh>
         </HeaderContent>
         <RowTemplate Context ="item">
             <MudTd>@item.notification</MudTd>
+            <MudTd>@item.Name</MudTd>
             <MudTd>@item.DaysLeft</MudTd>
             <MudTd>@item.Expiration.ToString("MM/dd/yyyy")</MudTd>
         </RowTemplate>
@@ -35,15 +37,17 @@
 
     private struct Notification
     {
-        public Notification(NotificationType notification, int daysLeft, DateTime expiration)
+        public Notification(NotificationType notification, int daysLeft, DateTime expiration, string name)
         {
             this.notification = notification;
             DaysLeft = daysLeft;
             Expiration = expiration;
+            Name = name;
         }
         public NotificationType notification;
         public int DaysLeft;
         public DateTime Expiration;
+        public string Name;
     }
 
     private void GetFoodNotifications()
@@ -52,15 +56,33 @@
         {
             if ((item.ExpirationDate - DateTime.Today).TotalDays <= 7 && item.Status == Status.Alive)
             {
-                var p1 = new Notification(NotificationType.FoodExpiration, (int)(item.ExpirationDate - DateTime.Today).TotalDays, item.ExpirationDate.Date);
+                var p1 = new Notification(NotificationType.FoodExpiration, (int)(item.ExpirationDate - DateTime.Today).TotalDays, item.ExpirationDate.Date, "Pallet ID: " + item.ItemID);
                 TotalNotifications.Add(p1);
             }
         }
         Console.WriteLine(TotalNotifications);
     }
     
+    private void GetFormNotifications()
+    {
+        foreach (var item in Context.Forms)
+        {
+            Recipient recipient = Context.Recipients.Find(item.RecipientId);
+            string name = recipient.FirstName + " " + recipient.LastName;
+            DateTime date = DateTime.Parse(item.Date);
+            if ((date - DateTime.Today).TotalDays <= 7)
+            {
+                var p1 = new Notification((NotificationType)item.FormType, (int)(date - DateTime.Today).TotalDays, date.Add(new TimeSpan(365, 0, 0, 0)), name);
+                TotalNotifications.Add(p1);
+            }
+        }
+        Console.WriteLine(TotalNotifications);
+    }
+    
+    
     protected override async Task OnInitializedAsync()
     {
         GetFoodNotifications();
+        GetFormNotifications();
     }
 }
