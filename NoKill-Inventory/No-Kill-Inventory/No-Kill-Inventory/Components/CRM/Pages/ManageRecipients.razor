@@ -13,65 +13,78 @@
 
 <AuthorizeView>
     <Authorized>
-        <h1>Add Recipient</h1>
-
         <!-- Search Section -->
         <MudPaper Class="pa-4 mb-4">
             <MudText Typo="Typo.h5">Search Recipients</MudText>
 
-            <MudTextField @bind-Value="searchTerm" Placeholder="Enter recipient name..." Immediate="true" Class="mb-2" />
+            <MudTextField @bind-Value="searchTerm" Placeholder="Enter recipient name or phone number..." Immediate="true" Class="mb-2" />
             
-            @if (filteredRecipients.Any())
-            {
-                @foreach (var recipient in filteredRecipients)
-                {
-                    <MudPaper Class="pa-2 mb-2">
-    <MudText Typo="Typo.subtitle2">@recipient.FirstName @recipient.LastName</MudText>
-    <MudText Typo="Typo.body2">@recipient.PhoneNumber</MudText>
-
-    <div class="d-flex flex-wrap gap-2 mt-1">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => SelectRecipient(recipient))">
-            Select Recipient
-        </MudButton>
-        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => ShowAppointmentDate(recipient))">
-            Show Last Appointment
-        </MudButton>
-    </div>
-
-    @if (recipientToShowDate?.Id == recipient.Id)
-    {
-        <MudText Typo="Typo.caption" Class="mt-1">
-            Last Appointment Date: @(string.IsNullOrWhiteSpace(recipient.LastAppointmentDate) ? "N/A" : recipient.LastAppointmentDate)
-        </MudText>
-    }
-</MudPaper>
-
-                }
-            }
-            else if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                <MudText>No recipients found.</MudText>
-            }
+            @if (!filteredRecipients.Any() && !string.IsNullOrWhiteSpace(searchTerm))
+{
+            <MudText>No recipients found.</MudText>
+}
 
         </MudPaper>
 
         <!-- Recipient Info Update Section -->
-        @if (selectedRecipient != null)
+        @foreach (var recipient in pagedRecipients)
+{
+    <MudPaper Class="pa-2 mb-2">
+        <MudText Typo="Typo.subtitle2">@recipient.FirstName @recipient.LastName</MudText>
+        <MudText Typo="Typo.body2">@recipient.PhoneNumber</MudText>
+
+        <div class="d-flex flex-wrap gap-2 mt-1">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => SelectRecipient(recipient))">
+                Select Recipient
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => ShowAppointmentDate(recipient))">
+                Show Last Appointment
+            </MudButton>
+        </div>
+
+        @if (recipientToShowDate?.Id == recipient.Id)
         {
-            <MudPaper Class="pa-4 mt-4">
-                <MudText Typo="Typo.h5">Selected Recipient: @selectedRecipient.FirstName @selectedRecipient.LastName</MudText>
-
-                <MudTextField T="string" Label="Items Receiving" @bind-Value="selectedRecipient.ItemsReceiving" Placeholder="Enter items or information" />
-
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitRecipientInfo">
-                    Submit
-                </MudButton>
-            </MudPaper>
+            <MudText Typo="Typo.caption" Class="mt-1">
+                Last Appointment Date: @(string.IsNullOrWhiteSpace(recipient.LastAppointmentDate) ? "N/A" : recipient.LastAppointmentDate)
+            </MudText>
         }
+
+        @if (selectedRecipient?.Id == recipient.Id)
+        {
+            <MudDivider Class="my-2" />
+            <MudText Typo="Typo.h6">Update Info for @recipient.FirstName @recipient.LastName</MudText>
+
+            <MudTextField T="string"
+                          Label="Items Receiving"
+                          @bind-Value="selectedRecipient.ItemsReceiving"
+                          Placeholder="Enter items or information" />
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       OnClick="SubmitRecipientInfo"
+                       Class="mt-2">
+                Submit
+            </MudButton>
+        }
+    </MudPaper>
+}
+
+        @if (totalPages > 1)
+{
+    <div class="d-flex justify-content-center mt-2">
+        <MudButton Disabled="@(currentPage == 1)" OnClick="PrevPage">Previous</MudButton>
+        <MudText Class="mx-2">Page @currentPage of @totalPages</MudText>
+        <MudButton Disabled="@(currentPage == totalPages)" OnClick="NextPage">Next</MudButton>
+    </div>
+}
+
     </Authorized>
+    
 </AuthorizeView>
 
 @code {
+    private int currentPage = 1;
+    private int pageSize = 15;
     private string[] errors = { };
     private PetType[] petTypes = [ PetType.Dog, PetType.Cat, PetType.Other ];
     private Recipient? recipientToShowDate;
@@ -83,11 +96,27 @@ private void ShowAppointmentDate(Recipient recipient)
 
     private Recipient? selectedRecipient;  // Track the selected recipient
 
-    private string searchTerm = "";
+    private string _searchTerm = "";
+    private string searchTerm
+    {
+        get => _searchTerm;
+        set
+        {
+            if (_searchTerm != value)
+            {
+                _searchTerm = value;
+                currentPage = 1;
+            }
+        }
+    }
+
     private List<Recipient> allRecipients = new();
     private IEnumerable<Recipient> filteredRecipients =>
         allRecipients
-            .Where(r => $"{r.FirstName} {r.LastName}".Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            .Where(r =>
+                $"{r.FirstName} {r.LastName}".Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                (r.PhoneNumber != null && r.PhoneNumber.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            )
             .ToList();
 
     protected override async Task OnInitializedAsync()
@@ -117,5 +146,23 @@ private void ShowAppointmentDate(Recipient recipient)
         }
     }
 
-    
+    private IEnumerable<Recipient> pagedRecipients => 
+    filteredRecipients
+        .Skip((currentPage - 1) * pageSize)
+        .Take(pageSize);
+
+    private int totalPages => (int)Math.Ceiling((double)filteredRecipients.Count() / pageSize);
+
+    private void NextPage()
+{
+    if (currentPage < totalPages)
+        currentPage++;
+}
+
+private void PrevPage()
+{
+    if (currentPage > 1)
+        currentPage--;
+}
+
 }

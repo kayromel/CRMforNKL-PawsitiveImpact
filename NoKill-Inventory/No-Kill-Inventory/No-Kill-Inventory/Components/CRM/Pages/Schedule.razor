@@ -335,7 +335,8 @@ private async Task CheckInVolunteer()
     if (!string.IsNullOrWhiteSpace(volunteerName))
     {
         var existingVolunteer = await Context.Volunteers
-            .FirstOrDefaultAsync(v => v.Name == volunteerName);
+            .FirstOrDefaultAsync(v => v.Name.ToLower() == volunteerName.ToLower());
+
 
         if (existingVolunteer == null)
         {
@@ -373,7 +374,8 @@ private async Task CheckOutVolunteer()
     if (!string.IsNullOrWhiteSpace(volunteerName))
     {
         var existingVolunteer = await Context.Volunteers
-            .FirstOrDefaultAsync(v => v.Name == volunteerName && v.IsAvailable);
+            .FirstOrDefaultAsync(v => v.Name.ToLower() == volunteerName.ToLower() && v.IsAvailable);
+
 
         if (existingVolunteer != null)
         {
