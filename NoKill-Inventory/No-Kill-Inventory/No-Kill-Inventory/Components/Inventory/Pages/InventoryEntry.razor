@@ -36,7 +36,7 @@
             <MudTextField @bind-Value="_weight" Label="Enter Weight (lb)" Placeholder="Ex: 50lb" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
             <MudStack Row="true" Spacing="16">
                 <MudDatePicker Label="Enter Arrival Date" @bind-Date="_arrivalDate" Editable="true" ShowToolbar="false"/>
-                <MudDatePicker Label="Enter Experation Date" @bind-Date="_expirationDate" Editable="true" ShowToolbar="false"/>
+                <MudDatePicker Label="Enter Expiration Date" @bind-Date="_expirationDate" Editable="true" ShowToolbar="false"/>
             </MudStack>
 
             <MudButton Disabled="@_processing" Variant="Variant.Filled" OnClick="AddPallet" Color="Color.Primary">
