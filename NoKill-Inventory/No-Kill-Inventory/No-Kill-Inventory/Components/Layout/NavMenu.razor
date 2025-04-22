@@ -41,7 +41,10 @@
                     </MudNavGroup>
                 </AuthorizeView>
 
-                <MudNavLink Href="/Notifications" Icon="@Icons.Material.Filled.NotificationsActive" Match="NavLinkMatch.All">Notifications</MudNavLink>
+                <MudNavGroup Title="Notifications" Icon="@Icons.Material.Filled.NotificationsActive" Expanded="true">
+                    <MudNavLink Href="/Notifications/View" Icon="@Icons.Material.Filled.NotificationsActive" Match="NavLinkMatch.Prefix">Notifications</MudNavLink>
+                    <MudNavLink Href="/Notifications/AddForm" Icon="@Icons.Material.Filled.NotificationsActive" Match="NavLinkMatch.Prefix">Add Form</MudNavLink>
+                </MudNavGroup>
                 
                 <MudNavLink Href="Account/Manage/ChangePassword" Icon="@Icons.Material.Filled.ManageAccounts">@context.User.Identity?.Name</MudNavLink>
                 
