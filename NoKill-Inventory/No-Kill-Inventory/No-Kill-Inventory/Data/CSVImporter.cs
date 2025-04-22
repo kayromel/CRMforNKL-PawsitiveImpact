@@ -3,6 +3,7 @@ using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
 using No_Kill_Inventory.Data;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 public class CSVImporter
 {
@@ -11,6 +12,24 @@ public class CSVImporter
     public CSVImporter(ApplicationDbContext context)
     {
         _context = context;
+    }
+    
+    public static string FormatPhoneNumber(string rawNumber)
+    {
+        if (string.IsNullOrWhiteSpace(rawNumber))
+            return "Invalid Number";
+        
+        // Step 1: Strip non-numeric characters
+        string digits = Regex.Replace(rawNumber ?? "", @"\D", "");
+
+        // Step 2: Validate length (should be 11 digits, e.g., 1 for US + 10 digits)
+        if (digits.Length != 10)
+        {
+            return "Invalid Number";
+        }
+
+        // Step 3: Format to xxx-xxx-xxxx
+        return $"{digits.Substring(1, 3)}-{digits.Substring(4, 3)}-{digits.Substring(7, 4)}";
     }
 
     public async Task ImportPetFoodRequestsAsync(string csvFilePath)
@@ -71,7 +90,7 @@ public class CSVImporter
             NamesOfAdults = r.NamesOfAdults,
             ChildrenInHousehold = r.ChildrenInHousehold,
             PhysicalAddress = r.PhysicalAddress,
-            ContactPhoneNumber = r.ContactPhoneNumber,
+            ContactPhoneNumber = r.ContactPhoneNumber != null ? FormatPhoneNumber(r.ContactPhoneNumber) : "Invalid Number",
             EmailAddress = r.EmailAddress,
             AuthorizedPickupPersons = r.AuthorizedPickupPersons,
             HouseholdIncomeSources = r.HouseholdIncomeSources,
