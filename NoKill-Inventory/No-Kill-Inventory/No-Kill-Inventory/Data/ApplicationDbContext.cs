@@ -16,6 +16,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         optionsBuilder.UseSqlite("Data Source=data/app.db");
     }
     // Telling the context what the tables that have been created are
+    public DbSet<Form> Forms { get; set; }
+    
     public DbSet<FoodPallet> FoodPallets { get; set; }
     
     public DbSet<PetFoodRequest> PetFoodRequests { get; set; }

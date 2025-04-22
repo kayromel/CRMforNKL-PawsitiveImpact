@@ -16,12 +16,16 @@ public class Form
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-    
-    
+
+    // Foreign key pointing to Recipients.Id
+    [ForeignKey(nameof(Recipient))]
     public int RecipientId { get; set; }
+
     public FormType FormType { get; set; }
-    
-    // Add date of submission
-    
-    
+
+    [Required]
+    public string Date { get; set; } = string.Empty;
+
+    // Navigation property to the recipient
+    public Recipient Recipient { get; set; } = null!;
 }
