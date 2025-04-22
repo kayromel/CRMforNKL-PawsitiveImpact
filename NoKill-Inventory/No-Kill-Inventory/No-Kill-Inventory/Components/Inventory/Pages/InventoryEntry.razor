@@ -3,129 +3,110 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
 @using Microsoft.EntityFrameworkCore
 @using No_Kill_Inventory.Data
+@inject ApplicationDbContext Context
 @rendermode InteractiveServer
-
-@inject NavigationManager NavigationManager
 
 @attribute [Authorize]
 
-<PageTitle>Inventory Entry</PageTitle>
+<MudText Typo="Typo.h4">Add Inventory</MudText>
+<MudText Typo="Typo.body1">Fill out the forum below to add a pallet.</MudText>
 
-<AuthorizeView>
-    <Authorized>
-        <MudText Typo="Typo.h3" GutterBottom="true">Inventory Entry</MudText>
+<MudPaper Class="pa-16 ma-2" Outlined="true">
+    <MudStack Spacing="4" AlignItems="AlignItems.Center">
+        @if (_submitted)
+        {
+            <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Success" >Inventory Added!</MudText>
+            <MudButton Variant="Variant.Filled" OnClick="@NewForm" Color="Color.Primary">
+                <MudText>Add More?</MudText>
+            </MudButton>
+            
+        }
+        else
+        {
+            <MudSelect @bind-Value="_enumValue" Label="Select Species" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
+                @foreach (Species Item in Enum.GetValues(typeof(Species)))
+                {
+                    <MudSelectItem Value="@Item">@Item</MudSelectItem>
+                }
+            </MudSelect>
+            <MudTextField @bind-Value="_locationDesc" Label="Enter Location" Placeholder="Ex: Spot 1" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
+            <MudTextField @bind-Value="_weight" Label="Enter Weight (lb)" Placeholder="Ex: 50lb" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
+            <MudStack Row="true" Spacing="16">
+                <MudDatePicker Label="Enter Arrival Date" @bind-Date="_arrivalDate" Editable="true" ShowToolbar="false"/>
+                <MudDatePicker Label="Enter Experation Date" @bind-Date="_expirationDate" Editable="true" ShowToolbar="false"/>
+            </MudStack>
 
-        <MudGrid>
-            <MudItem xs="12" sm="4">
-                <MudForm @ref="form" Model="@Input">
-                    <MudText Typo="Typo.h6">All fields must be filled</MudText>
-                    <MudDivider Class="my-2" />
-                    <MudText Typo="Typo.subtitle1">Choose what type of food you are adding to the inventory</MudText>
+            <MudButton Disabled="@_processing" Variant="Variant.Filled" OnClick="AddPallet" Color="Color.Primary">
+                @if (_processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Medium" Indeterminate="true"/>
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>Add Pallet</MudText>
+                }
+            </MudButton>
+            @if (_error)
+            {
+                <MudText Color="Color.Error">One or more fields are blank. Please fill out all fields to submit form.</MudText>
+            }
+        }
+    </MudStack>
+</MudPaper>
 
-                    <MudPaper Class="pa-4 mt-4">
-                        <MudMenu Label="Food Type" Variant="Variant.Filled">
-                            <MudMenuItem OnClick="@GoToDogFoodInventoryEntry">Dog</MudMenuItem>
-                            <MudMenuItem OnClick="@GoToCatFoodInventoryEntry">Cat</MudMenuItem>
-                            <MudMenuItem OnClick="@GoToOtherPetFoodInventoryEntry">Other Pets</MudMenuItem>
-                        </MudMenu>
-                    </MudPaper>
-                </MudForm>
-            </MudItem>
-        </MudGrid>
-    </Authorized>
-</AuthorizeView>
 
 @code {
-    private void GoToDogFoodInventoryEntry() 
-    {
-        NavigationManager.NavigateTo("/DogFoodInventoryEntry");
-    }
-    private void GoToCatFoodInventoryEntry() 
-    {
-        NavigationManager.NavigateTo("/CatFoodInventoryEntry");
-    }
-    private void GoToOtherPetFoodInventoryEntry() 
-    {
-        NavigationManager.NavigateTo("/OtherPetFoodInventoryEntry");
-    }
-    
-    private MudForm form;
-    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+    private bool _processing = false;
+    private bool _submitted = false;
+    private bool _error = false;
 
-    public void CatItemStore()
-    {
-        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
-        {
-            var newCatItem = new CatItem
-            {
-                Type = Input.TypeCat,
-                Weight = Input.WeightCat
-            };
-            // Add saving logic here if needed
-        }
-    }
+    private Species _enumValue;
+    private String _locationDesc;
+    private int _weight;
+    private DateTime? _arrivalDate;
+    private DateTime? _expirationDate;
     
-    public void DogItemStore()
+    async Task AddPallet()
     {
-        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        _processing = true;
+
+        if (_enumValue == null || _weight == 0 || _arrivalDate == null || _expirationDate == null || _locationDesc == null)
         {
-            var newDogItem = new DogItem()
-            {
-                Type = Input.TypeDog,
-                Weight = Input.WeightDog
-            };
-            // Add saving logic here if needed
+            _error = true;
+            _processing = false;
         }
-    }
-    
-    public void OtherItemStore()
-    {
-        using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+        else
         {
-            var newOtherItem = new OtherItem()
+            Context.FoodPallets.Add( new FoodPallet
             {
-                Animal = Input.Animal,
-                Desc = Input.Desc,
-                Weight = Input.WeightOther
-            };
-            // Add saving logic here if needed
+                Animal = _enumValue,
+                Status = Status.Alive,
+                InitWeight = _weight,
+                CurrentWeight = _weight,
+                ArrivalDate = (DateTime)_arrivalDate,
+                ExpirationDate = (DateTime)_expirationDate,
+                LocationDesc = _locationDesc
+            });
+        
+            await Context.SaveChangesAsync();
+            
+            _submitted = true;
         }
+
+        _processing = false;
     }
-    
-    private sealed class InputModel
+
+    async Task NewForm()
     {
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input from the dropdown")]
-        [Display(Name = "TypeDog")]
-        public string TypeDog { get; set; }
-        
-        [Required]
-        [Display(Name = "WeightDog")]
-        public int WeightDog { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input from the dropdown")]
-        [Display(Name = "TypeCat")]
-        public string TypeCat { get; set; }
-        
-        [Required]
-        [Display(Name = "WeightCat")]
-        public int WeightCat { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input a String")]
-        [Display(Name = "Animal")]
-        public string Animal { get; set; }
-        
-        [Required]
-        [StringLength(100, ErrorMessage = "Should input a String")]
-        [Display(Name = "Desc")]
-        public string Desc { get; set; }
-        
-        [Required]
-        [Display(Name = "WeightOther")]
-        public int WeightOther { get; set; }
+        _enumValue = Species.Dog;
+        _locationDesc = "";
+        _arrivalDate = null;
+        _expirationDate = null;
+
+        _submitted = false;
     }
 }

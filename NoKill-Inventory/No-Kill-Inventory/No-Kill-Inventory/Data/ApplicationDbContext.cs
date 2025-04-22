@@ -16,15 +16,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         optionsBuilder.UseSqlite("Data Source=data/app.db");
     }
     // Telling the context what the tables that have been created are
-    public DbSet<OtherItem> OtherItems { get; set; }
-    public DbSet<CatItem> CatItems { get; set; }
-    public DbSet<DogItem> DogItems { get; set; }
-
-    public DbSet<Volunteer> Volunteers { get; set; }
-    
-    public DbSet<Recipient> Recipients { get; set; }
-    
-    public DbSet<Pet> Pets { get; set; }
+    public DbSet<FoodPallet> FoodPallets { get; set; }
     
     // When the model (schema) is created, do these things
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -99,137 +91,31 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             }
         );
 
-        modelBuilder.Entity<Recipient>().HasData(
-            new Recipient()
-            {
-                Id = 1,
-                FirstName = "Billy",
-                LastName = "Madison",
-                PhoneNumber = "555-555-5555",
-                Email = "billy@gmail.com"
-            },
-            new Recipient()
-            {
-                Id = 2,
-                FirstName = "Sarah",
-                LastName = "Connor",
-                PhoneNumber = "444-123-9876",
-                Email = "sarahc@gmail.com"
-            },
-            new Recipient()
-            {
-                Id = 3,
-                FirstName = "John",
-                LastName = "Doe",
-                PhoneNumber = "333-456-7890",
-                Email = "johndoe@example.com"
-            },
-            new Recipient()
-            {
-                Id = 4,
-                FirstName = "Jane",
-                LastName = "Smith",
-                PhoneNumber = "222-654-3210",
-                Email = "janesmith@hotmail.com"
-            },
-            new Recipient()
-            {
-                Id = 5,
-                FirstName = "Michael",
-                LastName = "Scott",
-                PhoneNumber = "111-777-8888",
-                Email = "mscott@dundermifflin.com"
-            });
-        
-        
-
-        modelBuilder.Entity<DogItem>().HasData(
-            new DogItem()
+        modelBuilder.Entity<FoodPallet>().HasData(
+            new FoodPallet()
             {
                 ItemID = 1,
-                Type = "Adult",
-                Weight = 0
-            });
-            
-        modelBuilder.Entity<DogItem>().HasData(
-            new DogItem()
-            {
-                ItemID = 2,
-                Type = "Puppy",
-                Weight = 0
-            });
-        
-        modelBuilder.Entity<DogItem>().HasData(
-            new DogItem()
-            {
-                ItemID = 3,
-                Type = "Weight Control",
-                Weight = 0
-            });
-        
-        modelBuilder.Entity<DogItem>().HasData(
-            new DogItem()
-            {
-                ItemID = 4,
-                Type = "Grain Free",
-                Weight = 0
-            });
-        
-        modelBuilder.Entity<DogItem>().HasData(
-            new DogItem()
-            {
-                ItemID = 5,
-                Type = "Small Bites",
-                Weight = 0
-            });
-        
-        modelBuilder.Entity<DogItem>().HasData(
-            new DogItem()
-            {
-                ItemID = 6,
-                Type = "Wet",
-                Weight = 0
-            });
-        
-        modelBuilder.Entity<DogItem>().HasData(
-            new DogItem()
-            {
-                ItemID = 7,
-                Type = "Special",
-                Weight = 0
-            });
-        
-        modelBuilder.Entity<CatItem>().HasData(
-            new CatItem()
-            {
-                ItemID = 1,
-                Type = "Adult",
-                Weight = 0
-            });
-        
-        modelBuilder.Entity<CatItem>().HasData(
-            new CatItem()
-            {
-                ItemID = 2,
-                Type = "Kitty",
-                Weight = 0
-            });
-        
-        modelBuilder.Entity<CatItem>().HasData(
-            new CatItem()
-            {
-                ItemID = 3,
-                Type = "Wet",
-                Weight = 0
-            });
-        
-        modelBuilder.Entity<CatItem>().HasData(
-            new CatItem()
-            {
-                ItemID = 4,
-                Type = "Special",
-                Weight = 0
-            });
+                Animal = Species.Dog,
+                Status = Status.Alive,
+                InitWeight = 50,
+                CurrentWeight = 50,
+                ArrivalDate = DateTime.UnixEpoch,
+                ExpirationDate = DateTime.Now,
+                LocationDesc = "Back Right of building"
 
+            });
+        modelBuilder.Entity<FoodPallet>().HasData(
+            new FoodPallet()
+            {
+                ItemID = 2,
+                Animal = Species.Cat,
+                Status = Status.Alive,
+                InitWeight = 50,
+                CurrentWeight = 50,
+                ArrivalDate = DateTime.UnixEpoch,
+                ExpirationDate = DateTime.Now,
+                LocationDesc = "Back Left of building"
+
+            });
     }
 }

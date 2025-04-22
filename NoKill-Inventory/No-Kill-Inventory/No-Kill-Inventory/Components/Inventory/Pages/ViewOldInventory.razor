@@ -1,0 +1,153 @@
+﻿@page "/Inventory/ViewOldInventory"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.EntityFrameworkCore.Design
+@using No_Kill_Inventory.Data
+@inject ApplicationDbContext Context
+@rendermode InteractiveServer
+
+@*
+    Locks the page behind authentication 
+*@
+@attribute [Authorize]
+
+<PageTitle>Home</PageTitle>
+
+@* 
+  <AuthorizeView> locks everything in it behind authentication
+  
+  This section deisplay the user's username and each table of items to see the current inventory  
+*@
+<AuthorizeView>
+    @if (!_yearselected)
+    {
+        <MudPaper Class="pa-16 ma-2" Outlined="true">
+            <MudStack Spacing="4" AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.body1">Please select a year to view.</MudText>
+                <MudDatePicker Label="Year" @bind-Date="_daterange" FixDay="1" FixMonth="1" DateFormat="yyyy"></MudDatePicker>
+                <MudButton Variant="Variant.Filled" OnClick="@SelectYear" Color="Color.Primary">
+                    <MudText>Select Year</MudText>
+                </MudButton>
+            </MudStack>
+        </MudPaper>
+    }
+    else if (_restoreselected)
+    {
+        <MudPaper Class="pa-16 ma-2" Outlined="true">
+            <MudStack AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.h4" Color="Color.Error">Remove Pallet?</MudText>
+                <MudText Typo="Typo.body1" Color="Color.Primary">
+                    This will restore this pallet and make it active again. Please make sure your selection is accurate before you select Confirm.
+                </MudText>
+                <MudStack Row="true" Spacing="4">
+                    <MudButton Variant="Variant.Filled" OnClick="@Restore" Color="Color.Primary">
+                        <MudText>Confirm</MudText>
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" OnClick="@GoBack" Color="Color.Primary">
+                        <MudText>Go Back</MudText>
+                    </MudButton>
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+    
+    }
+    else
+    {
+        <MudText Typo="Typo.h4">Hello, @context.User.Identity.Name</MudText>
+        <MudText Typo="Typo.subtitle1">Used inventory is below.</MudText>
+        
+        <MudPaper Class="pa-16 ma-2" Outlined="true">
+            <MudStack Spacing="4" AlignItems="AlignItems.Center" Row="true">
+                <MudText Typo="Typo.body1">Total Inventory for @_selectedyear.Year:</MudText>
+                <MudText Typo="Typo.body1">@GetYearTotal(_selectedyear)lbs</MudText>
+            </MudStack>
+        </MudPaper>
+
+        <MudTable T="FoodPallet" Items="@Context.FoodPallets" Hover="true" Breakpoint="Breakpoint.Sm">
+            <HeaderContent>
+                <MudTh>Item ID Number</MudTh>
+                <MudTh>Animal</MudTh>
+                <MudTh>Food Donated (lb)</MudTh>
+                <MudTh>Arrival Date</MudTh>
+                <MudTh>Expiration Date</MudTh>
+                <MudTh>Location Description</MudTh>
+                <MudTh>Restore</MudTh>
+            </HeaderContent>
+            <RowTemplate Context="pallet">
+                @if (pallet.Status == Status.Used && pallet.ArrivalDate.Year == _selectedyear.Year)
+                {
+                    <MudTd DataLabel="ID">@pallet.ItemID</MudTd>
+                    <MudTd DataLabel="Animal">@pallet.Animal</MudTd>
+                    <MudTd DataLabel="Weight">@pallet.InitWeight</MudTd>
+                    <MudTd DataLabel="Arrival">@pallet.ArrivalDate.ToString("MM/dd/yyyy")</MudTd>
+                    <MudTd DataLabel="Expiration">@pallet.ExpirationDate.ToString("MM/dd/yyyy")</MudTd>
+                    <MudTd DataLabel="Location">@pallet.LocationDesc</MudTd>
+                    <MudTd>
+                        <MudButton Variant="Variant.Filled" OnClick="() => ConfirmRestore(pallet.ItemID)" Color="Color.Primary">
+                            <MudText>Restore Pallet</MudText>
+                        </MudButton>
+                    </MudTd>
+                }
+            </RowTemplate>
+        </MudTable>
+    }
+</AuthorizeView>
+
+@code {
+    private bool _yearselected = false;
+    private bool _restoreselected = false;
+    private int SelectedPallet;
+    private DateTime? _daterange;
+    private DateTime _selectedyear;
+
+    async Task SelectYear()
+    {
+        if (_daterange != null)
+        {
+            _selectedyear = (DateTime)_daterange;
+            _yearselected = true;
+        }
+
+    }
+
+    private int GetYearTotal(DateTime Year)
+    {
+        int foodTotal = 0;
+        foreach(var item in Context.FoodPallets)
+        {
+            if (item.ArrivalDate.Year == Year.Year)
+            {
+                foodTotal += (item.InitWeight - item.CurrentWeight);
+            }
+        }
+
+        return foodTotal;
+    }
+
+    private void GoBack()
+    {
+        _restoreselected = false;
+    }
+
+    private void ConfirmRestore(int ID)
+    {
+        SelectedPallet = ID;
+        _restoreselected = true;
+    }
+    
+    async Task Restore()
+    {
+        
+        var entry = Context.FoodPallets.FirstOrDefault(item => item.ItemID == SelectedPallet);
+
+        if (entry != null)
+        {
+            entry.Status = Status.Alive;
+        }
+
+        await Context.SaveChangesAsync();
+        GoBack();
+    
+    }
+}

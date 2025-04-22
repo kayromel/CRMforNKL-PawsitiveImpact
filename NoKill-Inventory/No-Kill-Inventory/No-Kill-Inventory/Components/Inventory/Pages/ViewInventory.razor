@@ -2,6 +2,7 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
+@using Microsoft.EntityFrameworkCore.Design
 @using No_Kill_Inventory.Data
 @inject ApplicationDbContext Context
 @rendermode InteractiveServer
@@ -19,65 +20,167 @@
   This section deisplay the user's username and each table of items to see the current inventory  
 *@
 <AuthorizeView>
-    <MudText Typo="Typo.h3">Hello, @context.User.Identity.Name</MudText>
-    <MudText Typo="Typo.subtitle1">The current inventory is below.</MudText>
+    @if (!_twostepremove && !_twostepsubtract)
+    {
+        <MudText Typo="Typo.h4">Hello, @context.User.Identity.Name</MudText>
+        <MudText Typo="Typo.body1">The current inventory is below.</MudText>
 
-    <!-- Dog Inventory Table -->
-    <MudText Typo="Typo.h6">Dog</MudText>
-    <MudTable T="DogItem" Items="@Context.DogItems" Hover="true" Breakpoint="Breakpoint.Sm">
-        <HeaderContent>
-            <MudTh>Type</MudTh>
-            <MudTh>Weight</MudTh>
-        </HeaderContent>
-        <RowTemplate Context="dog">
-            <MudTd DataLabel="Type">@dog.Type</MudTd>
-            <MudTd DataLabel="Weight">@dog.Weight</MudTd>
-        </RowTemplate>
-    </MudTable>
+        <MudTable T="FoodPallet" Items="@Context.FoodPallets" Hover="true" Breakpoint="Breakpoint.Sm">
+            <HeaderContent>
+                <MudTh>Item ID Number</MudTh>
+                <MudTh>Animal</MudTh>
+                <MudTh>Food Left (lb)</MudTh>
+                <MudTh>Arrival Date</MudTh>
+                <MudTh>Expiration Date</MudTh>
+                <MudTh>Location Description</MudTh>
+                <MudTh>Subtract Inventory</MudTh>
+                <MudTh>Remove Pallet</MudTh>
+            </HeaderContent>
+            <RowTemplate Context="pallet">
+                @if (pallet.Status == Status.Alive)
+                {
+                    <MudTd DataLabel="ID">@pallet.ItemID</MudTd>
+                    <MudTd DataLabel="Animal">@pallet.Animal</MudTd>
+                    <MudTd DataLabel="Weight">@pallet.CurrentWeight</MudTd>
+                    <MudTd DataLabel="Arrival">@pallet.ArrivalDate.ToString("MM/dd/yyyy")</MudTd>
+                    <MudTd DataLabel="Expiration">@pallet.ExpirationDate.ToString("MM/dd/yyyy")</MudTd>
+                    <MudTd DataLabel="Location">@pallet.LocationDesc</MudTd>
+                    <MudTd>
+                        <MudButton Variant="Variant.Filled" OnClick="() => ConfirmSubtract(pallet.ItemID)" Color="Color.Primary">
+                            <MudText>Subtract</MudText>
+                        </MudButton>
+                    </MudTd>
+                    <MudTd>
+                        <MudButton Variant="Variant.Filled" OnClick="() => ConfirmRemove(pallet.ItemID)" Color="Color.Primary">
+                            <MudText>Remove Pallet</MudText>
+                        </MudButton>
+                    </MudTd>
+                }
+            </RowTemplate>
+        </MudTable>
+        if (_success)
+        {
+            <MudText Color="Color.Success">Success!</MudText>
+        }
+    }
+    else if(_twostepremove)
+    {
+        <MudPaper Class="pa-16 ma-2" Outlined="true">
+            <MudStack AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.h4" Color="Color.Error">Remove Pallet?</MudText>
+                <MudText Typo="Typo.body1" Color="Color.Primary">
+                    This will move the pallet and its information to the Old Inventory tab. Please make sure you have selected
+                    the correct entry.
+                </MudText>
+                <MudStack Row="true" Spacing="4">
+                    <MudButton Variant="Variant.Filled" OnClick="@Remove" Color="Color.Primary">
+                        <MudText>Confirm</MudText>
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" OnClick="@GoBack" Color="Color.Primary">
+                        <MudText>Go Back</MudText>
+                    </MudButton>
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+    }
+    else if (_twostepsubtract)
+    {
+        <MudPaper Class="pa-16 ma-2" Outlined="true">
+            <MudStack AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.h4" Color="Color.Error">Remove Pallet?</MudText>
+                <MudText Typo="Typo.body1" Color="Color.Primary">
+                    This will subtract the amount entered from the pallet. Please ensure the amount subtracted is correct before selecting Confirm.
+                </MudText>
+                <MudText Typo="Typo.body1" Color="Color.Primary">
+                    If the current weight hits zero, this will automatically remove the pallet.
+                </MudText>
+                <MudText Typo="Typo.body1">
+                    Current amout of food left: @Context.FoodPallets.FirstOrDefault(item => item.ItemID == SelectedPallet).CurrentWeight lbs
+                </MudText>
 
-    <!-- Cat Inventory Table -->
-    <MudText Typo="Typo.h6">Cat</MudText>
-    <MudTable T="CatItem" Items="@Context.CatItems" Hover="true" Breakpoint="Breakpoint.Sm">
-        <HeaderContent>
-            <MudTh>Type</MudTh>
-            <MudTh>Weight</MudTh>
-        </HeaderContent>
-        <RowTemplate Context="cat">
-            <MudTd DataLabel="Type">@cat.Type</MudTd>
-            <MudTd DataLabel="Weight">@cat.Weight</MudTd>
-        </RowTemplate>
-    </MudTable>
+                <MudTextField T="String" @bind-Text="_subtractamount" Label="Enter Weight (lb)" Placeholder="Ex: 50lb" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
+                <MudStack Row="true" Spacing="4">
+                    <MudButton Variant="Variant.Filled" OnClick="@Subtract" Color="Color.Primary">
+                        <MudText>Confirm</MudText>
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" OnClick="@GoBack" Color="Color.Primary">
+                        <MudText>Go Back</MudText>
+                    </MudButton>
+                </MudStack>
+                @if (_error)
+                {
+                    <MudText Color="Color.Error">Please input a whole number into the text field.</MudText>
+                }
+            </MudStack>
+        </MudPaper>
+    }
 
-    <!-- Other Inventory Table -->
-    <MudText Typo="Typo.h6">Other</MudText>
-    <MudTable T="OtherItem" Items="@Context.OtherItems" Hover="true" Breakpoint="Breakpoint.Sm">
-        <HeaderContent>
-            <MudTh>Type</MudTh>
-            <MudTh>Description</MudTh>
-            <MudTh>Weight</MudTh>
-            <MudTh>Remove</MudTh>
-        </HeaderContent>
-        <RowTemplate Context="other">
-            <MudTd DataLabel="Type">@other.Animal</MudTd>
-            <MudTd DataLabel="Description">@other.Desc</MudTd>
-            <MudTd DataLabel="Weight">@other.Weight</MudTd>
-            <MudTd DataLabel="Remove">
-                <MudButton OnClick="@(async () => await DeleteItem(other.ItemID))" Color="Color.Error" Variant="Variant.Filled">
-                    Delete
-                </MudButton>
-            </MudTd>
-        </RowTemplate>
-    </MudTable>
 </AuthorizeView>
 
 @code {
-    private async Task DeleteItem(int ItemID)
+    private bool _success = false;
+    private bool _twostepremove = false;
+    private bool _twostepsubtract = false;
+    private bool _error = false;
+    private int SelectedPallet;
+    private String _subtractamount;
+
+
+    private void ConfirmRemove(int ID)
     {
-        var item = await Context.OtherItems.FindAsync(ItemID);
-        if (item != null)
-        {
-            Context.OtherItems.Remove(item);
-            await Context.SaveChangesAsync();
-        }
+        SelectedPallet = ID;
+        _twostepremove = true;
+
     }
+
+    private void ConfirmSubtract(int ID)
+    {
+        SelectedPallet = ID;
+        _twostepsubtract = true;
+
+    }
+
+    private void GoBack()
+    {
+        _error = false;
+        _twostepremove = false;
+        _twostepsubtract = false;
+    }
+
+    async Task Remove()
+    {
+        var entry = Context.FoodPallets.FirstOrDefault(item => item.ItemID == SelectedPallet);
+
+        if (entry != null)
+        {
+            entry.Status = Status.Used;
+        }
+
+        await Context.SaveChangesAsync();
+        GoBack();
+    }
+
+    async Task Subtract()
+    {
+        var entry = Context.FoodPallets.FirstOrDefault(item => item.ItemID == SelectedPallet);
+
+        try
+        {
+            entry.CurrentWeight -= int.Parse(_subtractamount);
+
+            if (entry.CurrentWeight <= 0)
+            {
+                await Remove();
+            }
+
+            await Context.SaveChangesAsync();
+            GoBack();
+        }
+        catch (System.FormatException)
+        {
+            _error = true;
+        }
+
+    }
+
 }
