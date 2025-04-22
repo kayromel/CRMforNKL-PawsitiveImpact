@@ -84,73 +84,73 @@
 <PageTitle>Schedule</PageTitle>
 
 <AuthorizeView>
-   <div class="container">
-    <h1>Volunteer Information</h1>
-    <div style="display: flex; justify-content: space-between;">
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Volunteers Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>@volunteersCount</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+   <div class="container" style="margin-top: 20px !important; max-width: 1000px; margin: auto; font-family: Arial, sans-serif;">
+    <h1 style="text-align: center; color: #333;">Volunteers</h1>
 
-        <div style="flex: 1; margin-left: 20px;">
-            <h2>Volunteers Today:</h2>
-            <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
-                <ul>
-                    @foreach (var volunteer in availableVolunteers)
-                    {
-                        <li>@volunteer.Name</li>
-                    }
-                </ul>
-            </div>
-        </div>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <table style="width: 100%; border-collapse: collapse; text-align: center; margin-bottom: 20px;">
+            <thead>
+                <tr style="background-color: #007BFF; color: white;">
+                    <th style="padding: 10px;">Volunteers Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd;">@volunteersCount</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <div style="text-align: center; margin-top: 20px;">
-        <input @bind="volunteerName" placeholder="Enter volunteer name" style="padding: 10px; width: 60%; border-radius: 5px; border: 1px solid #ddd;" />
-        <div style="margin-top: 10px;">
-            <button @onclick="CheckInVolunteer">Check-In</button>
-            <button @onclick="CheckOutVolunteer">Check-Out</button>
+    <h2 style="text-align: center; color: #333;">Volunteers Today:</h2>
+    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background-color: #f9f9f9; margin-bottom: 20px;">
+        <ul style="list-style: none; padding: 0; margin: 0;">
+            @foreach (var volunteer in availableVolunteers)
+            {
+                <li style="padding: 5px; border-bottom: 1px solid #ddd;">@volunteer.Name</li>
+            }
+        </ul>
+    </div>
+
+    <div style="text-align: center;">
+        <input @bind="volunteerName" placeholder="Enter volunteer name" 
+
+            style="padding: 12px; width: 80%; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;" />
+        
+        <div style="display: flex; justify-content: center; gap: 10px;">
+            <button @onclick="CheckInVolunteer" style="padding: 10px 15px; background-color: #7ace8e; color: white; border: none; border-radius: 5px; cursor: pointer;">Check-In</button>
+            <button @onclick="CheckOutVolunteer" style="padding: 10px 15px; background-color: #c16770; color: white; border: none; border-radius: 5px; cursor: pointer;">Check-Out</button>
         </div>
-        <div style="text-align: center; margin-top: 10px;">
-            <button @onclick="SignOutAllVolunteers">Sign Out All Volunteers</button>
-        </div>
+        
+        <button @onclick="SignOutAllVolunteers" style="margin-top: 15px; padding: 12px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Sign Out All Volunteers</button>
     </div>
 </div>
 
-    <div class="container">
-    <h2>Recipients</h2>
-    <div class="table-container">
-        <div style="text-align: center; margin-top: 10px;">
-            <button @onclick="ResetAllRecipients">Reset All Recipients</button>
-        </div>
-        <table>
+<div class="container" style="margin-top: 40px !important; max-width: 1000px; margin: auto; font-family: Arial, sans-serif;">
+    <h1 style="text-align: center; color: #333; padding-bottom: 20px;">Recipients</h1>
+    
+    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background-color: #f9f9f9;">
+        <table style="width: 100%; border-collapse: collapse; text-align: center;">
             <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Status</th>
-                    <th>Update Status</th>
+                <tr style="background-color: #007BFF; color: white;">
+                    <th style="padding: 10px; border: 1px solid #ddd;">First Name</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Last Name</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Status</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Update Status</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var recipient in recipients.Where(r => r.Status != RecipientStatus.Completed))
                 {
                     <tr>
-                        <td>@recipient.FirstName</td>
-                        <td>@recipient.LastName</td>
-                        <td>@recipient.Status</td>
-                        <td>
-                            <button @onclick="() => UpdateRecipientStatus(recipient)">Update Status</button>
+                        <td style="padding: 10px; border: 1px solid #ddd;">@recipient.FirstName</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">@recipient.LastName</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">@recipient.Status</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">
+                            <button @onclick="() => UpdateRecipientStatus(recipient)" 
+                                style="padding: 8px 12px; background-color: #7ace8e; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                Update Status
+                            </button>
                         </td>
                     </tr>
                 }
@@ -159,8 +159,11 @@
     </div>
 </div>
 
-<div class="container">
-    <h2>Completed Recipients</h2>
+<div class="container" style="margin-top: 40px !important; max-width: 1000px; margin: auto; font-family: Arial, sans-serif;">
+    <h1 style="text-align: center; color: #333; padding-bottom: 20px;">Completed Recipients</h1>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <button @onclick="ResetAllRecipients" style="padding: 10px 15px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Reset All Recipients</button>
+        </div>
     <div class="table-container">
         <table>
             <thead>
@@ -183,6 +186,18 @@
         </table>
     </div>
 </div>
+@if (showPopup)
+{
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+        <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); text-align: center;">
+            <h2>Items Receiving</h2>
+            <p>@recipientItemsReceivingToShow</p> 
+            <button @onclick="() => showPopup = false">Close</button>
+        </div>
+    </div>
+}
+
 
 </AuthorizeView>
 
@@ -192,6 +207,16 @@
 
 private string volunteerName = string.Empty;
 private List<Volunteer> availableVolunteers = new List<Volunteer>();
+private bool showPopup = false;
+
+private string recipientItemsReceivingToShow;
+
+private List<Volunteer> allVolunteers = new List<Volunteer>();
+
+private async Task LoadAllVolunteers()
+{
+    allVolunteers = await Context.Volunteers.ToListAsync();
+}
 
 protected override async Task OnInitializedAsync()
 {
@@ -200,6 +225,7 @@ protected override async Task OnInitializedAsync()
     volunteersCount = availableVolunteers.Count;
     // Load recipients from the database
     await LoadRecipientsFromDatabase();
+    allVolunteers = await Context.Volunteers.ToListAsync();
 }
 
     private async Task LoadRecipientsFromDatabase()
@@ -275,15 +301,20 @@ protected override async Task OnInitializedAsync()
         }
     }
 
-    private async Task UpdateRecipientStatus(Recipient recipient)
+private async Task UpdateRecipientStatus(Recipient recipient)
 {
+    recipientItemsReceivingToShow = recipient.ItemsReceiving;
+
     if (recipient.Status == RecipientStatus.NotStarted)
     {
         recipient.Status = RecipientStatus.InProgress;
+        showPopup = true; // Show popup only when status changes to InProgress
     }
     else if (recipient.Status == RecipientStatus.InProgress)
     {
+        //Change from InProgress to Completed, add the recipient's last appointment date
         recipient.Status = RecipientStatus.Completed;
+        recipient.LastAppointmentDate = DateTime.Now.ToString("MMMM dd, yyyy"); 
     }
     else
     {
@@ -293,9 +324,11 @@ protected override async Task OnInitializedAsync()
     Context.Recipients.Update(recipient);
     await Context.SaveChangesAsync();
 
-    // Re-fetch the recipients to update the UI
     recipients = await Context.Recipients.ToListAsync();
 }
+
+
+
 
 private async Task CheckInVolunteer()
 {
@@ -309,7 +342,9 @@ private async Task CheckInVolunteer()
             var newVolunteer = new Volunteer
             {
                 Name = volunteerName,
-                IsAvailable = true
+                IsAvailable = true,
+                CheckInTime = DateTime.Now, 
+                TotalMinutes = 0 
             };
 
             Context.Volunteers.Add(newVolunteer);
@@ -318,6 +353,8 @@ private async Task CheckInVolunteer()
         else if (!existingVolunteer.IsAvailable)
         {
             existingVolunteer.IsAvailable = true;
+            existingVolunteer.CheckInTime = DateTime.Now; 
+            existingVolunteer.TotalMinutes = 0; 
             availableVolunteers.Add(existingVolunteer);
         }
 
@@ -329,6 +366,8 @@ private async Task CheckInVolunteer()
         volunteerName = string.Empty;
     }
 }
+
+
 private async Task CheckOutVolunteer()
 {
     if (!string.IsNullOrWhiteSpace(volunteerName))
@@ -339,6 +378,14 @@ private async Task CheckOutVolunteer()
         if (existingVolunteer != null)
         {
             existingVolunteer.IsAvailable = false;
+
+            // If they are checked in, calculate the time signed in
+            if (existingVolunteer.CheckInTime.HasValue)
+            {
+                var sessionDuration = DateTime.Now - existingVolunteer.CheckInTime.Value;
+                existingVolunteer.TotalMinutes = sessionDuration.TotalMinutes; // Save time in minutes
+            }
+
             availableVolunteers.Remove(existingVolunteer);
 
             await Context.SaveChangesAsync();
@@ -350,6 +397,9 @@ private async Task CheckOutVolunteer()
         volunteerName = string.Empty;
     }
 }
+
+
+
 private async Task SignOutAllVolunteers()
 {
     // Get all currently available volunteers
@@ -357,20 +407,30 @@ private async Task SignOutAllVolunteers()
         .Where(v => v.IsAvailable)
         .ToListAsync();
 
-    // Mark them as unavailable
+    // Mark them as unavailable 
     foreach (var volunteer in availableVolunteersList)
     {
         volunteer.IsAvailable = false;
+
+        if (volunteer.CheckInTime.HasValue)
+        {
+            var sessionDuration = DateTime.Now - volunteer.CheckInTime.Value;
+            volunteer.TotalMinutes += sessionDuration.TotalMinutes;
+        }
+
         Context.Volunteers.Update(volunteer);
     }
 
     // Save changes to the database
     await Context.SaveChangesAsync();
 
-    // Clear the available volunteers list and update the count
+    // Clear the available volunteers list 
     availableVolunteers.Clear();
     volunteersCount = availableVolunteers.Count;
 }
+
+
+
 private async Task ResetAllRecipients()
 {
     // Reset all recipient statuses to "Not Started"

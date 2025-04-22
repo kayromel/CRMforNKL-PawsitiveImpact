@@ -4,4 +4,7 @@ public class Volunteer
     public string Name { get; set; }
     public bool IsAvailable { get; set; }
 
+    public DateTime? CheckInTime { get; set; }
+    public double TotalMinutes { get; set; }
+
 }

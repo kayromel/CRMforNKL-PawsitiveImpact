@@ -19,4 +19,8 @@ public class Recipient
     public RecipientStatus Status { get; set; }
     
     public List<Pet> Pets { get; set; }
+
+    public string? ItemsReceiving { get; set; }
+
+    public string? LastAppointmentDate { get; set; }
 }

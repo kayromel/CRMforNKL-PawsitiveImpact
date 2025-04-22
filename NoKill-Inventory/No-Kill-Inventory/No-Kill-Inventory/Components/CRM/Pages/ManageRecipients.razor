@@ -1,0 +1,121 @@
+@page "/Recipients/manage"
+
+@using System.ComponentModel.DataAnnotations
+@using No_Kill_Inventory.Data
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+
+@inject ApplicationDbContext Context
+
+@attribute [Authorize]
+
+<PageTitle>Manage Recipients</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Add Recipient</h1>
+
+        <!-- Search Section -->
+        <MudPaper Class="pa-4 mb-4">
+            <MudText Typo="Typo.h5">Search Recipients</MudText>
+
+            <MudTextField @bind-Value="searchTerm" Placeholder="Enter recipient name..." Immediate="true" Class="mb-2" />
+            
+            @if (filteredRecipients.Any())
+            {
+                @foreach (var recipient in filteredRecipients)
+                {
+                    <MudPaper Class="pa-2 mb-2">
+    <MudText Typo="Typo.subtitle2">@recipient.FirstName @recipient.LastName</MudText>
+    <MudText Typo="Typo.body2">@recipient.PhoneNumber</MudText>
+
+    <div class="d-flex flex-wrap gap-2 mt-1">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => SelectRecipient(recipient))">
+            Select Recipient
+        </MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => ShowAppointmentDate(recipient))">
+            Show Last Appointment
+        </MudButton>
+    </div>
+
+    @if (recipientToShowDate?.Id == recipient.Id)
+    {
+        <MudText Typo="Typo.caption" Class="mt-1">
+            Last Appointment Date: @(string.IsNullOrWhiteSpace(recipient.LastAppointmentDate) ? "N/A" : recipient.LastAppointmentDate)
+        </MudText>
+    }
+</MudPaper>
+
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                <MudText>No recipients found.</MudText>
+            }
+
+        </MudPaper>
+
+        <!-- Recipient Info Update Section -->
+        @if (selectedRecipient != null)
+        {
+            <MudPaper Class="pa-4 mt-4">
+                <MudText Typo="Typo.h5">Selected Recipient: @selectedRecipient.FirstName @selectedRecipient.LastName</MudText>
+
+                <MudTextField T="string" Label="Items Receiving" @bind-Value="selectedRecipient.ItemsReceiving" Placeholder="Enter items or information" />
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitRecipientInfo">
+                    Submit
+                </MudButton>
+            </MudPaper>
+        }
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private string[] errors = { };
+    private PetType[] petTypes = [ PetType.Dog, PetType.Cat, PetType.Other ];
+    private Recipient? recipientToShowDate;
+
+private void ShowAppointmentDate(Recipient recipient)
+{
+    recipientToShowDate = recipient;
+}
+
+    private Recipient? selectedRecipient;  // Track the selected recipient
+
+    private string searchTerm = "";
+    private List<Recipient> allRecipients = new();
+    private IEnumerable<Recipient> filteredRecipients =>
+        allRecipients
+            .Where(r => $"{r.FirstName} {r.LastName}".Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        allRecipients = await Context.Recipients.ToListAsync();
+    }
+
+    private void SelectRecipient(Recipient recipient)
+    {
+        selectedRecipient = recipient;  // Set the selected recipient
+    }
+
+    private async Task SubmitRecipientInfo()
+    {
+        try
+        {
+            // Update the selected recipient with the new ItemsReceiving info
+            Context.Recipients.Update(selectedRecipient);
+            await Context.SaveChangesAsync();
+
+            // Optionally, reset the form or do other actions
+            selectedRecipient = null;  // Reset selected recipient after submission
+        }
+        catch (Exception ex)
+        {
+            errors = new[] { "Error saving recipient info: " + ex.Message };
+        }
+    }
+
+    
+}
