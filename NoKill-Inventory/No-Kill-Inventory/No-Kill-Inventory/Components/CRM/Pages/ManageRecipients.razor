@@ -20,53 +20,131 @@
             <MudTextField @bind-Value="searchTerm" Placeholder="Enter recipient name or phone number..." Immediate="true" Class="mb-2" />
             
             @if (!filteredRecipients.Any() && !string.IsNullOrWhiteSpace(searchTerm))
-{
-            <MudText>No recipients found.</MudText>
-}
+            {
+                <MudText>No recipients found.</MudText>
+            }
 
         </MudPaper>
 
         <!-- Recipient Info Update Section -->
         @foreach (var recipient in pagedRecipients)
-{
-    <MudPaper Class="pa-2 mb-2">
-        <MudText Typo="Typo.subtitle2">@recipient.FirstName @recipient.LastName</MudText>
-        <MudText Typo="Typo.body2">@recipient.PhoneNumber</MudText>
-
-        <div class="d-flex flex-wrap gap-2 mt-1">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => SelectRecipient(recipient))">
-                Select Recipient
-            </MudButton>
-            <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => ShowAppointmentDate(recipient))">
-                Show Last Appointment
-            </MudButton>
-        </div>
-
-        @if (recipientToShowDate?.Id == recipient.Id)
         {
-            <MudText Typo="Typo.caption" Class="mt-1">
-                Last Appointment Date: @(string.IsNullOrWhiteSpace(recipient.LastAppointmentDate) ? "N/A" : recipient.LastAppointmentDate)
-            </MudText>
-        }
+            <MudPaper Class="pa-2 mb-2">
+                <MudText Typo="Typo.subtitle2">@recipient.FirstName @recipient.LastName</MudText>
+                <MudText Typo="Typo.body2">@recipient.PhoneNumber</MudText>
 
-        @if (selectedRecipient?.Id == recipient.Id)
-        {
-            <MudDivider Class="my-2" />
-            <MudText Typo="Typo.h6">Update Info for @recipient.FirstName @recipient.LastName</MudText>
+                <div class="d-flex flex-wrap gap-2 mt-1">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => SelectRecipient(recipient))">
+                        Select Recipient
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@(() => ShowAppointmentDate(recipient))">
+                        Show Last Appointment
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => ToggleFormDataView(recipient.Id))">
+                        Show Form Data
+                    </MudButton>
+                </div>
 
-            <MudTextField T="string"
-                          Label="Items Receiving"
-                          @bind-Value="selectedRecipient.ItemsReceiving"
-                          Placeholder="Enter items or information" />
+                @if (recipientToShowDate?.Id == recipient.Id)
+                {
+                    <MudText Typo="Typo.caption" Class="mt-1">
+                        Last Appointment Date: @(string.IsNullOrWhiteSpace(recipient.LastAppointmentDate) ? "N/A" : recipient.LastAppointmentDate)
+                    </MudText>
+                }
 
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       OnClick="SubmitRecipientInfo"
-                       Class="mt-2">
-                Submit
-            </MudButton>
-        }
-    </MudPaper>
+                @if (selectedRecipient?.Id == recipient.Id)
+                {
+                    <MudDivider Class="my-2" />
+                    <MudText Typo="Typo.h6">Update Info for @recipient.FirstName @recipient.LastName</MudText>
+
+                    <MudTextField T="string"
+                                  Label="Items Receiving"
+                                  @bind-Value="selectedRecipient.ItemsReceiving"
+                                  Placeholder="Enter items or information" />
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               OnClick="SubmitRecipientInfo"
+                               Class="mt-2">
+                        Submit
+                    </MudButton>
+                }
+        
+                @if (expandedRecipientId == recipient.Id)
+                {
+                    <MudPaper Class="mt-2 p-3" Elevation="2">
+                        <MudTable Items="expandedRecipientRequests" Hover="true" Dense="true">
+                            <RowTemplate Context="request">
+                                <MudTd ColSpan="5">
+                                    <MudText><b>Form Submitted:</b> @request.Timestamp</MudText>
+                                    <MudText><b>First Name:</b> @request.FirstName</MudText>
+                                    <MudText><b>Last Name:</b> @request.LastName</MudText>
+                                    <MudText><b>Phone:</b> @request.ContactPhoneNumber</MudText>
+                                    <MudText><b>Email:</b> @request.EmailAddress</MudText>
+                                    <MudText><b>Physical Address:</b> @request.PhysicalAddress</MudText>
+
+                                    <MudDivider Class="my-2" />
+                                    
+                                    <MudText><b>Adults in Household:</b> @request.AdultsInHousehold</MudText>
+                                    <MudText><b>Names of Adults:</b> @request.NamesOfAdults</MudText>
+                                    <MudText><b>Children in Household:</b> @request.ChildrenInHousehold</MudText>
+                                    <MudText><b>Authorized Pickup Persons:</b> @request.AuthorizedPickupPersons</MudText>
+                                    <MudText><b>Household Income Sources:</b> @request.HouseholdIncomeSources</MudText>
+                                    <MudText><b>Fostering Organization:</b> @request.FosteringOrganization</MudText>
+                                    <MudText><b>Breeding Animals:</b> @request.BreedingAnimals</MudText>
+                                    <MudText><b>Spay/Neuter Acknowledgment:</b> @request.SpayNeuterAcknowledgment</MudText>
+
+                                    <MudDivider Class="my-2" />
+                                    
+                                    <MudText><b>Dog Count:</b> @request.DogCount</MudText>
+                                    @if (!string.IsNullOrWhiteSpace(request.Dog1Name))
+                                    {
+                                        <MudText><b>Dog 1 Name:</b> @request.Dog1Name | <b>Breed:</b> @request.Dog1Breed | <b>Sex:</b> @request.Dog1Sex</MudText>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(request.Dog2Name))
+                                    {
+                                        <MudText><b>Dog 2 Name:</b> @request.Dog2Name | <b>Breed:</b> @request.Dog2Breed | <b>Sex:</b> @request.Dog2Sex</MudText>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(request.Dog3Name))
+                                    {
+                                        <MudText><b>Dog 3 Name:</b> @request.Dog3Name | <b>Breed:</b> @request.Dog3Breed | <b>Sex:</b> @request.Dog3Sex</MudText>
+                                    }
+
+                                    <MudDivider Class="my-2" />
+
+                                    <MudText><b>Cat Count:</b> @request.CatCount</MudText>
+                                    @if (!string.IsNullOrWhiteSpace(request.Cat1Name))
+                                    {
+                                        <MudText><b>Cat 1:</b> @request.Cat1Name | <b>Sex:</b> @request.Cat1Sex | <b>Residence:</b> @request.Cat1Residence</MudText>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(request.Cat2Name))
+                                    {
+                                        <MudText><b>Cat 2:</b> @request.Cat2Name | <b>Sex:</b> @request.Cat2Sex | <b>Residence:</b> @request.Cat2Residence</MudText>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(request.Cat3Name))
+                                    {
+                                        <MudText><b>Cat 3:</b> @request.Cat3Name | <b>Sex:</b> @request.Cat3Sex | <b>Residence:</b> @request.Cat3Residence</MudText>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(request.Cat4Name))
+                                    {
+                                        <MudText><b>Cat 4:</b> @request.Cat4Name | <b>Sex:</b> @request.Cat4Sex | <b>Residence:</b> @request.Cat4Residence</MudText>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(request.Cat5Name))
+                                    {
+                                        <MudText><b>Cat 5:</b> @request.Cat5Name | <b>Sex:</b> @request.Cat5Sex | <b>Residence:</b> @request.Cat5Residence</MudText>
+                                    }
+                                    <MudDivider Class="my-2" />
+
+                                    <MudText><b>Other Animals:</b> @request.OtherAnimals</MudText>
+                                    <MudText><b>Preferred Notification Method:</b> @request.PreferredNotificationMethod</MudText>
+                                </MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudPaper>
+                }
+                
+                
+            </MudPaper>
 }
 
         @if (totalPages > 1)
@@ -164,5 +242,26 @@ private void PrevPage()
     if (currentPage > 1)
         currentPage--;
 }
+
+private int? expandedRecipientId = null;
+private List<PetFoodRequest> expandedRecipientRequests = new();
+
+private async Task ToggleFormDataView(int recipientId)
+{
+    if (expandedRecipientId == recipientId)
+    {
+        expandedRecipientId = null;
+        expandedRecipientRequests.Clear();
+    }
+    else
+    {
+        expandedRecipientId = recipientId;
+        expandedRecipientRequests = await Context.PetFoodRequests
+            .Where(r => r.Id == recipientId)
+            .OrderByDescending(r => r.Timestamp)
+            .ToListAsync();
+    }
+}
+
 
 }

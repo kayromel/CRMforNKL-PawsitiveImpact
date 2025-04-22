@@ -1,0 +1,47 @@
+@page "/Recipients/Entry"
+@inject ApplicationDbContext Db
+@using System.IO
+@using No_Kill_Inventory.Data
+
+<PageTitle>Import</PageTitle>
+
+<MudText Class="my-4" Typo="Typo.h5">Import Google Form Responses</MudText>
+<MudDivider Class="my-2"/>
+<InputFile OnChange="HandleFileSelected"/>
+@if (!string.IsNullOrEmpty(Status))
+{
+    <p><strong>@Status</strong></p>
+}
+
+@code {
+    private string Status = "";
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var file = e.File;
+            if (file == null || !file.Name.EndsWith(".csv"))
+            {
+                Status = "Please upload a valid CSV file.";
+                return;
+            }
+
+            var importer = new CSVImporter(Db);
+
+            using var stream = file.OpenReadStream(); // default 512KB limit
+            using var reader = new StreamReader(stream);
+            using var tempWriter = new StreamWriter("temp_import.csv");
+            await tempWriter.WriteAsync(await reader.ReadToEndAsync());
+            tempWriter.Close();
+
+            await importer.ImportPetFoodRequestsAsync("temp_import.csv");
+
+            Status = "Import successful!";
+        }
+        catch (Exception ex)
+        {
+            Status = $"Error: {ex.Message}";
+        }
+    }
+}
