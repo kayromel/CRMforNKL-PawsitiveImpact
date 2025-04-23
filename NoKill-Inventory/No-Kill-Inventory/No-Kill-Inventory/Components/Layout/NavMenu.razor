@@ -36,12 +36,12 @@
 
                     <!--Recipient Management Links-->
                   <MudNavGroup Title="Recipients" Icon="@Icons.Material.Filled.SupervisedUserCircle" Expanded="true">
-                        <MudNavLink Href="/Recipients/manage" Icon="@Icons.Material.Filled.SupervisedUserCircle" Match="NavLinkMatch.Prefix">Manage Recipients</MudNavLink>
+                        <MudNavLink Href="/Recipients/Manage" Icon="@Icons.Material.Filled.SupervisedUserCircle" Match="NavLinkMatch.Prefix">Manage Recipients</MudNavLink>
                         <MudNavLink Href="/Recipients/Entry" Icon="@Icons.Material.Filled.SupervisedUserCircle" Match="NavLinkMatch.Prefix">Add Recipients</MudNavLink>
                     </MudNavGroup>
                 </AuthorizeView>
 
-                <MudNavLink Href="/Notifications" Icon="@Icons.Material.Filled.NotificationsActive" Match="NavLinkMatch.All">Notifications</MudNavLink>
+                <MudNavLink Href="/Notifications" Icon="@Icons.Material.Filled.NotificationsActive" Match="NavLinkMatch.Prefix">Notifications</MudNavLink>
                 
                 <MudNavLink Href="Account/Manage/ChangePassword" Icon="@Icons.Material.Filled.ManageAccounts">@context.User.Identity?.Name</MudNavLink>
                 

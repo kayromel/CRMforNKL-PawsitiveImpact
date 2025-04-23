@@ -1,6 +1,5 @@
-@page "/Recipients/manage"
+@page "/Recipients/Manage"
 
-@using System.ComponentModel.DataAnnotations
 @using No_Kill_Inventory.Data
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
@@ -41,9 +40,32 @@
                         Show Last Appointment
                     </MudButton>
                     <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => ToggleFormDataView(recipient.Id))">
-                        Show Form Data
+                        Show Google Form Data
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="@(() => AddForm(recipient))">
+                        Add Form
                     </MudButton>
                 </div>
+                
+                @if (activeFormRecipientId == recipient.Id)
+                {
+                    <MudPaper Class="pa-4 mt-2" Elevation="2">
+                        <MudForm OnValidSubmit="SubmitNewForm">
+                            <MudSelect T="FormType" Label="Form Type" @bind-Value="newForm.FormType" Required="true">
+                                @foreach (FormType type in Enum.GetValues<FormType>())
+                                {
+                                    <MudSelectItem Value="@type">@type.ToString()</MudSelectItem>
+                                }
+                            </MudSelect>
+
+                            <MudDatePicker Label="Date" @bind-Date="formDate" Required="true" />
+
+                            <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Tertiary" Class="mt-2" OnClick="@(() => SubmitNewForm())">
+                                Submit Form
+                            </MudButton>
+                        </MudForm>
+                    </MudPaper>
+                }
 
                 @if (recipientToShowDate?.Id == recipient.Id)
                 {
@@ -166,6 +188,10 @@
     private string[] errors = { };
     private PetType[] petTypes = [ PetType.Dog, PetType.Cat, PetType.Other ];
     private Recipient? recipientToShowDate;
+    
+    private int? activeFormRecipientId = null; // tracks expanded form under a recipient
+    private Form newForm = new();
+    private DateTime? formDate = DateTime.Today;
 
 private void ShowAppointmentDate(Recipient recipient)
 {
@@ -260,6 +286,38 @@ private async Task ToggleFormDataView(int recipientId)
             .Where(r => r.Id == recipientId)
             .OrderByDescending(r => r.Timestamp)
             .ToListAsync();
+    }
+}
+
+private void AddForm(Recipient recipient)
+{
+    if (activeFormRecipientId == recipient.Id)
+    {
+        activeFormRecipientId = null;
+        newForm = new();
+    }
+    else
+    {
+        activeFormRecipientId = recipient.Id;
+        newForm = new Form
+        {
+            RecipientId = recipient.Id,
+            FormType = FormType.Application
+        };
+        formDate = DateTime.Today;
+    }
+}
+
+private async Task SubmitNewForm()
+{
+    if (formDate.HasValue)
+    {
+        newForm.Date = formDate.Value.ToString("yyyy-MM-dd");
+        Context.Forms.Add(newForm);
+        await Context.SaveChangesAsync();
+
+        activeFormRecipientId = null;
+        newForm = new Form(); // reset
     }
 }
 
