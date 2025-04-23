@@ -4,7 +4,7 @@
 
 Integrating a CRM system to the existing NKL inventory system (ASP.NET Blazor web app). This will allow NKL volunteers to manage recipient information, volunteer information, and distribution activities along with inventory in one place.
 
-Read our User Manual to learn about what each page does and how you can utilize this system
+Read our User Manual (CRM-Documents/Implementation/UsersManual.pdf) to learn about what each page does and how you can utilize this system
 
 ## Team Members:
 Kaylyn McGehee<br>
