@@ -65,7 +65,7 @@ See the User's Manual or Programmer's Manual in the /Documents/Implementation/ f
 
 If for any reason you need to move the web app and want to keep all the data in the current database use the steps below to migrate the data to a new database.
 
-1. Download and install the pre-compiled binaries the host operating system [here](https://www.sqlite.org/download.html). (This is not neccesary to use the database with the app, only to migrate the data to a new one)
+1. Download and install the pre-compiled binaries the host operating system [here](https://www.sqlite.org/download.html). (This is not necessary to use the database with the app, only to migrate the data to a new one)
 2. Open a terminal and cd to the /NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/Data/ folder
 3. Run the command `sqlite3 app.db .dump > dump_file.sql`
 4. Wherever the new database is that you want to insert the data into, run this command `sqlite3 new_database_name.db < dump_file.sql`
