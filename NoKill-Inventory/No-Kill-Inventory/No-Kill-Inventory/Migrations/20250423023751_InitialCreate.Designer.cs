@@ -11,7 +11,7 @@ using No_Kill_Inventory.Data;
 namespace NoKillInventory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250422020619_InitialCreate")]
+    [Migration("20250423023751_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -239,15 +239,15 @@ namespace NoKillInventory.Migrations
                         {
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3d22d340-b292-4741-8285-c54b83d7d155",
+                            ConcurrencyStamp = "fa763901-a704-409f-8467-b07490858413",
                             Email = "adminuser",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMINUSER",
                             NormalizedUserName = "ADMINUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEbFTKjF+wbDZu6FOWPP7rmc+jyEHR3LVypaxUH4ThMzTDSqMQu7ZTcHXLKbDfSe1Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDbO2Mga/lwUwCGrBEh7URMiNpXOGxVq8s1a9ZQYtQwrwFbxvgfjRf3PPrygE6V5Eg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "21ae80fd-9806-4267-86aa-e86883759e23",
+                            SecurityStamp = "1ff93826-545e-4d30-a23a-2d371346473b",
                             TwoFactorEnabled = false,
                             UserName = "adminuser"
                         });
@@ -287,6 +287,29 @@ namespace NoKillInventory.Migrations
                     b.ToTable("FoodPallets");
                 });
 
+            modelBuilder.Entity("No_Kill_Inventory.Data.Form", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Date")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FormType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RecipientId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("Forms");
+                });
+
             modelBuilder.Entity("No_Kill_Inventory.Data.Pet", b =>
                 {
                     b.Property<int>("Id")
@@ -315,6 +338,260 @@ namespace NoKillInventory.Migrations
                     b.HasIndex("RecipientId");
 
                     b.ToTable("Pets");
+                });
+
+            modelBuilder.Entity("No_Kill_Inventory.Data.PetFoodRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AdultsInHousehold")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AgreementToGuidelines")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AuthorizedPickupPersons")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BreedingAnimals")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat1Age")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat1DietaryDetails")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat1Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat1PrescriptionNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat1Residence")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat1Sex")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat1SpayNeuter")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat2Age")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat2DietaryDetails")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat2Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat2PrescriptionNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat2Residence")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat2Sex")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat2SpayNeuter")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat3Age")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat3DietaryDetails")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat3Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat3PrescriptionNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat3Residence")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat3Sex")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat3SpayNeuter")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat4Age")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat4DietaryDetails")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat4Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat4PrescriptionNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat4Residence")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat4Sex")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat4SpayNeuter")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat5Age")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat5DietaryDetails")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat5Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat5PrescriptionNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat5Residence")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat5Sex")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cat5SpayNeuter")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CatCount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ChildrenInHousehold")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ContactPhoneNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog1Age")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog1Breed")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog1DietaryDetails")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog1Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog1PrescriptionNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog1Sex")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog1SpayNeuter")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog1Weight")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog2Age")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog2Breed")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog2DietaryDetails")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog2Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog2PrescriptionNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog2Sex")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog2SpayNeuter")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog2Weight")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog3Age")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog3Breed")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog3DietaryDetails")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog3Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog3PrescriptionNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog3Sex")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog3SpayNeuter")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dog3Weight")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DogCount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DogsKeptLocation")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EmailAddress")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FosteringOrganization")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HouseholdIncomeSources")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NamesOfAdults")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OtherAnimals")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhysicalAddress")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PreferredNotificationMethod")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SpayNeuterAcknowledgment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TermsAndConditionsPart1")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TermsAndConditionsPart2")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Timestamp")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PetFoodRequests");
                 });
 
             modelBuilder.Entity("No_Kill_Inventory.Data.Recipient", b =>
@@ -351,53 +628,6 @@ namespace NoKillInventory.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Recipients");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "billy@gmail.com",
-                            FirstName = "Billy",
-                            LastName = "Madison",
-                            PhoneNumber = "555-555-5555",
-                            Status = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "sarahc@gmail.com",
-                            FirstName = "Sarah",
-                            LastName = "Connor",
-                            PhoneNumber = "444-123-9876",
-                            Status = 0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Email = "johndoe@example.com",
-                            FirstName = "John",
-                            LastName = "Doe",
-                            PhoneNumber = "333-456-7890",
-                            Status = 0
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Email = "janesmith@hotmail.com",
-                            FirstName = "Jane",
-                            LastName = "Smith",
-                            PhoneNumber = "222-654-3210",
-                            Status = 0
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Email = "mscott@dundermifflin.com",
-                            FirstName = "Michael",
-                            LastName = "Scott",
-                            PhoneNumber = "111-777-8888",
-                            Status = 0
-                        });
                 });
 
             modelBuilder.Entity("Volunteer", b =>
@@ -473,6 +703,17 @@ namespace NoKillInventory.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("No_Kill_Inventory.Data.Form", b =>
+                {
+                    b.HasOne("No_Kill_Inventory.Data.Recipient", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipient");
                 });
 
             modelBuilder.Entity("No_Kill_Inventory.Data.Pet", b =>

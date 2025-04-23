@@ -72,6 +72,99 @@ namespace NoKillInventory.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PetFoodRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Timestamp = table.Column<string>(type: "TEXT", nullable: true),
+                    AgreementToGuidelines = table.Column<string>(type: "TEXT", nullable: true),
+                    TermsAndConditionsPart1 = table.Column<string>(type: "TEXT", nullable: true),
+                    TermsAndConditionsPart2 = table.Column<string>(type: "TEXT", nullable: true),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: true),
+                    LastName = table.Column<string>(type: "TEXT", nullable: true),
+                    AdultsInHousehold = table.Column<string>(type: "TEXT", nullable: true),
+                    NamesOfAdults = table.Column<string>(type: "TEXT", nullable: true),
+                    ChildrenInHousehold = table.Column<string>(type: "TEXT", nullable: true),
+                    PhysicalAddress = table.Column<string>(type: "TEXT", nullable: true),
+                    ContactPhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    EmailAddress = table.Column<string>(type: "TEXT", nullable: true),
+                    AuthorizedPickupPersons = table.Column<string>(type: "TEXT", nullable: true),
+                    HouseholdIncomeSources = table.Column<string>(type: "TEXT", nullable: true),
+                    FosteringOrganization = table.Column<string>(type: "TEXT", nullable: true),
+                    BreedingAnimals = table.Column<string>(type: "TEXT", nullable: true),
+                    SpayNeuterAcknowledgment = table.Column<string>(type: "TEXT", nullable: true),
+                    DogCount = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog1Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog1Age = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog1Weight = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog1Sex = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog1SpayNeuter = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog1Breed = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog1DietaryDetails = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog1PrescriptionNotes = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog2Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog2Age = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog2Weight = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog2Sex = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog2SpayNeuter = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog2Breed = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog2DietaryDetails = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog2PrescriptionNotes = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog3Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog3Age = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog3Weight = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog3Sex = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog3SpayNeuter = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog3Breed = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog3DietaryDetails = table.Column<string>(type: "TEXT", nullable: true),
+                    Dog3PrescriptionNotes = table.Column<string>(type: "TEXT", nullable: true),
+                    DogsKeptLocation = table.Column<string>(type: "TEXT", nullable: true),
+                    CatCount = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat1Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat1Age = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat1Sex = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat1SpayNeuter = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat1DietaryDetails = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat1PrescriptionNotes = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat1Residence = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat2Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat2Age = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat2Sex = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat2SpayNeuter = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat2DietaryDetails = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat2PrescriptionNotes = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat2Residence = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat3Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat3Age = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat3Sex = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat3SpayNeuter = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat3DietaryDetails = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat3PrescriptionNotes = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat3Residence = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat4Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat4Age = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat4Sex = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat4SpayNeuter = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat4DietaryDetails = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat4PrescriptionNotes = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat4Residence = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat5Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat5Age = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat5Sex = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat5SpayNeuter = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat5DietaryDetails = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat5PrescriptionNotes = table.Column<string>(type: "TEXT", nullable: true),
+                    Cat5Residence = table.Column<string>(type: "TEXT", nullable: true),
+                    OtherAnimals = table.Column<string>(type: "TEXT", nullable: true),
+                    PreferredNotificationMethod = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PetFoodRequests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Recipients",
                 columns: table => new
                 {
@@ -213,6 +306,27 @@ namespace NoKillInventory.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Forms",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RecipientId = table.Column<int>(type: "INTEGER", nullable: false),
+                    FormType = table.Column<int>(type: "INTEGER", nullable: false),
+                    Date = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Forms", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Forms_Recipients_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "Recipients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Pets",
                 columns: table => new
                 {
@@ -247,19 +361,7 @@ namespace NoKillInventory.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "b74ddd14-6340-4840-95c2-db12554843e5", 0, "3d22d340-b292-4741-8285-c54b83d7d155", "adminuser", true, true, null, "ADMINUSER", "ADMINUSER", "AQAAAAIAAYagAAAAEEbFTKjF+wbDZu6FOWPP7rmc+jyEHR3LVypaxUH4ThMzTDSqMQu7ZTcHXLKbDfSe1Q==", null, false, "21ae80fd-9806-4267-86aa-e86883759e23", false, "adminuser" });
-
-            migrationBuilder.InsertData(
-                table: "Recipients",
-                columns: new[] { "Id", "Email", "FirstName", "ItemsReceiving", "LastAppointmentDate", "LastName", "PhoneNumber", "Status" },
-                values: new object[,]
-                {
-                    { 1, "billy@gmail.com", "Billy", null, null, "Madison", "555-555-5555", 0 },
-                    { 2, "sarahc@gmail.com", "Sarah", null, null, "Connor", "444-123-9876", 0 },
-                    { 3, "johndoe@example.com", "John", null, null, "Doe", "333-456-7890", 0 },
-                    { 4, "janesmith@hotmail.com", "Jane", null, null, "Smith", "222-654-3210", 0 },
-                    { 5, "mscott@dundermifflin.com", "Michael", null, null, "Scott", "111-777-8888", 0 }
-                });
+                values: new object[] { "b74ddd14-6340-4840-95c2-db12554843e5", 0, "fa763901-a704-409f-8467-b07490858413", "adminuser", true, true, null, "ADMINUSER", "ADMINUSER", "AQAAAAIAAYagAAAAEDbO2Mga/lwUwCGrBEh7URMiNpXOGxVq8s1a9ZQYtQwrwFbxvgfjRf3PPrygE6V5Eg==", null, false, "1ff93826-545e-4d30-a23a-2d371346473b", false, "adminuser" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -304,6 +406,11 @@ namespace NoKillInventory.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Forms_RecipientId",
+                table: "Forms",
+                column: "RecipientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pets_RecipientId",
                 table: "Pets",
                 column: "RecipientId");
@@ -329,6 +436,12 @@ namespace NoKillInventory.Migrations
 
             migrationBuilder.DropTable(
                 name: "FoodPallets");
+
+            migrationBuilder.DropTable(
+                name: "Forms");
+
+            migrationBuilder.DropTable(
+                name: "PetFoodRequests");
 
             migrationBuilder.DropTable(
                 name: "Pets");

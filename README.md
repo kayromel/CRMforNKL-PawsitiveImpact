@@ -69,3 +69,13 @@ If for any reason you need to move the web app and want to keep all the data in 
 2. Open a terminal and cd to the /NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/Data/ folder
 3. Run the command `sqlite3 app.db .dump > dump_file.sql`
 4. Wherever the new database is that you want to insert the data into, run this command `sqlite3 new_database_name.db < dump_file.sql`
+
+### Troubleshooting Migration Issues
+
+If for any reason you are greeted with an error regarding the database when trying to access a webpage, follow the steps outlined below:
+ 1. Delete the Migrations folder in NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/.
+ 2. Open a new terminal and navigate to NoKill-Inventory/No-Kill-Inventory/No-Kill-Inventory/.
+ 3. Run the command `dotnet ef database drop -v -f`.
+ 4. Run the command `dotnet ef migrations add InitialCreate`.
+ 5. Run the command `dotnet ef database update`.
+ 6. The issue should now be fixed.
