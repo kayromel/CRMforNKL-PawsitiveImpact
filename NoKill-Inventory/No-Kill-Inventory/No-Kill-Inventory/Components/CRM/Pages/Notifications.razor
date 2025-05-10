@@ -70,9 +70,9 @@
             Recipient recipient = Context.Recipients.Find(item.RecipientId);
             string name = recipient.FirstName + " " + recipient.LastName;
             DateTime date = DateTime.Parse(item.Date);
-            if ((date - DateTime.Today).TotalDays <= 7)
+            if ((date.Add(new TimeSpan(365, 0, 0, 0)) - DateTime.Today).TotalDays <= 7)
             {
-                var p1 = new Notification((NotificationType)item.FormType, (int)(date - DateTime.Today).TotalDays, date.Add(new TimeSpan(365, 0, 0, 0)), name);
+                var p1 = new Notification((NotificationType)item.FormType, (int)(date.Add(new TimeSpan(365, 0, 0, 0)) - DateTime.Today).TotalDays, date.Add(new TimeSpan(365, 0, 0, 0)), name);
                 TotalNotifications.Add(p1);
             }
         }
