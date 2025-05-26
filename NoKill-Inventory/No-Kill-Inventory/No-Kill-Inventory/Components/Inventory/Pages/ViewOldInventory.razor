@@ -62,13 +62,18 @@
                 <MudText Typo="Typo.body1">Total Inventory for @_selectedyear.Year:</MudText>
                 <MudText Typo="Typo.body1">@GetYearTotal(_selectedyear)lbs</MudText>
             </MudStack>
+            <MudStack Spacing="4" AlignItems="AlignItems.Center" Row="true">
+                <MudText Typo="Typo.body1">Total Amount Trashed for @_selectedyear.Year:</MudText>
+                <MudText Typo="Typo.body1">@GetYearWasted(_selectedyear)lbs</MudText>
+            </MudStack>
         </MudPaper>
 
         <MudTable T="FoodPallet" Items="@Context.FoodPallets" Hover="true" Breakpoint="Breakpoint.Sm">
             <HeaderContent>
                 <MudTh>Item ID Number</MudTh>
+                <MudTh>Food Type</MudTh>
                 <MudTh>Animal</MudTh>
-                <MudTh>Food Donated (lb)</MudTh>
+                <MudTh>Food Left (lb)</MudTh>
                 <MudTh>Arrival Date</MudTh>
                 <MudTh>Expiration Date</MudTh>
                 <MudTh>Location Description</MudTh>
@@ -78,8 +83,9 @@
                 @if (pallet.Status == Status.Used && pallet.ArrivalDate.Year == _selectedyear.Year)
                 {
                     <MudTd DataLabel="ID">@pallet.ItemID</MudTd>
-                    <MudTd DataLabel="Animal">@pallet.Animal</MudTd>
-                    <MudTd DataLabel="Weight">@pallet.InitWeight</MudTd>
+                    <MudTd DataLabel="Food Type">@pallet.Barcode.Name</MudTd>
+                    <MudTd DataLabel="Animal">@pallet.Barcode.Animal</MudTd>
+                    <MudTd DataLabel="Weight">@pallet.CurrentWeight</MudTd>
                     <MudTd DataLabel="Arrival">@pallet.ArrivalDate.ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="Expiration">@pallet.ExpirationDate.ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="Location">@pallet.LocationDesc</MudTd>
@@ -116,9 +122,23 @@
         int foodTotal = 0;
         foreach(var item in Context.FoodPallets)
         {
-            if (item.ArrivalDate.Year == Year.Year)
+            if (item.ArrivalDate.Year == Year.Year && item.Status == Status.Used)
             {
                 foodTotal += (item.InitWeight - item.CurrentWeight);
+            }
+        }
+
+        return foodTotal;
+    }
+    
+    private int GetYearWasted(DateTime Year)
+    {
+        int foodTotal = 0;
+        foreach(var item in Context.FoodPallets)
+        {
+            if (item.ArrivalDate.Year == Year.Year && item.Status == Status.Used)
+            {
+                foodTotal += (item.CurrentWeight);
             }
         }
 

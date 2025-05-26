@@ -4,13 +4,6 @@ using Microsoft.AspNetCore.Components;
 
 namespace No_Kill_Inventory.Data;
 
-public enum Species
-{
-    Dog,
-    Cat,
-    Other
-}
-
 public enum Status
 {
     Alive,
@@ -23,7 +16,7 @@ public class FoodPallet
     [Key]
     public int ItemID { get; set; }
     
-    public Species Animal { get; set; }
+    public Barcode Barcode { get; set; }
     
     public Status Status { get; set; }
     

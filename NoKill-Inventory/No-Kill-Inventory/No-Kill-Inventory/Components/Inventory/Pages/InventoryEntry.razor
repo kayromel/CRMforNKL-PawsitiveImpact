@@ -26,10 +26,10 @@
         }
         else
         {
-            <MudSelect @bind-Value="_enumValue" Label="Select Species" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
-                @foreach (Species Item in Enum.GetValues(typeof(Species)))
+            <MudSelect @bind-Value="_barcode" Label="Select Food Type" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
+                @foreach (Barcode barcode in Context.Barcodes)
                 {
-                    <MudSelectItem Value="@Item">@Item</MudSelectItem>
+                    <MudSelectItem Value="@barcode">@barcode.Name</MudSelectItem>
                 }
             </MudSelect>
             <MudTextField @bind-Value="_locationDesc" Label="Enter Location" Placeholder="Ex: Spot 1" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
@@ -64,7 +64,7 @@
     private bool _submitted = false;
     private bool _error = false;
 
-    private Species _enumValue;
+    private Barcode _barcode;
     private String _locationDesc;
     private int _weight;
     private DateTime? _arrivalDate;
@@ -74,7 +74,7 @@
     {
         _processing = true;
 
-        if (_enumValue == null || _weight == 0 || _arrivalDate == null || _expirationDate == null || _locationDesc == null)
+        if (_barcode == null || _weight == 0 || _arrivalDate == null || _expirationDate == null || _locationDesc == null)
         {
             _error = true;
             _processing = false;
@@ -83,7 +83,7 @@
         {
             Context.FoodPallets.Add( new FoodPallet
             {
-                Animal = _enumValue,
+                Barcode = _barcode,
                 Status = Status.Alive,
                 InitWeight = _weight,
                 CurrentWeight = _weight,
@@ -102,7 +102,7 @@
 
     async Task NewForm()
     {
-        _enumValue = Species.Dog;
+        _barcode = null;
         _locationDesc = "";
         _arrivalDate = null;
         _expirationDate = null;

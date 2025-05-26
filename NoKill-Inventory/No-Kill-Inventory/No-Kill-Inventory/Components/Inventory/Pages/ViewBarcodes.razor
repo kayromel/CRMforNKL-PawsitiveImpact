@@ -1,0 +1,115 @@
+﻿@page "/Inventory/ViewBarcodes"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.EntityFrameworkCore.Design
+@using No_Kill_Inventory.Data
+@inject ApplicationDbContext Context
+@rendermode InteractiveServer
+
+@*
+    Locks the page behind authentication 
+*@
+@attribute [Authorize]
+
+<PageTitle>Home</PageTitle>
+
+@* 
+  <AuthorizeView> locks everything in it behind authentication
+  
+  This section deisplay the user's username and each table of items to see the current inventory  
+*@
+<AuthorizeView>
+    @if (!_twostepremove)
+    {
+        <MudText Typo="Typo.h4">Hello, @context.User.Identity.Name</MudText>
+        <MudText Typo="Typo.body1">The current barcodes are below.</MudText>
+
+        <MudTable T="Barcode" Items="@Context.Barcodes" Hover="true" Breakpoint="Breakpoint.Sm">
+            <HeaderContent>
+                <MudTh>Item ID Number</MudTh>
+                <MudTh>Name</MudTh>
+                <MudTh>Animal</MudTh>
+                <MudTh>Age Type</MudTh>
+                <MudTh>Food Type</MudTh>
+                <MudTh>Prescription</MudTh>
+                <MudTh>Remove Barcode</MudTh>
+            </HeaderContent>
+            <RowTemplate Context="barcode">
+                
+                <MudTd DataLabel="ID">@barcode.ItemID</MudTd>
+                <MudTd DataLabel="Name">@barcode.Name</MudTd>
+                <MudTd DataLabel="Animal">@barcode.Animal</MudTd>
+                <MudTd DataLabel="Age">@barcode.Age</MudTd>
+                <MudTd DataLabel="Food Type">@barcode.FoodType</MudTd>
+                <MudTd DataLabel="Prescription">@barcode.Prescription</MudTd>
+                <MudTd>
+                    <MudButton Variant="Variant.Filled" OnClick="() => ConfirmRemove(barcode.ItemID)" Color="Color.Primary">
+                        <MudText>Remove Pallet</MudText>
+                    </MudButton>
+                </MudTd>
+
+            </RowTemplate>
+        </MudTable>
+        if (_success)
+        {
+            <MudText Color="Color.Success">Success!</MudText>
+        }
+    }
+    else if(_twostepremove)
+    {
+        <MudPaper Class="pa-16 ma-2" Outlined="true">
+            <MudStack AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.h4" Color="Color.Error">Remove Barcode?</MudText>
+                <MudText Typo="Typo.body1" Color="Color.Primary">
+                    This will remove the selected barcode and it will not be recoverable. Please make sure you have selected
+                    the correct entry.
+                </MudText>
+                <MudStack Row="true" Spacing="4">
+                    <MudButton Variant="Variant.Filled" OnClick="@Remove" Color="Color.Primary">
+                        <MudText>Confirm</MudText>
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" OnClick="@GoBack" Color="Color.Primary">
+                        <MudText>Go Back</MudText>
+                    </MudButton>
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+    }
+
+</AuthorizeView>
+
+@code {
+    private bool _success = false;
+    private bool _error = false;
+    private bool _twostepremove = false;
+    private int SelectedBarcode;
+
+    private void ConfirmRemove(int ID)
+    {
+        SelectedBarcode = ID;
+        _twostepremove = true;
+
+    }
+    
+    private void GoBack()
+    {
+        _error = false;
+        _twostepremove = false;
+        
+    }
+
+    async Task Remove()
+    {
+        var entry = Context.Barcodes.FirstOrDefault(item => item.ItemID == SelectedBarcode);
+
+        if (entry != null)
+        {
+            Context.Barcodes.Remove(entry);
+        }
+
+        await Context.SaveChangesAsync();
+        GoBack();
+    }
+
+}

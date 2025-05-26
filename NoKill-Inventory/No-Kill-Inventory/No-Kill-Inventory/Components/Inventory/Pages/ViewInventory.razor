@@ -28,6 +28,7 @@
         <MudTable T="FoodPallet" Items="@Context.FoodPallets" Hover="true" Breakpoint="Breakpoint.Sm">
             <HeaderContent>
                 <MudTh>Item ID Number</MudTh>
+                <MudTh>Food Type</MudTh>
                 <MudTh>Animal</MudTh>
                 <MudTh>Food Left (lb)</MudTh>
                 <MudTh>Arrival Date</MudTh>
@@ -40,7 +41,8 @@
                 @if (pallet.Status == Status.Alive)
                 {
                     <MudTd DataLabel="ID">@pallet.ItemID</MudTd>
-                    <MudTd DataLabel="Animal">@pallet.Animal</MudTd>
+                    <MudTd DataLabel="Food Type">@pallet.Barcode.Name</MudTd>
+                    <MudTd DataLabel="Animal">@pallet.Barcode.Animal</MudTd>
                     <MudTd DataLabel="Weight">@pallet.CurrentWeight</MudTd>
                     <MudTd DataLabel="Arrival">@pallet.ArrivalDate.ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="Expiration">@pallet.ExpirationDate.ToString("MM/dd/yyyy")</MudTd>
