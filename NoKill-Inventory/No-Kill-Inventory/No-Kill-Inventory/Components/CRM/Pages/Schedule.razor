@@ -7,6 +7,7 @@
 @using OfficeOpenXml
 @inject ApplicationDbContext Context
 @inject IHostEnvironment HostEnvironment
+@inject IJSRuntime JS
 @rendermode InteractiveServer
 
 @attribute [Authorize]
@@ -220,8 +221,8 @@
                 background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;">
         <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); text-align: center;">
             <h2>Items Receiving</h2>
-            <p>@recipientItemsReceivingToShow</p> 
-            <button @onclick="() => showPopup = false">Close</button>
+            <p>@(GetFormattedRecipientItems())</p>
+            <button @onclick="OnPopupClose">Close</button>
         </div>
     </div>
 }
@@ -233,6 +234,8 @@
     private int volunteersCount;
     private List<Recipient> recipients = new List<Recipient>();
     private string searchTerm = "";
+    private Recipient selectedRecipient;
+
 
 private string volunteerName = string.Empty;
 private List<Volunteer> availableVolunteers = new List<Volunteer>();
@@ -296,13 +299,9 @@ private async Task UpdateRecipientStatus(Recipient recipient)
 
     if (recipient.Status == RecipientStatus.NotStarted)
     {
-        recipient.Status = RecipientStatus.InProgress;
-        showPopup = true; // Show popup only when status changes to InProgress
-    }
-    else if (recipient.Status == RecipientStatus.InProgress)
-    {
-        //Change from InProgress to Completed, add the recipient's last appointment date
+        //Change from NotStarted to Completed, show items listed, add the recipient's last appointment date
         recipient.Status = RecipientStatus.Completed;
+        showPopup = true;
         recipient.LastAppointmentDate = DateTime.Now.ToString("MMMM dd, yyyy"); 
     }
     else
@@ -315,6 +314,7 @@ private async Task UpdateRecipientStatus(Recipient recipient)
 
     recipients = await Context.Recipients.ToListAsync();
 }
+
 
 
 
@@ -483,5 +483,20 @@ private void OnSearchInput(ChangeEventArgs e)
     ResetToFirstPage();
 }
 
+private async Task OnPopupClose()
+{
+    await JS.InvokeVoidAsync("printText", recipientItemsReceivingToShow);
+    showPopup = false;
+}
+
+
+private MarkupString GetFormattedRecipientItems()
+{
+    if (string.IsNullOrWhiteSpace(recipientItemsReceivingToShow))
+        return new MarkupString("");
+
+    var formatted = recipientItemsReceivingToShow.Replace("\n", "<br />");
+    return new MarkupString(formatted);
+}
 
 }
