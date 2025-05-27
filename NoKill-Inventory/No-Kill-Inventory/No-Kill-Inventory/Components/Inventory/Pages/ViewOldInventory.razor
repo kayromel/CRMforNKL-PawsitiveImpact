@@ -54,8 +54,7 @@
     }
     else
     {
-        <MudText Typo="Typo.h4">Hello, @context.User.Identity.Name</MudText>
-        <MudText Typo="Typo.subtitle1">Used inventory is below.</MudText>
+        <MudText Typo="Typo.h4">View Old Inventory</MudText>
         
         <MudPaper Class="pa-16 ma-2" Outlined="true">
             <MudStack Spacing="4" AlignItems="AlignItems.Center" Row="true">
@@ -70,8 +69,8 @@
 
         <MudTable T="FoodPallet" Items="@Context.FoodPallets" Hover="true" Breakpoint="Breakpoint.Sm">
             <HeaderContent>
-                <MudTh>Item ID Number</MudTh>
-                <MudTh>Food Type</MudTh>
+                <MudTh>Pallet ID</MudTh>
+                <MudTh>Barcode ID</MudTh>
                 <MudTh>Animal</MudTh>
                 <MudTh>Food Left (lb)</MudTh>
                 <MudTh>Arrival Date</MudTh>
@@ -82,9 +81,16 @@
             <RowTemplate Context="pallet">
                 @if (pallet.Status == Status.Used && pallet.ArrivalDate.Year == _selectedyear.Year)
                 {
-                    <MudTd DataLabel="ID">@pallet.ItemID</MudTd>
-                    <MudTd DataLabel="Food Type">@pallet.Barcode.Name</MudTd>
-                    <MudTd DataLabel="Animal">@pallet.Barcode.Animal</MudTd>
+                    <MudTd DataLabel="Pallet ID">@pallet.ItemID</MudTd>
+                    <MudTd DataLabel="Barcode ID">@pallet.Barcode.ItemID</MudTd>
+                    @if (pallet.Barcode.Animal == Species.Other)
+                    {
+                        <MudTd DataLabel="Animal">@pallet.Barcode.AnimalName</MudTd>
+                    }
+                    else
+                    {
+                        <MudTd DataLabel="Animal">@pallet.Barcode.Animal</MudTd>
+                    }
                     <MudTd DataLabel="Weight">@pallet.CurrentWeight</MudTd>
                     <MudTd DataLabel="Arrival">@pallet.ArrivalDate.ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="Expiration">@pallet.ExpirationDate.ToString("MM/dd/yyyy")</MudTd>

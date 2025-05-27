@@ -22,30 +22,35 @@
 <AuthorizeView>
     @if (!_twostepremove)
     {
-        <MudText Typo="Typo.h4">Hello, @context.User.Identity.Name</MudText>
-        <MudText Typo="Typo.body1">The current barcodes are below.</MudText>
+        <MudText Typo="Typo.h4">View Barcodes</MudText>
 
         <MudTable T="Barcode" Items="@Context.Barcodes" Hover="true" Breakpoint="Breakpoint.Sm">
             <HeaderContent>
-                <MudTh>Item ID Number</MudTh>
+                <MudTh>Barcode ID</MudTh>
                 <MudTh>Name</MudTh>
                 <MudTh>Animal</MudTh>
                 <MudTh>Age Type</MudTh>
                 <MudTh>Food Type</MudTh>
                 <MudTh>Prescription</MudTh>
-                <MudTh>Remove Barcode</MudTh>
+                <MudTh></MudTh>
             </HeaderContent>
             <RowTemplate Context="barcode">
-                
                 <MudTd DataLabel="ID">@barcode.ItemID</MudTd>
                 <MudTd DataLabel="Name">@barcode.Name</MudTd>
-                <MudTd DataLabel="Animal">@barcode.Animal</MudTd>
+                @if (barcode.Animal == Species.Other)
+                {
+                    <MudTd DataLabel="Animal">@barcode.AnimalName</MudTd>
+                }
+                else
+                {
+                    <MudTd DataLabel="Animal">@barcode.Animal</MudTd>    
+                }
                 <MudTd DataLabel="Age">@barcode.Age</MudTd>
                 <MudTd DataLabel="Food Type">@barcode.FoodType</MudTd>
                 <MudTd DataLabel="Prescription">@barcode.Prescription</MudTd>
                 <MudTd>
                     <MudButton Variant="Variant.Filled" OnClick="() => ConfirmRemove(barcode.ItemID)" Color="Color.Primary">
-                        <MudText>Remove Pallet</MudText>
+                        <MudText>Remove</MudText>
                     </MudButton>
                 </MudTd>
 

@@ -12,7 +12,6 @@
 @attribute [Authorize]
 
 <MudText Typo="Typo.h4">Barcode Entry</MudText>
-<MudText Typo="Typo.body1">Fill out the form below to add a new food type</MudText>
 
 <MudPaper Class="pa-16 ma-2" Outlined="true">
     <MudStack Spacing="4" AlignItems="AlignItems.Center">
@@ -33,23 +32,25 @@
                     <MudSelectItem Value="@Item">@Item</MudSelectItem>
                 }
             </MudSelect>
-            <MudStack Row="true" Spacing="16">
-                <MudSelect @bind-Value="_age" Label="Select Age" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
-                    @foreach (Age age in Enum.GetValues(typeof(Age)))
-                    {
-                        <MudSelectItem Value="@age">@age</MudSelectItem>
-                    }
-                </MudSelect>
-                <MudSelect @bind-Value="_foodType" Label="Select Food Type" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
-                    @foreach (FoodType type in Enum.GetValues(typeof(FoodType)))
-                    {
-                        <MudSelectItem Value="@type">@type</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudStack>
+            @if (_enumValue == Species.Other)
+            {
+                <MudTextField @bind-Value="_animalName" Label="Enter the Animal's species" Placeholder="Ex: Hamster" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
+            }
+            <MudSelect @bind-Value="_age" Label="Select Age" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
+                @foreach (Age age in Enum.GetValues(typeof(Age)))
+                {
+                    <MudSelectItem Value="@age">@age</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect @bind-Value="_foodType" Label="Select Food Type" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
+                @foreach (FoodType type in Enum.GetValues(typeof(FoodType)))
+                {
+                    <MudSelectItem Value="@type">@type</MudSelectItem>
+                }
+            </MudSelect>
             <MudSelect @bind-Value="_prescription" Label="Is this prescription?" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
-                <MudSelectItem Value="true">True</MudSelectItem>
                 <MudSelectItem Value="false">False</MudSelectItem>
+                <MudSelectItem Value="true">True</MudSelectItem>
             </MudSelect>
 
             <MudButton Disabled="@_processing" Variant="Variant.Filled" OnClick="AddPallet" Color="Color.Primary">
@@ -60,7 +61,7 @@
                 }
                 else
                 {
-                    <MudText>Add Pallet</MudText>
+                    <MudText>Add Barcode</MudText>
                 }
             </MudButton>
             @if (_error)
@@ -79,6 +80,7 @@
 
     private Species _enumValue;
     private String _nickName;
+    private String _animalName;
     private Age _age;
     private FoodType _foodType;
     private bool _prescription;
@@ -99,6 +101,7 @@
             {
                 Name = _nickName,
                 Animal = _enumValue,
+                AnimalName = _animalName,
                 Age = _age,
                 FoodType = _foodType,
                 Prescription = _prescription
@@ -116,6 +119,7 @@
     {
         _enumValue = Species.Dog;
         _nickName = "";
+        _animalName = "";
         _age = Age.Adult;
         _foodType = FoodType.Dry;
         _prescription = false;

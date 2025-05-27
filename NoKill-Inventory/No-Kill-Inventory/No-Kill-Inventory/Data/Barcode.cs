@@ -13,9 +13,9 @@ public enum Species
 
 public enum Age
 {
+    Adult,
     Senior,
     Large,
-    Adult,
     Young
 }
 
@@ -33,6 +33,8 @@ public class Barcode
     public String Name { get; set; }
     
     public Species Animal { get; set; }
+    
+    public String AnimalName { get; set; }
     
     public Age Age { get; set; }
     
