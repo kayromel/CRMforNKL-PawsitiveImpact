@@ -1,4 +1,4 @@
-﻿@page "/Notifications/AddForm"
+﻿@page "/Inventory/BarcodeEntry"
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authorization
@@ -11,14 +11,13 @@
 
 @attribute [Authorize]
 
-<MudText Typo="Typo.h4">Add Form</MudText>
-<MudText Typo="Typo.body1">Fill out the document below to add a form.</MudText>
+<MudText Typo="Typo.h4">Barcode Entry</MudText>
 
 <MudPaper Class="pa-16 ma-2" Outlined="true">
     <MudStack Spacing="4" AlignItems="AlignItems.Center">
         @if (_submitted)
         {
-            <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Success" >Form Added!</MudText>
+            <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Success" >Food Type Added!</MudText>
             <MudButton Variant="Variant.Filled" OnClick="@NewForm" Color="Color.Primary">
                 <MudText>Add More?</MudText>
             </MudButton>
@@ -26,18 +25,33 @@
         }
         else
         {
+            <MudTextField @bind-Value="_nickName" Label="Enter Nickname for Barcode" Placeholder="Ex: Wet Adult Dog Food" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
             <MudSelect @bind-Value="_enumValue" Label="Select Species" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
                 @foreach (Species Item in Enum.GetValues(typeof(Species)))
                 {
                     <MudSelectItem Value="@Item">@Item</MudSelectItem>
                 }
             </MudSelect>
-            <MudTextField @bind-Value="_locationDesc" Label="Enter Location" Placeholder="Ex: Spot 1" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
-            <MudTextField @bind-Value="_weight" Label="Enter Weight (lb)" Placeholder="Ex: 50lb" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
-            <MudStack Row="true" Spacing="16">
-                <MudDatePicker Label="Enter Arrival Date" @bind-Date="_arrivalDate" Editable="true" ShowToolbar="false"/>
-                <MudDatePicker Label="Enter Expiration Date" @bind-Date="_expirationDate" Editable="true" ShowToolbar="false"/>
-            </MudStack>
+            @if (_enumValue == Species.Other)
+            {
+                <MudTextField @bind-Value="_animalName" Label="Enter the Animal's species" Placeholder="Ex: Hamster" FullWidth="true" AdornmentColor="Color.Primary"></MudTextField>
+            }
+            <MudSelect @bind-Value="_age" Label="Select Age" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
+                @foreach (Age age in Enum.GetValues(typeof(Age)))
+                {
+                    <MudSelectItem Value="@age">@age</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect @bind-Value="_foodType" Label="Select Food Type" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
+                @foreach (FoodType type in Enum.GetValues(typeof(FoodType)))
+                {
+                    <MudSelectItem Value="@type">@type</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect @bind-Value="_prescription" Label="Is this prescription?" Placeholder="Please Select" FullWidth="true" AdornmentColor="Color.Primary">
+                <MudSelectItem Value="false">False</MudSelectItem>
+                <MudSelectItem Value="true">True</MudSelectItem>
+            </MudSelect>
 
             <MudButton Disabled="@_processing" Variant="Variant.Filled" OnClick="AddPallet" Color="Color.Primary">
                 @if (_processing)
@@ -47,7 +61,7 @@
                 }
                 else
                 {
-                    <MudText>Add Pallet</MudText>
+                    <MudText>Add Barcode</MudText>
                 }
             </MudButton>
             @if (_error)
@@ -65,31 +79,32 @@
     private bool _error = false;
 
     private Species _enumValue;
-    private String _locationDesc;
-    private int _weight;
-    private DateTime? _arrivalDate;
-    private DateTime? _expirationDate;
+    private String _nickName;
+    private String _animalName;
+    private Age _age;
+    private FoodType _foodType;
+    private bool _prescription;
+    
     
     async Task AddPallet()
     {
         _processing = true;
 
-        if (_enumValue == null || _weight == 0 || _arrivalDate == null || _expirationDate == null || _locationDesc == null)
+        if (_enumValue == null || _age == null || _foodType == null || _nickName == null)
         {
             _error = true;
             _processing = false;
         }
         else
         {
-            Context.FoodPallets.Add( new FoodPallet
+            Context.Barcodes.Add( new Barcode
             {
+                Name = _nickName,
                 Animal = _enumValue,
-                Status = Status.Alive,
-                InitWeight = _weight,
-                CurrentWeight = _weight,
-                ArrivalDate = (DateTime)_arrivalDate,
-                ExpirationDate = (DateTime)_expirationDate,
-                LocationDesc = _locationDesc
+                AnimalName = _animalName,
+                Age = _age,
+                FoodType = _foodType,
+                Prescription = _prescription
             });
         
             await Context.SaveChangesAsync();
@@ -103,9 +118,11 @@
     async Task NewForm()
     {
         _enumValue = Species.Dog;
-        _locationDesc = "";
-        _arrivalDate = null;
-        _expirationDate = null;
+        _nickName = "";
+        _animalName = "";
+        _age = Age.Adult;
+        _foodType = FoodType.Dry;
+        _prescription = false;
 
         _submitted = false;
     }

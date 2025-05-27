@@ -20,6 +20,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     
     public DbSet<FoodPallet> FoodPallets { get; set; }
     
+    public DbSet<Barcode> Barcodes { get; set; }
+    
     public DbSet<PetFoodRequest> PetFoodRequests { get; set; }
 
     public DbSet<Volunteer> Volunteers { get; set; }
