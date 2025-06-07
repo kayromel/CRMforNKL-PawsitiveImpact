@@ -51,22 +51,59 @@
                 {
                     <MudPaper Class="pa-4 mt-2" Elevation="2">
                         <MudForm OnValidSubmit="SubmitNewForm">
-                            <MudSelect T="FormType" Label="Form Type" @bind-Value="newForm.FormType" Required="true">
+                            <MudSelect T="FormType" Label="Form Type" @bind-Value="formType" Required="true">
                                 @foreach (FormType type in Enum.GetValues<FormType>())
                                 {
                                     <MudSelectItem Value="@type">@type.ToString()</MudSelectItem>
                                 }
                             </MudSelect>
                             
-                            <MudTextField @bind-Value="formComment" Label="Comments" Variant="Variant.Text"></MudTextField>
+                            
 
                             <MudDatePicker Label="Date" @bind-Date="formDate" Required="true" />
-                            <MudDatePicker Label="Expiration Date" @bind-Date="formExpDate" Required="true" />
-
+                            
+                            @if (formType != FormType.SpayNeuter)
+                            {
+                                <MudDatePicker Label="Expiration Date" @bind-Date="formExpDate" Required="true"/>
+                                <MudTextField @bind-Value="formComment" Label="Comments" Variant="Variant.Text"></MudTextField>
+                            }
+                            else
+                            {
+                                <MudTextField @bind-Value="formComment" Label="Pet Name" Variant="Variant.Text"></MudTextField>
+                            }
+                            
                             <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Tertiary" Class="mt-2" OnClick="@(() => SubmitNewForm())">
                                 Submit Form
                             </MudButton>
                         </MudForm>
+                        
+                        @if (activeFormsForRecipient.Any())
+                        {
+                            <MudPaper Class="pa-2 mt-2" Elevation="1">
+                                <MudText Typo="Typo.subtitle2">Active Forms for @recipient.FirstName:</MudText>
+                                <MudTable Items="activeFormsForRecipient" Hover="true" Dense="true">
+                                    <HeaderContent>
+                                        <MudTh>Type</MudTh>
+                                        <MudTh>Date</MudTh>
+                                        <MudTh>Expires</MudTh>
+                                        <MudTh>Comments</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate Context="form">
+                                        <MudTd>@form.FormType</MudTd>
+                                        <MudTd>@form.Date</MudTd>
+                                        <MudTd>@form.ExpDate</MudTd>
+                                        <MudTd>@form.Comment</MudTd>
+                                        <MudTd>
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                           Color="Color.Error"
+                                                           OnClick="@(async () => await DeleteForm(form.Id))"
+                                                           Title="Delete this form" />
+                                        </MudTd>
+                                    </RowTemplate>
+                                </MudTable>
+                            </MudPaper>
+                        }
+                        
                     </MudPaper>
                 }
 
@@ -121,43 +158,99 @@
 
                                     <MudDivider Class="my-2" />
                                     
-                                    <MudText><b>Dog Count:</b> @request.DogCount</MudText>
-                                    @if (!string.IsNullOrWhiteSpace(request.Dog1Name))
-                                    {
-                                        <MudText><b>Dog 1 Name:</b> @request.Dog1Name | <b>Breed:</b> @request.Dog1Breed | <b>Sex:</b> @request.Dog1Sex | <b>Weight:</b> @request.Dog1Weight</MudText>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(request.Dog2Name))
-                                    {
-                                        <MudText><b>Dog 2 Name:</b> @request.Dog2Name | <b>Breed:</b> @request.Dog2Breed | <b>Sex:</b> @request.Dog2Sex | <b>Weight:</b> @request.Dog2Weight</MudText>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(request.Dog3Name))
-                                    {
-                                        <MudText><b>Dog 3 Name:</b> @request.Dog3Name | <b>Breed:</b> @request.Dog3Breed | <b>Sex:</b> @request.Dog3Sex | <b>Weight:</b> @request.Dog3Weight</MudText>
-                                    }
+                                    <MudText Typo="Typo.subtitle2">Dogs:</MudText>
+                                    <table style="width: 100%; margin-bottom: 1rem;">
+                                        <thead>
+                                        <tr>
+                                            <th style="text-align: left;">Dog Name</th>
+                                            <th style="text-align: left;">Breed</th>
+                                            <th style="text-align: left;">Sex</th>
+                                            <th style="text-align: left;">Weight</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @if (!string.IsNullOrWhiteSpace(request.Dog1Name))
+                                        {
+                                            <tr>
+                                                <td>@request.Dog1Name</td>
+                                                <td>@request.Dog1Breed</td>
+                                                <td>@request.Dog1Sex</td>
+                                                <td>@request.Dog1Weight</td>
+                                            </tr>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(request.Dog2Name))
+                                        {
+                                            <tr>
+                                                <td>@request.Dog2Name</td>
+                                                <td>@request.Dog2Breed</td>
+                                                <td>@request.Dog2Sex</td>
+                                                <td>@request.Dog2Weight</td>
+                                            </tr>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(request.Dog3Name))
+                                        {
+                                            <tr>
+                                                <td>@request.Dog3Name</td>
+                                                <td>@request.Dog3Breed</td>
+                                                <td>@request.Dog3Sex</td>
+                                                <td>@request.Dog3Weight</td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
 
-                                    <MudDivider Class="my-2" />
-
-                                    <MudText><b>Cat Count:</b> @request.CatCount</MudText>
-                                    @if (!string.IsNullOrWhiteSpace(request.Cat1Name))
-                                    {
-                                        <MudText><b>Cat 1:</b> @request.Cat1Name | <b>Sex:</b> @request.Cat1Sex | <b>Residence:</b> @request.Cat1Residence</MudText>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(request.Cat2Name))
-                                    {
-                                        <MudText><b>Cat 2:</b> @request.Cat2Name | <b>Sex:</b> @request.Cat2Sex | <b>Residence:</b> @request.Cat2Residence</MudText>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(request.Cat3Name))
-                                    {
-                                        <MudText><b>Cat 3:</b> @request.Cat3Name | <b>Sex:</b> @request.Cat3Sex | <b>Residence:</b> @request.Cat3Residence</MudText>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(request.Cat4Name))
-                                    {
-                                        <MudText><b>Cat 4:</b> @request.Cat4Name | <b>Sex:</b> @request.Cat4Sex | <b>Residence:</b> @request.Cat4Residence</MudText>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(request.Cat5Name))
-                                    {
-                                        <MudText><b>Cat 5:</b> @request.Cat5Name | <b>Sex:</b> @request.Cat5Sex | <b>Residence:</b> @request.Cat5Residence</MudText>
-                                    }
+                                    <MudText Typo="Typo.subtitle2">Cats:</MudText>
+                                    <table style="width: 100%; margin-bottom: 1rem;">
+                                        <thead>
+                                        <tr>
+                                            <th style="text-align: left;">Cat Name</th>
+                                            <th style="text-align: left;">Sex</th>
+                                            <th style="text-align: left;">Residence</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @if (!string.IsNullOrWhiteSpace(request.Cat1Name))
+                                        {
+                                            <tr>
+                                                <td>@request.Cat1Name</td>
+                                                <td>@request.Cat1Sex</td>
+                                                <td>@request.Cat1Residence</td>
+                                            </tr>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(request.Cat2Name))
+                                        {
+                                            <tr>
+                                                <td>@request.Cat2Name</td>
+                                                <td>@request.Cat2Sex</td>
+                                                <td>@request.Cat2Residence</td>
+                                            </tr>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(request.Cat3Name))
+                                        {
+                                            <tr>
+                                                <td>@request.Cat3Name</td>
+                                                <td>@request.Cat3Sex</td>
+                                                <td>@request.Cat3Residence</td>
+                                            </tr>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(request.Cat4Name))
+                                        {
+                                            <tr>
+                                                <td>@request.Cat4Name</td>
+                                                <td>@request.Cat4Sex</td>
+                                                <td>@request.Cat4Residence</td>
+                                            </tr>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(request.Cat5Name))
+                                        {
+                                            <tr>
+                                                <td>@request.Cat5Name</td>
+                                                <td>@request.Cat5Sex</td>
+                                                <td>@request.Cat5Residence</td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
                                     <MudDivider Class="my-2" />
 
                                     <MudText><b>Other Animals:</b> @request.OtherAnimals</MudText>
@@ -197,6 +290,7 @@
     private DateTime? formDate = DateTime.Today;
     private DateTime? formExpDate = DateTime.Today.AddYears(1);
     private string formComment = "";
+    private FormType formType;
     private List<Form> activeFormsForRecipient = new();
 
 
@@ -302,6 +396,7 @@ private void AddForm(Recipient recipient)
     {
         activeFormRecipientId = null;
         newForm = new();
+        activeFormsForRecipient.Clear();
     }
     else
     {
@@ -312,6 +407,13 @@ private void AddForm(Recipient recipient)
             FormType = FormType.Application
         };
         formDate = DateTime.Today;
+        formExpDate = DateTime.Today.AddYears(1);
+
+        // Load active forms for this recipient
+        activeFormsForRecipient = Context.Forms
+            .Where(f => f.RecipientId == recipient.Id && f.isActive)
+            .OrderByDescending(f => f.Date)
+            .ToList();
     }
 }
 
@@ -319,13 +421,68 @@ private async Task SubmitNewForm()
 {
     if (formDate.HasValue)
     {
+        var recipientId = newForm.RecipientId;
+
+        if (formType != FormType.SpayNeuter)
+        {
+            var existingActiveForm = await Context.Forms
+                .Where(f => f.RecipientId == recipientId &&
+                            f.FormType == formType &&
+                            f.isActive)
+                .FirstOrDefaultAsync();
+
+            if (existingActiveForm != null)
+            {
+                existingActiveForm.isActive = false;
+                Context.Forms.Update(existingActiveForm);
+            }
+        }
+
+        newForm.FormType = formType;
         newForm.Date = formDate.Value.ToString("yyyy-MM-dd");
         newForm.ExpDate = formExpDate.Value.ToString("yyyy-MM-dd");
+        newForm.Comment = formComment;
+        newForm.isActive = true;
+
         Context.Forms.Add(newForm);
         await Context.SaveChangesAsync();
 
-        activeFormRecipientId = null;
-        newForm = new Form(); // reset
+        // Refresh active forms
+        activeFormsForRecipient = await Context.Forms
+            .Where(f => f.RecipientId == recipientId && f.isActive)
+            .OrderBy(f => f.FormType == FormType.Application ? 0
+                : f.FormType == FormType.ProofOfIncome ? 1
+                : 2)
+            .ThenByDescending(f => f.Date)
+            .ToListAsync();
+
+        // Reset fields but retain RecipientId
+        newForm = new Form { RecipientId = recipientId };
+        formComment = "";
+        formDate = DateTime.Today;
+        formExpDate = DateTime.Today.AddYears(1);
+    }
+}
+
+private async Task DeleteForm(int formId)
+{
+    var form = await Context.Forms.FindAsync(formId);
+    if (form != null)
+    {
+        Context.Forms.Remove(form);
+        await Context.SaveChangesAsync();
+
+        // Refresh the list after deletion
+        if (form.RecipientId == activeFormRecipientId)
+        {
+            activeFormsForRecipient = await Context.Forms
+                .Where(f => f.RecipientId == form.RecipientId && f.isActive)
+                .OrderBy(f => f.FormType == FormType.Application ? 0
+                    : f.FormType == FormType.ProofOfIncome ? 1
+                    : 2)
+                .ThenByDescending(f => f.Date)
+                .ToListAsync();
+        }
     }
 }
 
