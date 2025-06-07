@@ -34,7 +34,7 @@ public class Barcode
     
     public Species Animal { get; set; }
     
-    public String AnimalName { get; set; }
+    public String? AnimalName { get; set; }
     
     public Age Age { get; set; }
     

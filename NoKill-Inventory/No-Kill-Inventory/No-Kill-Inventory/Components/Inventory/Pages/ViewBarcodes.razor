@@ -5,6 +5,7 @@
 @using Microsoft.EntityFrameworkCore.Design
 @using No_Kill_Inventory.Data
 @inject ApplicationDbContext Context
+@inject IJSRuntime JS
 @rendermode InteractiveServer
 
 @*
@@ -32,6 +33,7 @@
                 <MudTh>Age Type</MudTh>
                 <MudTh>Food Type</MudTh>
                 <MudTh>Prescription</MudTh>
+                <MudTh>Print</MudTh>
                 <MudTh></MudTh>
             </HeaderContent>
             <RowTemplate Context="barcode">
@@ -49,7 +51,12 @@
                 <MudTd DataLabel="Food Type">@barcode.FoodType</MudTd>
                 <MudTd DataLabel="Prescription">@barcode.Prescription</MudTd>
                 <MudTd>
-                    <MudButton Variant="Variant.Filled" OnClick="() => ConfirmRemove(barcode.ItemID)" Color="Color.Primary">
+                    <MudButton Variant="Variant.Filled" OnClick="() => Print(barcode)" Color="MudBlazor.Color.Primary">
+                        <MudText>Print</MudText>
+                    </MudButton>
+                </MudTd>
+                <MudTd>
+                    <MudButton Variant="Variant.Filled" OnClick="() => ConfirmRemove(barcode.ItemID)" Color="MudBlazor.Color.Primary">
                         <MudText>Remove</MudText>
                     </MudButton>
                 </MudTd>
@@ -58,23 +65,23 @@
         </MudTable>
         if (_success)
         {
-            <MudText Color="Color.Success">Success!</MudText>
+            <MudText Color="MudBlazor.Color.Success">Success!</MudText>
         }
     }
     else if(_twostepremove)
     {
         <MudPaper Class="pa-16 ma-2" Outlined="true">
             <MudStack AlignItems="AlignItems.Center">
-                <MudText Typo="Typo.h4" Color="Color.Error">Remove Barcode?</MudText>
-                <MudText Typo="Typo.body1" Color="Color.Primary">
+                <MudText Typo="Typo.h4" Color="MudBlazor.Color.Error">Remove Barcode?</MudText>
+                <MudText Typo="Typo.body1" Color="MudBlazor.Color.Primary">
                     This will remove the selected barcode and it will not be recoverable. Please make sure you have selected
                     the correct entry.
                 </MudText>
                 <MudStack Row="true" Spacing="4">
-                    <MudButton Variant="Variant.Filled" OnClick="@Remove" Color="Color.Primary">
+                    <MudButton Variant="Variant.Filled" OnClick="@Remove" Color="MudBlazor.Color.Primary">
                         <MudText>Confirm</MudText>
                     </MudButton>
-                    <MudButton Variant="Variant.Filled" OnClick="@GoBack" Color="Color.Primary">
+                    <MudButton Variant="Variant.Filled" OnClick="@GoBack" Color="MudBlazor.Color.Primary">
                         <MudText>Go Back</MudText>
                     </MudButton>
                 </MudStack>
@@ -103,6 +110,15 @@
         _twostepremove = false;
         
     }
+
+    private async Task Print(Barcode item)
+    {
+        String name = item.Name + " , Item ID: " + item.ItemID;
+    
+        await JS.InvokeVoidAsync("printText", name);
+        
+    }
+    
 
     async Task Remove()
     {
