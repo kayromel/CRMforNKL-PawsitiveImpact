@@ -24,6 +24,12 @@ public class Form
 
     [Required]
     public string Date { get; set; } = string.Empty;
+    
+    public string ExpDate { get; set; } = string.Empty;
+    
+    public string Comment { get; set; } = string.Empty;
+    
+    public bool isActive { get; set; } = true;
 
     // Navigation property to the recipient
     public Recipient Recipient { get; set; } = null!;

@@ -57,8 +57,11 @@
                                     <MudSelectItem Value="@type">@type.ToString()</MudSelectItem>
                                 }
                             </MudSelect>
+                            
+                            <MudTextField @bind-Value="formComment" Label="Comments" Variant="Variant.Text"></MudTextField>
 
                             <MudDatePicker Label="Date" @bind-Date="formDate" Required="true" />
+                            <MudDatePicker Label="Expiration Date" @bind-Date="formExpDate" Required="true" />
 
                             <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Tertiary" Class="mt-2" OnClick="@(() => SubmitNewForm())">
                                 Submit Form
@@ -121,15 +124,15 @@
                                     <MudText><b>Dog Count:</b> @request.DogCount</MudText>
                                     @if (!string.IsNullOrWhiteSpace(request.Dog1Name))
                                     {
-                                        <MudText><b>Dog 1 Name:</b> @request.Dog1Name | <b>Breed:</b> @request.Dog1Breed | <b>Sex:</b> @request.Dog1Sex</MudText>
+                                        <MudText><b>Dog 1 Name:</b> @request.Dog1Name | <b>Breed:</b> @request.Dog1Breed | <b>Sex:</b> @request.Dog1Sex | <b>Weight:</b> @request.Dog1Weight</MudText>
                                     }
                                     @if (!string.IsNullOrWhiteSpace(request.Dog2Name))
                                     {
-                                        <MudText><b>Dog 2 Name:</b> @request.Dog2Name | <b>Breed:</b> @request.Dog2Breed | <b>Sex:</b> @request.Dog2Sex</MudText>
+                                        <MudText><b>Dog 2 Name:</b> @request.Dog2Name | <b>Breed:</b> @request.Dog2Breed | <b>Sex:</b> @request.Dog2Sex | <b>Weight:</b> @request.Dog2Weight</MudText>
                                     }
                                     @if (!string.IsNullOrWhiteSpace(request.Dog3Name))
                                     {
-                                        <MudText><b>Dog 3 Name:</b> @request.Dog3Name | <b>Breed:</b> @request.Dog3Breed | <b>Sex:</b> @request.Dog3Sex</MudText>
+                                        <MudText><b>Dog 3 Name:</b> @request.Dog3Name | <b>Breed:</b> @request.Dog3Breed | <b>Sex:</b> @request.Dog3Sex | <b>Weight:</b> @request.Dog3Weight</MudText>
                                     }
 
                                     <MudDivider Class="my-2" />
@@ -192,6 +195,10 @@
     private int? activeFormRecipientId = null; // tracks expanded form under a recipient
     private Form newForm = new();
     private DateTime? formDate = DateTime.Today;
+    private DateTime? formExpDate = DateTime.Today.AddYears(1);
+    private string formComment = "";
+    private List<Form> activeFormsForRecipient = new();
+
 
 private void ShowAppointmentDate(Recipient recipient)
 {
@@ -313,6 +320,7 @@ private async Task SubmitNewForm()
     if (formDate.HasValue)
     {
         newForm.Date = formDate.Value.ToString("yyyy-MM-dd");
+        newForm.ExpDate = formExpDate.Value.ToString("yyyy-MM-dd");
         Context.Forms.Add(newForm);
         await Context.SaveChangesAsync();
 
